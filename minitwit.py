@@ -100,7 +100,7 @@ def timeline():
     offset = request.args.get('offset', type=int)
     return render_template('timeline.html', messages=query_db('''
         select message.*, user.* from message, user
-        where message.author_id = user.user_id and (
+        where message.flagged = 0 and message.author_id = user.user_id and (
             user.user_id = ? or
             user.user_id in (select whom_id from follower
                                     where who_id = ?))
@@ -113,7 +113,7 @@ def public_timeline():
     """Displays the latest messages of all users."""
     return render_template('timeline.html', messages=query_db('''
         select message.*, user.* from message, user
-        where message.author_id = user.user_id
+        where message.flagged = 0 and message.author_id = user.user_id
         order by message.pub_date desc limit ?''', [PER_PAGE]))
 
 
@@ -173,8 +173,8 @@ def add_message():
     if 'user_id' not in session:
         abort(401)
     if request.form['text']:
-        g.db.execute('''insert into message (author_id, text, pub_date)
-            values (?, ?, ?)''', (session['user_id'], request.form['text'],
+        g.db.execute('''insert into message (author_id, text, pub_date, flagged)
+            values (?, ?, ?, 0)''', (session['user_id'], request.form['text'],
                                   int(time.time())))
         g.db.commit()
         flash('Your message was recorded')
