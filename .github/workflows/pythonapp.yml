@@ -33,6 +33,6 @@ jobs:
       with:
         github_token: ${{ secrets.github_token }}
         reporter: github-check
-        level: warning
+        level: errors
         pattern: "*.sh"
         exclude: "./.git/*"
