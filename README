@@ -24,3 +24,11 @@
 
       You betcha.  Run the `minitwit_tests.py` file to
       see the tests pass.
+
+    ~ How to run flag_tool?
+
+      1. sudo apt-get install libsqlite3-dev
+
+      2. make build
+
+      3. ./flag_tool -h
