@@ -17,11 +17,11 @@ This script allows for some quick management of various aspects the application.
 
 | Command | Meaning                                                                                                                                  |
 |---------|------------------------------------------------------------------------------------------------------------------------------------------|
-| init    | Initializes a SQLite database file at the default location (`/tmp/minitwit.db)`).                                                        |
-| start   | Runs the server, piping the output to a log file (`/tmp/out.log`). Also creates a file `/tmp/minitwit.pid` with the server's process id. |
-| stop    | Kills the server.                                                                                                                        |
-| inspect | Show a list of all twits and authors in a interactive view (using the `less` command).                                                   |
-| flag    | Shorthand for running the Flagging Tool, see the [documentation](#flag-tool) for details.                                                |
+| `contro.sh init`    | Initializes a SQLite database file at the default location (`/tmp/minitwit.db)`).                                                        |
+| `contro.sh start`   | Runs the server, piping the output to a log file (`/tmp/out.log`). Also creates a file `/tmp/minitwit.pid` with the server's process id. |
+| `contro.sh stop`    | Kills the server.                                                                                                                        |
+| `contro.sh inspect` | Show a list of all twits and authors in a interactive view (using the `less` command).                                                   |
+| `contro.sh flag`    | Shorthand for running the flagging tool. All arguments passed to this command will be used with the flag tool. See the [documentation](#flag-tool) for details.                                                |
 
 
 ## Server configuration
