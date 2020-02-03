@@ -29,7 +29,7 @@ This script allows for some quick management of various aspects the application.
 To change the server configuration, edit the variables towards the top of `minitwit.py`. The variables and their meanings can be found in the table below.
 
 | Variable   |                                                          Meaning                                                          |     Default value    |                  Valid values                  |
-|------------|:-------------------------------------------------------------------------------------------------------------------------:|:--------------------:|:----------------------------------------------:|
+|------------|---------------------------------------------------------------------------------------------------------------------------|----------------------|------------------------------------------------|
 | `DATABASE`   | The path to the SQLite database file. If changed, make sure to move the old DB file or create a new one with `make init`. | `"/tmp/minitwit.db"` | Any valid file path.                           |
 | `PER_PAGE`   | How many twits to show per page.                                                                                          | `30`                 | Any integer number above 0.                    |
 | `DEBUG`      | Whether to run the Flask app in a debug mode. **Set to False for production.**                                            | `True`               | `True` or `False`.                             |
