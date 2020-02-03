@@ -15,21 +15,20 @@ This tool is used for flagging twits, which hides them in the web app.
 
 This script allows for some quick management of various aspects the application.
 
-|      Command      | Meaning                                                                                                                                  |
-|---------|------------------------------------------------------------------------------------------------------------------------------------------|
-| `control.sh init`    | Initializes a SQLite database file at the default location (`/tmp/minitwit.db)`).                                                        |
-| `control.sh start`   | Runs the server, piping the output to a log file (`/tmp/out.log`). Also creates a file `/tmp/minitwit.pid` with the server's process id. |
-| `control.sh stop`    | Kills the server.                                                                                                                        |
-| `control.sh inspect` | Show a list of all twits and authors in a interactive view (using the `less` command).                                                   |
-| `control.sh flag`    | Shorthand for running the flagging tool. All arguments passed to this command will be used with the flag tool. See the [documentation](#flag-tool) for details.                                                |
-
+| Command              | Meaning                                                                                                                                                         |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `control.sh init`    | Initializes a SQLite database file at the default location (`/tmp/minitwit.db)`).                                                                               |
+| `control.sh start`   | Runs the server, piping the output to a log file (`/tmp/out.log`). Also creates a file `/tmp/minitwit.pid` with the server's process id.                        |
+| `control.sh stop`    | Kills the server.                                                                                                                                               |
+| `control.sh inspect` | Show a list of all twits and authors in a interactive view (using the `less` command).                                                                          |
+| `control.sh flag`    | Shorthand for running the flagging tool. All arguments passed to this command will be used with the flag tool. See the [documentation](#flag-tool) for details. |
 
 ## Server configuration
 
 To change the server configuration, edit the variables towards the top of `minitwit.py`. The variables and their meanings can be found in the table below.
 
-| Variable   |                                                          Meaning                                                          |     Default value    |                  Valid values                  |
-|------------|---------------------------------------------------------------------------------------------------------------------------|----------------------|------------------------------------------------|
+| Variable     |                                                          Meaning                                                          |     Default value    |                  Valid values                  |
+|--------------|---------------------------------------------------------------------------------------------------------------------------|----------------------|------------------------------------------------|
 | `DATABASE`   | The path to the SQLite database file. If changed, make sure to move the old DB file or create a new one with `make init`. | `"/tmp/minitwit.db"` | Any valid file path.                           |
 | `PER_PAGE`   | How many twits to show per page.                                                                                          | `30`                 | Any integer number above 0.                    |
 | `DEBUG`      | Whether to run the Flask app in a debug mode. **Set to False for production.**                                            | `True`               | `True` or `False`.                             |
