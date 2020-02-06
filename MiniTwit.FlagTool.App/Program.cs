@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.Linq;
 
 namespace MiniTwit.FlagTool.App
 {
@@ -32,11 +33,7 @@ namespace MiniTwit.FlagTool.App
         }
 
         public void Run(string[] args) {
-            //cannot remember syntactic sugar for this :/
-            var cmd = "";
-            if(args.Length >= 1) {
-                cmd = args[0];
-            }
+            var cmd = args.ElementAtOrDefault(0) ?? "";
 
             switch(cmd) {
                 case "-i":
