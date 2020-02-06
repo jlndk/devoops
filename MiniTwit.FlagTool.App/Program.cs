@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 
@@ -59,10 +60,15 @@ namespace MiniTwit.FlagTool.App
             {
                 connection.Open();
 
-                //TODO: Use prepared statements to prevent SQL injection
-                var sql = "UPDATE message SET flagged=1 WHERE message_id="+messageId;
+                var sql = "UPDATE message SET flagged=1 WHERE message_id=@messageId";
 
                 var cmd = new SQLiteCommand(sql, connection);
+
+                //Use prepared statement to prevent sql injection
+                var idParam = new SQLiteParameter("@messageId", DbType.Int32);
+                idParam.Value = messageId;
+                cmd.Parameters.Add(idParam);
+
                 cmd.ExecuteNonQuery();
             }
             Console.WriteLine("Flagged entry: {0}", messageId);
