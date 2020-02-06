@@ -1,12 +1,109 @@
 ﻿using System;
+using System.Data.SQLite;
 
 namespace MiniTwit.FlagTool.App
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static readonly string docStr =
+                "ITU-Minitwit Tweet Flagging Tool\n\n" +
+                "Usage:\n" +
+                "  flag_tool <tweet_id>...\n" +
+                "  flag_tool -i\n" +
+                "  flag_tool -h\n" +
+                "Options:\n" +
+                "-h            Show this screen.\n" +
+                "-i            Dump all tweets and authors to STDOUT.";
+
+        private string _connectionString = null;
+        public string ConnectionString {
+            get {
+                if(_connectionString == null) {
+                    var b = new SQLiteConnectionStringBuilder();
+                    b.DataSource = "/tmp/minitwit.db";
+                    _connectionString = b.ToString();
+                }
+
+                return _connectionString;
+            }
+            set {
+                _connectionString = value;
+            }
+        }
+
+        public void Run(string[] args) {
+            //cannot remember syntactic sugar for this :/
+            var cmd = "";
+            if(args.Length >= 1) {
+                cmd = args[0];
+            }
+
+            switch(cmd) {
+                case "-i":
+                    printAllMessages();
+                    break;
+                case "-h":
+                    printHelp();
+                    break;
+                default:
+                    if(cmd == "") {
+                        printHelp();
+                    }
+                    else {
+                        flagMessage(int.Parse(cmd));
+                    }
+                    break;
+            }
+        }
+
+        private void flagMessage(int messageId)
         {
-            Console.WriteLine("Hello Flagtool!");
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                //TODO: Use prepared statements to prevent SQL injection
+                var sql = "UPDATE message SET flagged=1 WHERE message_id="+messageId;
+
+                var cmd = new SQLiteCommand(sql, connection);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Flagged entry: {0}", messageId);
+        }
+
+        private void printHelp()
+        {
+            Console.WriteLine(docStr);
+        }
+
+        private void printAllMessages()
+        {
+            using (var connection = new SQLiteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                var sql = "SELECT message_id, author_id, text, flagged FROM message;";
+
+                var cmd = new SQLiteCommand(sql, connection);
+
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var messageId = (Int64) reader["message_id"];
+                    var authorId = (Int64) reader["author_id"];
+                    var text = reader["text"] as string;
+                    var flagged = (Int64) reader["flagged"];
+
+                    Console.WriteLine("{0},{1},{2},{3}", messageId, authorId, text, flagged);
+                }
+            }
+        }
+
+        public static void Main(string[] args)
+        {
+            var p = new Program();
+            p.Run(args);
         }
     }
 }
