@@ -34,16 +34,6 @@ namespace MiniTwit.Web.App.Controllers
             };
             return View();
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Hola()
-        {
-            return View();
-        }
         
         public IActionResult LogIn()
         {
