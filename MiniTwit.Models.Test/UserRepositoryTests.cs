@@ -20,7 +20,7 @@ namespace MiniTwit.Models.Tests
             return new MiniTwitContext(options);
         }
 
-        public async Task Add_dummy_data(UserRepository repository)
+        private async Task Add_dummy_data(UserRepository repository)
         {
             for (int i = 1; i < 10; i++)
             {
