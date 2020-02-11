@@ -9,9 +9,9 @@ namespace MiniTwit.Models
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IMinitwitContext _context;
+        private readonly IMiniTwitContext _context;
 
-        public UserRepository(IMinitwitContext context)
+        public UserRepository(IMiniTwitContext context)
         {
             _context = context;
         }
