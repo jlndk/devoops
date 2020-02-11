@@ -8,7 +8,8 @@ namespace MiniTwit.Entities
         public int Id { get; set; }
         [Required]
         public string Username { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false)]
+        [MinLength(5)]
         public string Email { get; set; }
         public string PwHash { get; set; }
 

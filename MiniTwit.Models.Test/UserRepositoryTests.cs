@@ -5,43 +5,32 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MiniTwit.Entities;
 using Xunit;
+using static MiniTwit.Models.Tests.Utility;
 
 namespace MiniTwit.Models.Tests
 {
     public class UserRepositoryTests
     {
 
-        public static MiniTwitContext CreateMiniTwitContextContext([CallerMemberName] string testName = "")
-        {
-            var options = new DbContextOptionsBuilder<MiniTwitContext>()
-                .UseInMemoryDatabase(databaseName: testName)
-                .Options;
-
-            return new MiniTwitContext(options);
-        }
-
-        private async Task Add_dummy_data(UserRepository repository)
-        {
-            for (int i = 1; i < 10; i++)
-            {
-                var user1 = new User
-                {
-                    Username = "user" + i,
-                    Email = "user" + i + "@kanban.com"
-                };
-                var (_, _) = await repository.CreateAsync(user1);
-            }
-        }
 
         [Fact]
         public async Task User_Is_Created_Succesfully()
         {
             UserRepository repo = new UserRepository(CreateMiniTwitContextContext());
 
-            var result = await repo.CreateAsync(new User() { Username = "TestCreate" });
+            var result = await repo.CreateAsync(new User() { Username = "TestCreate", Email = "qwdq@gqqw.com" });
 
             Assert.Equal(Response.Created, result.response);
             Assert.Equal(1, result.userId);
+
+        }
+
+        [Fact]
+        public async Task User_without_mails_fails()
+        {
+            UserRepository repo = new UserRepository(CreateMiniTwitContextContext());
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => repo.CreateAsync(new User() { Username = "TestCreate" }));
 
         }
 
