@@ -1,6 +1,6 @@
 using System;
 
-namespace MiniTwit.Web.App.Models
+namespace MiniTwit.Library.Database
 {
     public class Message
     {
