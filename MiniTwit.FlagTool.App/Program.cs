@@ -8,7 +8,7 @@ namespace MiniTwit.FlagTool.App
     public class Program
     {
         public static readonly string docStr =
-                "ITU-Minitwit Tweet Flagging Tool\n\n" +
+                "ITU-MiniTwit Tweet Flagging Tool\n\n" +
                 "Usage:\n" +
                 "  flag_tool <tweet_id>...\n" +
                 "  flag_tool -i\n" +
@@ -22,7 +22,7 @@ namespace MiniTwit.FlagTool.App
             get {
                 if(_connectionString == null) {
                     var b = new SQLiteConnectionStringBuilder();
-                    b.DataSource = "/tmp/minitwit.db";
+                    b.DataSource = "/tmp/MiniTwit.db";
                     _connectionString = b.ToString();
                 }
 

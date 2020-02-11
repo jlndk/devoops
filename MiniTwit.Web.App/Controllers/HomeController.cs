@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MiniTwit.Entities;
 using MiniTwit.Web.App.Models;
 
 namespace MiniTwit.Web.App.Controllers
