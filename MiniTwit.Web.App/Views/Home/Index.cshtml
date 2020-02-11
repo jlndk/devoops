@@ -1,8 +1,33 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Public Timeline";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2>@ViewData["Title"]</h2>
+<div>
+    <ul class="messages">
+        @{
+            var messages = (IList<Message>)ViewData["Messages"];
+        }
+        @if (messages.Count > 0)
+        {
+            @foreach (Message msg in (IList<Message>)ViewData["Messages"])
+            {
+                <li>
+                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48" /> <!--TODO remember to softcode-->
+                    <strong>
+                        <a href="#">@msg.Author.Username</a>
+                    </strong>
+                    @msg.Text
+                    <small>
+                        &mdash; @msg.PubDate
+                    </small>
+                </li>
+            }
+        }
+        else
+        {
+            <li><em>There's no message so far.</em></li>
+        }
+
+    </ul>
 </div>

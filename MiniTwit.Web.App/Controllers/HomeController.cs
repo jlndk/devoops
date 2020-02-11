@@ -20,16 +20,6 @@ namespace MiniTwit.Web.App.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Hola()
-        {
             ViewData["Messages"] = new List<Message> {
                 new Message
                 {
@@ -42,6 +32,16 @@ namespace MiniTwit.Web.App.Controllers
                     PubDate = 2
                 }
             };
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Hola()
+        {
             return View();
         }
 
