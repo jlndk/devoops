@@ -98,8 +98,8 @@ namespace MiniTwit.FlagTool.Tests
             var actual = output.ToString().Trim();
 
             var expected = new StringBuilder();
-            expected.Append("1,1,hello world,0\n");
-            expected.Append("2,1,foobar,0\n");
+            expected.Append("1,1,hello world,0" + Environment.NewLine);
+            expected.Append("2,1,foobar,0" + Environment.NewLine);
             expected.Append("3,1,fricking heck,1");
             Assert.Equal(expected.ToString(), actual);
         }
