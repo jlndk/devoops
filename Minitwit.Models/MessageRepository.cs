@@ -43,6 +43,15 @@ namespace MiniTwit.Models
             return await messages.FirstOrDefaultAsync();
         }
 
+        public async Task<List<Message>> ReadAllMessagesFromUserAsync(int userId)
+        {
+            var messages = from m in _context.Messages
+                           where m.AuthorId == userId
+                           select m;
+
+            return await messages.ToListAsync();
+        }
+
         public async Task<Response> UpdateAsync(Message message)
         {
             var entity = await _context.Messages.FindAsync(message.Id);
