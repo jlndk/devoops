@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Hola Mundo";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Hola mundo , mucho gracias.</p>
+<div>
+    <ul class="messages">
+        @{
+            var messages = (IList<Message>)ViewData["Messages"];
+        }
+        @if (messages.Count > 0)
+        {
+            @foreach (Message msg in (IList<Message>)ViewData["Messages"])
+            {
+                <li>
+                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp" /> <!--TODO remember to softcode-->
+                    <strong>
+                        <a href="#">@msg.Author.Username</a>
+                    </strong>
+                    @msg.Text
+                    <small>
+                        &mdash; @msg.PubDate
+                    </small>
+                </li>
+            }
+        }
+        else 
+        {
+            <li><em>There's no message so far.</em></li>
+        }
+
+    </ul>
+</div>
