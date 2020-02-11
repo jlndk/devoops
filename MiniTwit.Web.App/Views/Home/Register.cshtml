@@ -1,0 +1,38 @@
+@model WebPlayground.Models.SignUp
+
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<h2>Sign Up</h2>
+@using (Html.BeginForm())
+{
+    var valSummary = @Html.ValidationSummary(true, "Something went wrong");
+    if (valSummary != null && valSummary.ToString() != "")
+    {
+        <div class=error><strong>Error:</strong>@valSummary</div>
+    }
+    <dl>
+        <dt>Username:</dt>
+        <dd>
+            @Html.TextBoxFor(u => u.UserName)
+            @Html.ValidationMessageFor(u => u.UserName)
+        </dd>
+        <dt>E-Mail:</dt>
+        <dd>
+            @Html.TextBoxFor(u => u.Email)
+            @Html.ValidationMessageFor(u => u.Email)
+        </dd>
+        <dt>Password:</dt>
+        <dd>
+            @Html.PasswordFor(u => u.Password)
+            @Html.ValidationMessageFor(u => u.Password)
+        </dd>
+        <dt>Password <small>(repeat)</small>:</dt>
+        <dd>
+            @Html.PasswordFor(u => u.PasswordRepeat)
+            @Html.ValidationMessageFor(u => u.PasswordRepeat)
+        </dd>
+    </dl>
+    <div class=actions><input type=submit value="Sign In"></div>
+}

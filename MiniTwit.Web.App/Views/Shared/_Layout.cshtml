@@ -1,36 +1,57 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MiniTwit.Web.App</title>
-    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] @("|") MiniTwit</title>
+    <link rel="stylesheet" type="text/css" href="~/css/site.css"/>
 </head>
 <body>
-
-    <div class="page">
-        <h1>MiniTwit</h1>
-
-        <div class="navigation">
-            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            <a asp-area="" asp-controller="Home" asp-action="Hola">Hola</a>
-        </div>
-
-        <!--<ul class="flashes">
-            <li></li>
-        </ul>-->
-
-        <div class="body">
-            @RenderBody()
-        </div>
-
-        <div class="footer">
-            MiniTwit &mdash; A C# Application
-        </div>
+<div class="page">
+    <h1>MiniTwit</h1>
+    <div class="navigation">
+        @if (ViewData["user"] != null)
+        {
+            @*<a asp-area="" asp-controller="Home" asp-action="TimeLine" >my timeline</a>
+            @("|")
+            <a asp-area="" asp-controller="Home" asp-action="Public_TimeLine" >public timeline</a>
+            @("|")
+            <a asp-area="" asp-controller="Home" asp-action="LogOut" >sign out @ViewData["username"]</a>*@
+        }
+        else
+        {
+            <a @*asp-area="" asp-controller="Home" asp-action="Public_TimeLine" *@>public timeline</a>
+            @("|")
+            <a asp-area="" asp-controller="Home" asp-action="Register" >sign up</a>
+            @("|")
+            <a asp-area="" asp-controller="Home" asp-action="LogIn" >sign in</a>
+        }
     </div>
+    @* 
+            Should be replaced with a resource via "using" 
+            Translated from:
+            {% with flashes = get_flashed_messages() %}
+            {% endwith %}
+        *@
+    @if (ViewData["flashes"] != null)
+    {
+        <ul class="flashes">
+        @foreach (var flash in (IEnumerable<string>) ViewData["flashes"])
+        {
+            <li>@flash</li>
+        }
+        </ul>
+    }
+    <div class="body">
+        @RenderBody()
+    </div>
+    <div class="footer">
+        MiniTwit &mdash; A C# Application
+    </div>
+</div>
 
-    <!--<script src="~/js/site.js" asp-append-version="true"></script>-->
+
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
