@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MiniTwit.Library.Database
+namespace MiniTwit.Entities
 {
     public class User
     {

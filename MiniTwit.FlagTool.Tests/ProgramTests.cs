@@ -56,7 +56,7 @@ namespace MiniTwit.FlagTool.Tests
         public void Program_default_ConnectionString_is_correct()
         {
             var b = new SQLiteConnectionStringBuilder();
-            b.DataSource = "/tmp/minitwit.db";
+            b.DataSource = "/tmp/MiniTwit.db";
             var expected = b.ToString();
 
             var program = new Program();
