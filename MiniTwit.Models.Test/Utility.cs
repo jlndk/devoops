@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 namespace MiniTwit.Models.Tests
 {
@@ -12,11 +13,10 @@ namespace MiniTwit.Models.Tests
     {
         public static MiniTwitContext CreateMiniTwitContextContext([CallerMemberName] string testName = "", [CallerFilePath] string testNamePart2 = "")
         {
-            var options = new DbContextOptionsBuilder<MiniTwitContext>()
-                .UseInMemoryDatabase(databaseName: testName + testNamePart2)
-                .Options;
-
-            return new MiniTwitContext(options);
+            var connection = new SqliteConnection("Datasource=:memory:");
+            connection.Open();
+            var options = new DbContextOptionsBuilder<MiniTwitContext>().UseSqlite(connection);
+            return new MiniTwitContext(options.Options);
         }
 
         public static async Task Add_dummy_data(UserRepository repository)
