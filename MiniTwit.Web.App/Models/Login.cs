@@ -1,4 +1,4 @@
-namespace WebPlayground.Models
+namespace MiniTwit.Web.App.Models
 {
     public class Login
     {
