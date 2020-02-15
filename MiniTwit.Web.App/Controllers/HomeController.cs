@@ -26,7 +26,7 @@ namespace MiniTwit.Web.App.Controllers
                 {
                     Author = new User
                     {
-                        Username = "Jakobis",
+                        UserName = "Jakobis",
                         Email = "yo@simongreen.ninja"
                     },
                     Text = "YO waddup!?",

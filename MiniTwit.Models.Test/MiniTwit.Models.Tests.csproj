@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MiniTwit.Entities\MiniTwit.Entities.csproj" />
-    <ProjectReference Include="..\Minitwit.Models\MiniTwit.Models.csproj" />
+    <ProjectReference Include="..\MiniTwit.Models\MiniTwit.Models.csproj" />
   </ItemGroup>
 
 </Project>

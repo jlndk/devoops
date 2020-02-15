@@ -1,17 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace MiniTwit.Entities
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
         [Required]
-        public string Username { get; set; }
+        public override string UserName { get; set; }
         [Required(AllowEmptyStrings = false)]
         [MinLength(5)]
-        public string Email { get; set; }
-        public string PwHash { get; set; }
+        public override string Email { get; set; }
 
         //can't remember how many-to-many relations are handled in EFC
 

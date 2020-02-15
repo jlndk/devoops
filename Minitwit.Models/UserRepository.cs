@@ -32,7 +32,7 @@ namespace MiniTwit.Models
         public async Task<IEnumerable<User>> ReadAsync()
         {
             var query = from u in _context.Users
-                        orderby u.Username
+                        orderby u.UserName
                         select u;
 
             return await query.ToListAsync();
@@ -61,7 +61,7 @@ namespace MiniTwit.Models
                 return Conflict;
             }
 
-            entity.Username = user.Username;
+            entity.UserName = user.UserName;
             entity.Email = user.Email;
 
             await _context.SaveChangesAsync();

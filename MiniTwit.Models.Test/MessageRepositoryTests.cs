@@ -22,7 +22,7 @@ namespace MiniTwit.Models.Tests
             MessageRepository repo = new MessageRepository(context);
             var userRepo = new UserRepository(context);
             await Add_dummy_data(userRepo);
-            (_, int id) = await userRepo.CreateAsync(new User() {Username ="Test", Email="qwfqwf@qdqw.qwf"});
+            (_, int id) = await userRepo.CreateAsync(new User() {UserName ="Test", Email="qwfqwf@qdqw.qwf"});
 
             var result = await repo.CreateAsync(new Message() { Text ="qwdqg", AuthorId=id});
 

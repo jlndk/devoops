@@ -13,7 +13,7 @@ namespace MiniTwit.Models.Tests
             {
                 var user1 = new User
                 {
-                    Username = "user" + i,
+                    UserName = "user" + i,
                     Email = "user" + i + "@kanban.com"
                 };
                 var (_, _) = await repository.CreateAsync(user1);

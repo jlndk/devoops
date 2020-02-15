@@ -20,7 +20,7 @@ namespace MiniTwit.Models.Tests
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
 
-            var result = await repo.CreateAsync(new User() { Username = "TestCreate", Email = "qwdq@gqqw.com" });
+            var result = await repo.CreateAsync(new User() { UserName = "TestCreate", Email = "qwdq@gqqw.com" });
 
             Assert.Equal(Response.Created, result.response);
             Assert.Equal(1, result.userId);
@@ -33,7 +33,7 @@ namespace MiniTwit.Models.Tests
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
 
-            await Assert.ThrowsAsync<DbUpdateException>(() => repo.CreateAsync(new User() { Username = "TestCreate" }));
+            await Assert.ThrowsAsync<DbUpdateException>(() => repo.CreateAsync(new User() { UserName = "TestCreate" }));
 
         }
 
@@ -45,14 +45,14 @@ namespace MiniTwit.Models.Tests
 
             var user1 = new User
             {
-                Username = "user1",
+                UserName = "user1",
                 Email = "user1@kanban.com"
             };
             var (_, _) = await repo.CreateAsync(user1);
 
             var user = new User
             {
-                Username = "user1",
+                UserName = "user1",
                 Email = "user1@kanban.com"
             };
 
@@ -70,7 +70,7 @@ namespace MiniTwit.Models.Tests
 
             var user = new User
             {
-                Username = "user4",
+                UserName = "user4",
                 Email = "user4@kanban.com"
             };
 
@@ -78,7 +78,7 @@ namespace MiniTwit.Models.Tests
 
             var entity = await context.Users.FindAsync(id);
 
-            Assert.Equal("user4", entity.Username);
+            Assert.Equal("user4", entity.UserName);
             Assert.Equal("user4@kanban.com", entity.Email);
         }
 
@@ -92,7 +92,7 @@ namespace MiniTwit.Models.Tests
 
             var user = new User
             {
-                Username = "user11",
+                UserName = "user11",
                 Email = "user11@kanban.com"
             };
 
@@ -123,7 +123,7 @@ namespace MiniTwit.Models.Tests
 
             var users = await repo.ReadAsync();
 
-            Assert.Equal(new[] { "user1", "user2", "user3" }, users.Where(u => u.Id < 4).Select(u => u.Username));
+            Assert.Equal(new[] { "user1", "user2", "user3" }, users.Where(u => u.Id < 4).Select(u => u.UserName));
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace MiniTwit.Models.Tests
             var user = users.First();
 
             Assert.Equal(1, user.Id);
-            Assert.Equal("user1", user.Username);
+            Assert.Equal("user1", user.UserName);
             Assert.Equal("user1@kanban.com", user.Email);
         }
 
@@ -184,7 +184,7 @@ namespace MiniTwit.Models.Tests
             UserRepository repo = new UserRepository(context);
             await Add_dummy_data(repo);
 
-            var user = new User { Id = 1, Username = "user120", Email = "user2@kanban.com" };
+            var user = new User { Id = 1, UserName = "user120", Email = "user2@kanban.com" };
 
             var response = await repo.UpdateAsync(user);
 
@@ -198,13 +198,13 @@ namespace MiniTwit.Models.Tests
             UserRepository repo = new UserRepository(context);
             await Add_dummy_data(repo);
 
-            var user = new User { Id = 2, Username = "newuser2", Email = "newuser2@kanban.com" };
+            var user = new User { Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com" };
 
             await repo.UpdateAsync(user);
 
             var entity = await context.Users.FindAsync(2);
 
-            Assert.Equal("newuser2", entity.Username);
+            Assert.Equal("newuser2", entity.UserName);
             Assert.Equal("newuser2@kanban.com", entity.Email);
         }
 
@@ -215,7 +215,7 @@ namespace MiniTwit.Models.Tests
             UserRepository repo = new UserRepository(context);
             await Add_dummy_data(repo);
 
-            var user = new User { Id = 2, Username = "newuser2", Email = "newuser2@kanban.com" };
+            var user = new User { Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com" };
 
             var response = await repo.UpdateAsync(user);
 
