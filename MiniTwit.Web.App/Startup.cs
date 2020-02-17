@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiniTwit.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace MiniTwit.Web.App
 {
@@ -22,7 +23,11 @@ namespace MiniTwit.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<MiniTwitContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); //todo figure out if we need to use connectionstring here
+            services.AddDbContext<MiniTwitContext>(options => {
+                var connection = new SqliteConnection("Datasource=:memory:");
+                connection.Open();
+                var builder = new DbContextOptionsBuilder<MiniTwitContext>().UseSqlite(connection);
+            }); //todo figure out if we need to use connectionstring here
             services.AddIdentity<User, IdentityRole<int>>()
                .AddEntityFrameworkStores<MiniTwitContext>()
                .AddDefaultTokenProviders();
