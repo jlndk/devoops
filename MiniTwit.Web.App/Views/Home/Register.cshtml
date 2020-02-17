@@ -1,38 +1,40 @@
 @model MiniTwit.Web.App.Models.SignUp
 
 @{
-    ViewData["Title"] = "Sign In";
+    ViewData["Title"] = "Sign Up";
 }
 
-<h2>Sign Up</h2>
-@using (Html.BeginForm())
-{
-    var valSummary = @Html.ValidationSummary(true, "Something went wrong");
-    if (valSummary != null && valSummary.ToString() != "")
-    {
-        <div class=error><strong>Error:</strong>@valSummary</div>
-    }
-    <dl>
-        <dt>Username:</dt>
-        <dd>
-            @Html.TextBoxFor(u => u.UserName)
-            @Html.ValidationMessageFor(u => u.UserName)
-        </dd>
-        <dt>E-Mail:</dt>
-        <dd>
-            @Html.TextBoxFor(u => u.Email)
-            @Html.ValidationMessageFor(u => u.Email)
-        </dd>
-        <dt>Password:</dt>
-        <dd>
-            @Html.PasswordFor(u => u.Password)
-            @Html.ValidationMessageFor(u => u.Password)
-        </dd>
-        <dt>Password <small>(repeat)</small>:</dt>
-        <dd>
-            @Html.PasswordFor(u => u.PasswordRepeat)
-            @Html.ValidationMessageFor(u => u.PasswordRepeat)
-        </dd>
-    </dl>
-    <div class=actions><input type=submit value="Sign Up"></div>
+<h2>@ViewData["Title"]</h2>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+            <h4>Create a new account.</h4>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PasswordRepeat"></label>
+                <input asp-for="PasswordRepeat" class="form-control" />
+                <span asp-validation-for="PasswordRepeat" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Register</button>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

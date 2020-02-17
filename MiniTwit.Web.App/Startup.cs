@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiniTwit.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace MiniTwit.Web.App
 {
@@ -26,7 +22,7 @@ namespace MiniTwit.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<MiniTwitContext>(); //todo figure out if we need to use connectionstring here
+            services.AddDbContext<MiniTwitContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))); //todo figure out if we need to use connectionstring here
             services.AddIdentity<User, IdentityRole<int>>()
                .AddEntityFrameworkStores<MiniTwitContext>()
                .AddDefaultTokenProviders();
