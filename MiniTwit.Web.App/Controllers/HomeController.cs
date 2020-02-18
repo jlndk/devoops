@@ -15,7 +15,7 @@ namespace MiniTwit.Web.App.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IMiniTwitContext _context;
 
-        public HomeController(ILogger<HomeController> logger, IMiniTwitContext context)
+        public HomeController(ILogger<HomeController> logger, MiniTwitContext context)
         {
             _logger = logger;
             _context = context;
