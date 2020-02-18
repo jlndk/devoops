@@ -80,7 +80,6 @@ namespace MiniTwit.Models
 
             _context.Messages.Remove(entity);
             await _context.SaveChangesAsync();
-
             return Deleted;
         }
 
