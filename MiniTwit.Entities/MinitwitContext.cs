@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace MiniTwit.Entities
 {
@@ -23,9 +24,10 @@ namespace MiniTwit.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connection = new SqliteConnection("Datasource=:memory:");
-                connection.Open();
-                optionsBuilder.UseSqlite(connection);
+                var builder = new ConfigurationBuilder();
+                var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=MiniTwit;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
