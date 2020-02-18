@@ -20,7 +20,8 @@
                 @("|")
                 <a asp-area="" asp-controller="Home" asp-action="Public_TimeLine">public timeline</a>
                 @("|")
-                <a asp-area="" asp-controller="Home" asp-action="LogOut">sign out @ViewData["username"]</a>
+                
+                <a asp-area="" asp-controller="Account" asp-action="LogOut">Sign out @ViewData["username"]</a>
             }
             else
             {

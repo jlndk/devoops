@@ -13,15 +13,17 @@ namespace MiniTwit.Web.App.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IMiniTwitContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IMiniTwitContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            ViewData["Messages"] = new List<Message> {
+            ViewData["Messages"] = new List<Message> { //todo: Figure out how to import messages from context.
                 new Message
                 {
                     Author = new User
