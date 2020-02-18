@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiniTwit.Web.App.Models
 {
-    public class SignUp : Login
+    public class Register : Login
     {
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
