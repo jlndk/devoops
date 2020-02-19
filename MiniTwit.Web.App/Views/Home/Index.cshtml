@@ -1,21 +1,24 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using System.Linq
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @model MiniTwit.Entities.Message
 @{
     ViewData["Title"] = SignInManager.IsSignedIn(User) ? "Timeline" : "Public Timeline";
+    
 }
 
 <h2>@ViewData["Title"]</h2>
 <div>
     @if (SignInManager.IsSignedIn(User))
     {
+        
         @if (false) @* TODO: user timeline *@
         {
             <div class="followstatus">
                 @if (false) @* TODO: current user is page user *@
                 {
-                    <span>This is you!</span>
+                    <span>This is you, @User.Identity.Name!</span>
                 }
                 else if (false) @* TODO: user is following *@ 
                 {
@@ -46,11 +49,11 @@
     }
     <ul class="messages">
         @{
-            var messages = (IList<Message>)ViewData["Messages"];
+            var messages = ((IEnumerable<Message>)ViewData["Messages"]).ToList();
         }
-        @if (messages.Count > 0)
+        @if (!messages.Any())
         {
-            @foreach (Message msg in (IList<Message>)ViewData["Messages"])
+            @foreach (Message msg in messages)
             {
                 <li>
                     <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48" /> <!--TODO remember to softcode-->
