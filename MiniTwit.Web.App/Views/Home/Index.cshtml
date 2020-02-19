@@ -1,9 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Public Timeline";
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@model MiniTwit.Entities.Message
+@{
+    ViewData["Title"] = SignInManager.IsSignedIn(User) ? "Timeline" : "Public Timeline";
 }
 
 <h2>@ViewData["Title"]</h2>
 <div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (false) @* TODO: user timeline *@
+        {
+            <div class="followstatus">
+                @if (false) @* TODO: current user is page user *@
+                {
+                    <span>This is you!</span>
+                }
+                else if (false) @* TODO: user is following *@ 
+                {
+                    <span>You are currently following this user.</span>
+                    @* TODO: This link should point at the unfollow 
+                             hook in a controller *@
+                    <a class="unfollow" href="#">Unfollow user</a>
+                }
+                else
+                {
+                    <span>You are not yet following this user.</span>
+                    @* TODO: This link should point at the follow 
+                             hook in a controller *@
+                    <a class="follow" href="#">Unfollow user</a>
+                }
+            </div>
+        } 
+        else if (false) @* TODO: timeline *@
+        {
+            <div class="twitbox">
+                <h3>What's on your mind @* TODO: @ViewData["UserName"] *@?</h3>
+                <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <p /><input asp-for="Text" size="60" /><!--
+                      --><input type="submit" value="share" />
+                </form>
+            </div>
+        }
+    }
     <ul class="messages">
         @{
             var messages = (IList<Message>)ViewData["Messages"];

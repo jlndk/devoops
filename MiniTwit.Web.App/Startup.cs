@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using MiniTwit.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using MiniTwit.Models;
 
 namespace MiniTwit.Web.App
 {
@@ -23,14 +24,21 @@ namespace MiniTwit.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<MiniTwitContext>(options => {
-                var connection = new SqliteConnection("Datasource=:memory:");
-                connection.Open();
-                var builder = new DbContextOptionsBuilder<MiniTwitContext>().UseSqlite(connection);
-            }); //todo figure out if we need to use connectionstring here
-            services.AddIdentity<User, IdentityRole<int>>()
-               .AddEntityFrameworkStores<MiniTwitContext>()
-               .AddDefaultTokenProviders();
+            services.AddDbContext<MiniTwitContext>();
+            services.AddScoped<IMiniTwitContext>(provider => provider.GetService<MiniTwitContext>());
+            services.AddIdentity<User, IdentityRole<int>>(options =>
+                {
+                    options.Lockout.MaxFailedAccessAttempts = 1000;
+                    //perhaps we should reenable these at some point, or maybe just find a way to only disable them during development.
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 1;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                })
+                .AddEntityFrameworkStores<MiniTwitContext>()
+                .AddDefaultTokenProviders();
+            services.AddScoped<IMessageRepository, MessageRepository>(); //todo: this should perhaps be something other than scoped
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
