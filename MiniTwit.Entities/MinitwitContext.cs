@@ -25,9 +25,9 @@ namespace MiniTwit.Entities
             if (!optionsBuilder.IsConfigured)
             {
                 var builder = new ConfigurationBuilder();
-                var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=MiniTwit;Trusted_Connection=True;MultipleActiveResultSets=true;User ID=WHEATLEYV2\Jakob Israelsen;";
+                var connectionString = @"Host=127.0.0.1;Database=MiniTwit;Username=postgres;Password=test";
 
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseNpgsql(connectionString);
             }
         }
 

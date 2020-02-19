@@ -143,6 +143,16 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }*/
 
+        public IActionResult LogIn()
+        {
+            return View();
+        }
+        
+        public IActionResult Register()
+        {
+            return View();
+        }
+        
         [Route("/logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]
