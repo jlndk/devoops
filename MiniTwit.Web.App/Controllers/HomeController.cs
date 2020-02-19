@@ -31,12 +31,28 @@ namespace MiniTwit.Web.App.Controllers
         }
 
         [Route("/user/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
             ViewData["ViewedUserId"] = id.ToString();
             ViewData["ViewedUserName"] = (await _userRepository.ReadAsync(id)).UserName;
             ViewData["Messages"] = await _messageRepository.ReadAsync(id);
             return View();
+        }
+
+        [Route("/msgs/{id}")]
+        [HttpPost]
+        public async Task<IActionResult> PostMessage(Message model, string id, string returnUrl = null) 
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            int actualId = 0;
+            if (!Int32.TryParse(id, out actualId)) return View(model);
+            model.AuthorId = actualId;
+            model.Author = await _userRepository.ReadAsync(actualId);
+
+            var (result, messageId) = await _messageRepository.CreateAsync(model);
+
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

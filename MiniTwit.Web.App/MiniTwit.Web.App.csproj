@@ -23,10 +23,6 @@
     <ProjectReference Include="..\MiniTwit.Models\MiniTwit.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-  </ItemGroup>
+  
 
 </Project>
