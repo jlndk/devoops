@@ -1,0 +1,13 @@
+version: '3'
+services:
+    database:
+        build: ./DatabaseDocker/
+        ports:
+            - "5432:5432"
+    webapp:
+        build: .
+        ports:
+            - "5001:5001"
+            - "5000:5000"
+            - "80:80"
+            - "443:443"
