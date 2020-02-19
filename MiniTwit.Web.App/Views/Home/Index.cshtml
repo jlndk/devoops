@@ -52,7 +52,7 @@
         }
         @if (!messages.Any())
         {
-            @foreach (Message msg in (IList<Message>)ViewData["Messages"])
+            @foreach (Message msg in messages)
             {
                 <li>
                     <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48" /> <!--TODO remember to softcode-->
