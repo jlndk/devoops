@@ -30,7 +30,7 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
-        [Route("/[user]/{id}")]
+        [Route("/user/{id}")]
         public async Task<IActionResult> Index(int id)
         {
             ViewData["ViewedUserId"] = id.ToString();
