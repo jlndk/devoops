@@ -14,17 +14,28 @@ namespace MiniTwit.Web.App.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IMessageRepository _repository;
+        private readonly IMessageRepository _messageRepository;
+        private readonly IUserRepository _userRepository;
+        
 
-        public HomeController(ILogger<HomeController> logger, IMessageRepository repository)
+        public HomeController(ILogger<HomeController> logger, IMessageRepository messageRepository, IUserRepository userRepository)
         {
             _logger = logger;
-            _repository = repository;
+            _messageRepository = messageRepository;
+            _userRepository = userRepository;
         }
-
         public async Task<IActionResult> Index()
         {
-            ViewData["Messages"] = await _repository.ReadAsync();
+            ViewData["Messages"] = await _messageRepository.ReadAsync();
+            return View();
+        }
+
+        [Route("/[user]/{id}")]
+        public async Task<IActionResult> Index(int id)
+        {
+            ViewData["ViewedUserId"] = id.ToString();
+            ViewData["ViewedUserName"] = (await _userRepository.ReadAsync(id)).UserName;
+            ViewData["Messages"] = await _messageRepository.ReadAsync(id);
             return View();
         }
 

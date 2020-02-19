@@ -8,7 +8,7 @@ namespace MiniTwit.Entities
         public int Id { get; set;}
         public int AuthorId { get; set;}
         [Required]
-        public User Author { get; set; }
+        public User Author { get; set;}
         [Required]
         public string Text { get; set;} 
         public int PubDate { get; set;}

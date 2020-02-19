@@ -1,22 +1,23 @@
 ﻿@using System.Linq
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @model MiniTwit.Entities.Message
 @{
     ViewData["Title"] = SignInManager.IsSignedIn(User) ? "Timeline" : "Public Timeline";
-    
 }
 
 <h2>@ViewData["Title"]</h2>
 <div>
     @if (SignInManager.IsSignedIn(User))
     {
-        
-        @if (false) @* TODO: user timeline *@
+        var userid = UserManager.GetUserId(User);
+        var viewedUserId = (string) ViewData["ViewedUserId"];
+        if (viewedUserId != null) @* TODO: user timeline *@
         {
             <div class="followstatus">
-                @if (false) @* TODO: current user is page user *@
+                @if (userid == viewedUserId) @* TODO: current user is page user *@
                 {
                     <span>This is you, @User.Identity.Name!</span>
                 }
