@@ -67,6 +67,9 @@ namespace MiniTwit.Web.App
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            scope.ServiceProvider.GetService<MiniTwitContext>().Database.Migrate();
         }
     }
 }

@@ -20,7 +20,9 @@ namespace MiniTwit.Web.App
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .UseUrls("http://*:80")
+                    .UseStartup<Startup>();
                 });
     }
 }
