@@ -24,7 +24,8 @@ namespace MiniTwit.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<IMiniTwitContext, MiniTwitContext>();    
+            services.AddDbContext<MiniTwitContext>();
+            services.AddScoped<IMiniTwitContext>(provider => provider.GetService<MiniTwitContext>());
             services.AddIdentity<User, IdentityRole<int>>(options =>
                 {
                     options.Lockout.MaxFailedAccessAttempts = 1000;
