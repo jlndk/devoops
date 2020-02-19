@@ -54,6 +54,7 @@ namespace MiniTwit.Web.App.Controllers
 
         #endregion
 
+        [Route("/register")]
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
@@ -62,6 +63,7 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
+        [Route("/register")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -89,6 +91,7 @@ namespace MiniTwit.Web.App.Controllers
             return View(model);
         }
 
+        [Route("/login")]
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
@@ -100,6 +103,7 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
+        [Route("/login")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -131,6 +135,8 @@ namespace MiniTwit.Web.App.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+        [Route("/logout")]
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -138,6 +144,7 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
+        [Route("/logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
