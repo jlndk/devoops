@@ -49,11 +49,11 @@
     }
     <ul class="messages">
         @{
-            var messages = (IEnumerable<Message>)ViewData["Messages"];
+            var messages = ((IEnumerable<Message>)ViewData["Messages"]).ToList();
         }
         @if (!messages.Any())
         {
-            @foreach (Message msg in (IEnumerable<Message>)ViewData["Messages"])
+            @foreach (Message msg in messages)
             {
                 <li>
                     <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48" /> <!--TODO remember to softcode-->
