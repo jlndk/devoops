@@ -24,23 +24,20 @@ namespace MiniTwit.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<IMiniTwitContext, MiniTwitContext>(options => {
-                var connection = new SqliteConnection("Datasource=:memory:");
-                connection.Open();
-                var builder = new DbContextOptionsBuilder<MiniTwitContext>().UseSqlite(connection);
-            });    
+            services.AddDbContext<IMiniTwitContext, MiniTwitContext>();    
             services.AddIdentity<User, IdentityRole<int>>(options =>
-                    {
-                        //perhaps we should reenable these at some point, or maybe just find a way to only disable them during development.
-                        options.Password.RequireNonAlphanumeric = false;
-                        options.Password.RequireDigit = false;
-                        options.Password.RequiredLength = 1;
-                        options.Password.RequireLowercase = false;
-                        options.Password.RequireUppercase = false;
-                    })
+                {
+                    options.Lockout.MaxFailedAccessAttempts = 1000;
+                    //perhaps we should reenable these at some point, or maybe just find a way to only disable them during development.
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 1;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                })
                 .AddEntityFrameworkStores<MiniTwitContext>()
                 .AddDefaultTokenProviders();
-            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>(); //todo: this should perhaps be something other than scoped
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
