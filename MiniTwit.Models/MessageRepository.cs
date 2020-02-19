@@ -34,6 +34,15 @@ namespace MiniTwit.Models
             return await query.ToListAsync();
         }
 
+        public async Task<IEnumerable<Message>> ReadCountAsync(int count)
+        {
+            var query = from m in _context.Messages
+                orderby m.Id
+                select m;
+
+            return await query.Take(count).ToListAsync();
+        }
+
         public async Task<Message> ReadAsync(int messageId)
         {
             var messages = from m in _context.Messages
