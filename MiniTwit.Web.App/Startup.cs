@@ -28,7 +28,7 @@ namespace MiniTwit.Web.App
                 var connection = new SqliteConnection("Datasource=:memory:");
                 connection.Open();
                 var builder = new DbContextOptionsBuilder<MiniTwitContext>().UseSqlite(connection);
-            }); //todo figure out if we need to use connectionstring here
+            });    
             services.AddIdentity<User, IdentityRole<int>>(options =>
                     {
                         //perhaps we should reenable these at some point, or maybe just find a way to only disable them during development.
