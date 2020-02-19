@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MiniTwit.Entities\MiniTwit.Entities.csproj" />
+    <ProjectReference Include="..\MiniTwit.Models\MiniTwit.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

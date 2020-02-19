@@ -10,6 +10,7 @@ using MiniTwit.Entities;
 using Microsoft.AspNetCore.Authorization;
 using MiniTwit.Web.App.Models;
 using Microsoft.AspNetCore.Authentication;
+using MiniTwit.Models;
 
 namespace MiniTwit.Web.App.Controllers
 {
@@ -18,18 +19,18 @@ namespace MiniTwit.Web.App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger _logger;
-        private readonly MiniTwitContext _context;
+        private readonly IMessageRepository _repository;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             ILogger<AccountController> logger,
-            MiniTwitContext context)
+            IMessageRepository repository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _context = context;
+            _repository = repository;
         }
 
 
