@@ -4,6 +4,7 @@ namespace MiniTwit.Web.App.Models
 {
     public class Login
     {
+        [Required]
         public string UserName { get; set; }
  
         [Required]
