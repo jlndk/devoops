@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using System.Linq
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @model MiniTwit.Entities.Message
@@ -46,11 +47,11 @@
     }
     <ul class="messages">
         @{
-            var messages = (IList<Message>)ViewData["Messages"];
+            var messages = (IEnumerable<Message>)ViewData["Messages"];
         }
-        @if (messages.Count > 0)
+        @if (messages.Count() > 0)
         {
-            @foreach (Message msg in (IList<Message>)ViewData["Messages"])
+            @foreach (Message msg in (IEnumerable<Message>)ViewData["Messages"])
             {
                 <li>
                     <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48" /> <!--TODO remember to softcode-->
