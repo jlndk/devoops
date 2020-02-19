@@ -22,9 +22,9 @@ namespace MiniTwit.Web.App.Controllers
             _repository = repository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            ViewData["Messages"] = _repository.ReadAsync();
+            ViewData["Messages"] = await _repository.ReadAsync();
             return View();
         }
 

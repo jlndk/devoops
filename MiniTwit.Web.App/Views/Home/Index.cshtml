@@ -4,18 +4,20 @@
 @model MiniTwit.Entities.Message
 @{
     ViewData["Title"] = SignInManager.IsSignedIn(User) ? "Timeline" : "Public Timeline";
+    
 }
 
 <h2>@ViewData["Title"]</h2>
 <div>
     @if (SignInManager.IsSignedIn(User))
     {
+        
         @if (false) @* TODO: user timeline *@
         {
             <div class="followstatus">
                 @if (false) @* TODO: current user is page user *@
                 {
-                    <span>This is you!</span>
+                    <span>This is you, @User.Identity.Name!</span>
                 }
                 else if (false) @* TODO: user is following *@ 
                 {
@@ -46,9 +48,9 @@
     }
     <ul class="messages">
         @{
-            var messages = (IList<Message>)ViewData["Messages"];
+            var messages = (IEnumerable<Message>)ViewData["Messages"];
         }
-        @if (messages.Count > 0)
+        @if (!messages.Any())
         {
             @foreach (Message msg in (IList<Message>)ViewData["Messages"])
             {
