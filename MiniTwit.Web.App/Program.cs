@@ -13,7 +13,6 @@ namespace MiniTwit.Web.App
     {
         public static void Main(string[] args)
         {
-            System.Console.WriteLine("------------------ VERSION 1 ------------------");
             CreateHostBuilder(args).Build().Run();
         }
 
