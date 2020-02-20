@@ -25,9 +25,9 @@ namespace MiniTwit.Entities
             if (!optionsBuilder.IsConfigured)
             {
                 var builder = new ConfigurationBuilder();
-                var connectionString = @"Host=127.0.0.1;Database=MiniTwit;Username=postgres;Password=test";
+                var connectionString = @"Host=database;Database=MiniTwit;Username=postgres;Password=test";
 
-                optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("MiniTwit.Web.App"));
+                optionsBuilder.UseNpgsql(connectionString);
             }
         }
 
