@@ -89,7 +89,7 @@ Options:
             var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                Console.WriteLine($"{reader["message_id"]}, {reader["author_id"]}, {reader["text"]}, {reader["flagged"]}");
+                Console.WriteLine($"{reader["message_id"]},{reader["author_id"]},{reader["text"]},{reader["flagged"]}");
             }
         }
 
