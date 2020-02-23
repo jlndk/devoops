@@ -20,7 +20,10 @@
                 @*<a asp-area="" asp-controller="Home" asp-action="Public_TimeLine">public timeline</a>
                 @("|")*@
 
-            <a asp-area="" asp-controller="Account" asp-action="LogOut">Sign out @ViewData["username"]</a>
+
+            <form method="post" asp-area="" asp-controller="Account" asp-action="LogOut">
+                <input type="submit" value="Logout"/>
+            </form>
         }
         else
         {
