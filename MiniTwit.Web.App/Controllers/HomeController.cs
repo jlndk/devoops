@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,17 +41,17 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
-        [Route("/msgs/{id}")]
+        // THIS SHOULD PROBALY NOT BE HERE. [Route("/msgs/{id}")] 
         [HttpPost]
-        public async Task<IActionResult> PostMessage(Message model, string id, string returnUrl = null) 
+        public async Task<IActionResult> PostMessage(Message message, string returnUrl = null) 
         {
             ViewData["ReturnUrl"] = returnUrl;
-            int actualId = 0;
-            if (!Int32.TryParse(id, out actualId)) return View(model);
-            model.AuthorId = actualId;
-            model.Author = await _userRepository.ReadAsync(actualId);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Int32.TryParse(userId, out var actualId)) return View("Index");
+            message.AuthorId = actualId;
+            message.Author = await _userRepository.ReadAsync(actualId);
 
-            var (result, messageId) = await _messageRepository.CreateAsync(model);
+            var (result, messageId) = await _messageRepository.CreateAsync(message);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

@@ -29,7 +29,16 @@ namespace MiniTwit.Models
         {
             var query = from m in _context.Messages
                         orderby m.Id
-                        select m;
+                        join user in _context.Users on m.AuthorId equals user.Id
+                        select new Message()
+                        {
+                            Author = user,
+                            AuthorId = user.Id,
+                            Flagged = m.Flagged,
+                            Id = m.Id,
+                            PubDate = m.PubDate,
+                            Text = m.Text
+                        };
 
             return await query.ToListAsync();
         }
@@ -38,7 +47,16 @@ namespace MiniTwit.Models
         {
             var query = from m in _context.Messages
                 orderby m.Id
-                select m;
+                join user in _context.Users on m.AuthorId equals user.Id
+                select new Message()
+                {
+                    Author = user,
+                    AuthorId = user.Id,
+                    Flagged = m.Flagged,
+                    Id = m.Id,
+                    PubDate = m.PubDate,
+                    Text = m.Text
+                };
 
             return await query.Take(count).ToListAsync();
         }
@@ -47,7 +65,16 @@ namespace MiniTwit.Models
         {
             var messages = from m in _context.Messages
                         where m.Id == messageId
-                        select m;
+                        join user in _context.Users on m.AuthorId equals user.Id
+                        select new Message()
+                        {
+                            Author = user,
+                            AuthorId = user.Id,
+                            Flagged = m.Flagged,
+                            Id = m.Id,
+                            PubDate = m.PubDate,
+                            Text = m.Text
+                        };
 
             return await messages.FirstOrDefaultAsync();
         }
@@ -56,7 +83,16 @@ namespace MiniTwit.Models
         {
             var messages = from m in _context.Messages
                            where m.AuthorId == userId
-                           select m;
+                           join user in _context.Users on m.AuthorId equals user.Id
+                           select new Message()
+                           {
+                               Author = user,
+                               AuthorId = user.Id,
+                               Flagged = m.Flagged,
+                               Id = m.Id,
+                               PubDate = m.PubDate,
+                               Text = m.Text
+                           };
 
             return await messages.ToListAsync();
         }
