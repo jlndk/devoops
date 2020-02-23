@@ -29,8 +29,8 @@ namespace MiniTwit.Models
         {
             var query = from m in _context.Messages
                 where m.Flagged <= 0
-                        orderby m.Pubdate
-                        select m;
+                orderby m.Pubdate
+                select m;
 
             return await query.ToListAsync();
         }
@@ -48,8 +48,9 @@ namespace MiniTwit.Models
         public async Task<Message> ReadAsync(int messageId)
         {
             var messages = from m in _context.Messages
-                        where m.Id == messageId
-                        select m;
+                where m.Flagged <= 0
+                where m.Id == messageId
+                select m;
 
             return await messages.FirstOrDefaultAsync();
         }
@@ -57,9 +58,10 @@ namespace MiniTwit.Models
         public async Task<List<Message>> ReadAllMessagesFromUserAsync(int userId)
         {
             var messages = from m in _context.Messages
-                           where m.AuthorId == userId
-                           select m;
-
+                where m.Flagged <= 0
+                where m.AuthorId == userId
+                orderby m.Pubdate
+                select m;
             return await messages.ToListAsync();
         }
 
