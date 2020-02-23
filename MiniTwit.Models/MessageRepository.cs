@@ -66,7 +66,7 @@ namespace MiniTwit.Models
         {
             var messages = 
                 from m in _context.Messages
-                where m.Id == messageId
+                where m.Id == messageId && m.Flagged <= 0
                 join user in _context.Users on m.AuthorId equals user.Id
                 select new Message
                 {
