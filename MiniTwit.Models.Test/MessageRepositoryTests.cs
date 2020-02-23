@@ -1,10 +1,12 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MiniTwit.Entities;
 using Xunit;
+using Xunit.Abstractions;
 using static MiniTwit.Models.Tests.Utility;
 using static MiniTwit.Models.Tests.MiniTwitTestContext;
 
@@ -12,36 +14,67 @@ namespace MiniTwit.Models.Tests
 {
     public class MessageRepositoryTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+        private readonly MiniTwitTestContext _context;
+        private readonly UserRepository _userRepository;
+        private readonly MessageRepository _messageRepository;
+
+        public MessageRepositoryTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+            _context = CreateMiniTwitContext();
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
+            _userRepository = new UserRepository(_context);
+            _messageRepository = new MessageRepository(_context);
+        }
 
         
 
         [Fact]
         public async Task Message_Is_Created_Succesfully()
         {
-            MiniTwitContext context = CreateMiniTwitContext();
-            MessageRepository repo = new MessageRepository(context);
-            var userRepo = new UserRepository(context);
-            await Add_dummy_data(userRepo);
-            (_, int id) = await userRepo.CreateAsync(new User() {UserName ="Test", Email="qwfqwf@qdqw.qwf"});
+            await Add_dummy_data(_userRepository, _messageRepository);
+            (_, int id) = await _userRepository.CreateAsync(new User() {UserName ="Test", Email="qwfqwf@qdqw.qwf"});
 
-            var result = await repo.CreateAsync(new Message() { Text ="qwdqg", AuthorId=id});
+            var (response, messageId) = await _messageRepository.CreateAsync(new Message() { Text ="qwdqg", AuthorId=id});
 
-            Assert.Equal(Response.Created, result.response);
-            Assert.Equal(1, result.messageId);
+            Assert.Equal(Response.Created, response);
+            Assert.Equal(12, messageId); //todo should probably find a way to figure out expected that doesn't break when dummydata is created.
 
         }
 
        [Fact]
         public async Task Message_without_author_fails()
         {
-            MiniTwitContext context = CreateMiniTwitContext();
-            MessageRepository repo = new MessageRepository(context);
-            await Add_dummy_data(new UserRepository(context));
-
-            await Assert.ThrowsAsync<DbUpdateException>(() => repo.CreateAsync(new Message() { Text ="qwdqg"}));
+            await Assert.ThrowsAsync<DbUpdateException>(() => _messageRepository.CreateAsync(new Message() { Text ="qwdqg"}));
 
         }
-       
 
+        [Fact]
+        public async Task Read_messages_in_pubDate_order()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadAsync();
+            DateTime prev = DateTime.MinValue;
+            foreach (var message in result)
+            {
+                Assert.True(DateTime.Compare(prev, message.PubDate) < 0);
+                _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
+                prev = message.PubDate;
+            
+            }
+        }
+       
+        [Fact]
+        public async Task Read_messages_contains_no_flagged()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadAsync();
+            foreach (var message in result)
+            {
+                Assert.True(message.Flagged <= 0);
+            }
+        }
     }
 }
