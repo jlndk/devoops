@@ -40,7 +40,7 @@ namespace MiniTwit.Models.Tests
             var (response, messageId) = await _messageRepository.CreateAsync(new Message() { Text ="qwdqg", AuthorId=id});
 
             Assert.Equal(Response.Created, response);
-            Assert.Equal(10, messageId); //todo should probably find a way to figure out expected that doesn't break when dummydata is created.
+            Assert.Equal(12, messageId); //todo should probably find a way to figure out expected that doesn't break when dummydata is created.
 
         }
 
@@ -66,6 +66,15 @@ namespace MiniTwit.Models.Tests
             }
         }
        
-
+        [Fact]
+        public async Task Read_messages_contains_no_flagged()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadAsync();
+            foreach (var message in result)
+            {
+                Assert.True(message.Flagged <= 0);
+            }
+        }
     }
 }

@@ -36,6 +36,14 @@ namespace MiniTwit.Models.Tests
                 Text = "waddup"
             };
             await messageRepository.CreateAsync(extraMessage);
+            var extraMessage2 = new Message
+            {
+                Author = extrauser,
+                Pubdate = new DateTime(2018, 1, 2),
+                Text = "waddup",
+                Flagged = 1
+            };
+            await messageRepository.CreateAsync(extraMessage2);
         }
     }
 }

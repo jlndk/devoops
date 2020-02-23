@@ -28,7 +28,8 @@ namespace MiniTwit.Models
         public async Task<IEnumerable<Message>> ReadAsync()
         {
             var query = from m in _context.Messages
-                        orderby m.Id
+                where m.Flagged <= 0
+                        orderby m.Pubdate
                         select m;
 
             return await query.ToListAsync();
@@ -37,7 +38,8 @@ namespace MiniTwit.Models
         public async Task<IEnumerable<Message>> ReadCountAsync(int count)
         {
             var query = from m in _context.Messages
-                orderby m.Id
+                where m.Flagged <= 0
+                orderby m.Pubdate
                 select m;
 
             return await query.Take(count).ToListAsync();
