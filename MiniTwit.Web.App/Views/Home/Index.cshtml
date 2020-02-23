@@ -1,9 +1,7 @@
-﻿@using System.Linq
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<User> SignInManager
+﻿@inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
-@model MiniTwit.Entities.Message
+@using Microsoft.AspNetCore.Identity
+@model Message
 @{
     ViewData["Title"] = SignInManager.IsSignedIn(User) ? "Timeline" : "Public Timeline";
 }
@@ -21,7 +19,7 @@
                 {
                     <span>This is you, @User.Identity.Name!</span>
                 }
-                else if (false) @* TODO: user is following *@ 
+                else if (false) @* TODO: user is following *@
                 {
                     <span>You are currently following this user.</span>
                     @* TODO: This link should point at the unfollow 
@@ -36,34 +34,33 @@
                     <a class="follow" href="#">Unfollow user</a>
                 }
             </div>
-        } 
-        else 
+        }
+        else
         {
             <div class="twitbox">
                 <h3>What's on your mind @* TODO: @ViewData["UserName"] *@?</h3>
-                <form 
-                    asp-route-returnurl="@ViewData["ReturnUrl"]" 
-                    method="post" 
+                <form
+                    asp-route-returnurl="@ViewData["ReturnUrl"]"
+                    method="post"
                     asp-area=""
                     asp-controller="Home"
-                    asp-action="PostMessage"
-                >
-                    <p /><input asp-for="Text" size="60" /><!--
-                      --><input type="submit" value="share" />
+                    asp-action="PostMessage">
+                    <p/><input asp-for="Text" size="60"/><!--
+                    --><input type="submit" value="share"/>
                 </form>
             </div>
         }
     }
     <ul class="messages">
         @{
-            var messages = ((IEnumerable<Message>)ViewData["Messages"]).ToList();
+            var messages = ((IEnumerable<Message>) ViewData["Messages"]).ToList();
         }
         @if (messages.Any())
         {
-            @foreach (Message msg in messages)
+            @foreach (var msg in messages)
             {
                 <li>
-                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48" /> <!--TODO remember to softcode-->
+                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48"/> <!--TODO remember to softcode-->
                     <strong>
                         <a href="#">@msg.Author.UserName</a>
                     </strong>
@@ -76,7 +73,9 @@
         }
         else
         {
-            <li><em>There's no message so far.</em></li>
+            <li>
+                <em>There's no message so far.</em>
+            </li>
         }
 
     </ul>

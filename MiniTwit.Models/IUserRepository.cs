@@ -1,6 +1,6 @@
-﻿using MiniTwit.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MiniTwit.Entities;
 
 namespace MiniTwit.Models
 {
@@ -13,4 +13,3 @@ namespace MiniTwit.Models
         Task<Response> DeleteAsync(int userId, bool force = false);
     }
 }
-    

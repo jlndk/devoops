@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "flagtool", "MiniTwit.FlagTool.App\flagtool.csproj", "{D6A871FB-22BF-47F9-A19D-2D5027B176F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.FlagTool", "MiniTwit.FlagTool\MiniTwit.FlagTool.csproj", "{D6A871FB-22BF-47F9-A19D-2D5027B176F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.FlagTool.Tests", "MiniTwit.FlagTool.Tests\MiniTwit.FlagTool.Tests.csproj", "{5C9B748E-4463-40C9-BC54-BC4B57DF2231}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Entities.Test", "MiniTwit.Entities.Test\MiniTwit.Entities.Test.csproj", "{C7539665-D53C-4AEF-96CD-0F88EAFD0CED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Models.Tests", "MiniTwit.Models.Test\MiniTwit.Models.Tests.csproj", "{947F0782-FF1C-42AC-9047-5C084C547B9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTwit.Utils", "MiniTwit.Utils\MiniTwit.Utils.csproj", "{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,18 @@ Global
 		{947F0782-FF1C-42AC-9047-5C084C547B9F}.Release|x64.Build.0 = Release|Any CPU
 		{947F0782-FF1C-42AC-9047-5C084C547B9F}.Release|x86.ActiveCfg = Release|Any CPU
 		{947F0782-FF1C-42AC-9047-5C084C547B9F}.Release|x86.Build.0 = Release|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Debug|x64.Build.0 = Debug|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Debug|x86.Build.0 = Debug|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Release|x64.Build.0 = Release|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Release|x86.ActiveCfg = Release|Any CPU
+		{5B22EF11-EAA8-4AAA-9160-ABB8D387427C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

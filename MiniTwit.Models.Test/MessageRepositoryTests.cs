@@ -32,23 +32,29 @@ namespace MiniTwit.Models.Tests
         
 
         [Fact]
-        public async Task Message_Is_Created_Succesfully()
+        public async Task Message_Is_Created_Successfully()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            (_, int id) = await _userRepository.CreateAsync(new User() {UserName ="Test", Email="qwfqwf@qdqw.qwf"});
+            var (_, id) = await _userRepository.CreateAsync(new User() {UserName ="Test", Email="qwfqwf@qdqw.qwf"});
 
-            var (response, messageId) = await _messageRepository.CreateAsync(new Message() { Text ="qwdqg", AuthorId=id});
+            var (response, messageId) = await _messageRepository.CreateAsync(new Message
+            {
+                Text ="qwdqg", AuthorId=id
+            });
 
             Assert.Equal(Response.Created, response);
-            Assert.Equal(12, messageId); //todo should probably find a way to figure out expected that doesn't break when dummydata is created.
+            // TODO: should probably find a way to figure out expected that doesn't break when dummy data is created.
+            Assert.Equal(12, messageId);
 
         }
 
        [Fact]
         public async Task Message_without_author_fails()
         {
-            await Assert.ThrowsAsync<DbUpdateException>(() => _messageRepository.CreateAsync(new Message() { Text ="qwdqg"}));
-
+            await Assert.ThrowsAsync<DbUpdateException>(() =>
+            {
+                return _messageRepository.CreateAsync(new Message {Text = "qwdqg"});
+            });
         }
 
         [Fact]

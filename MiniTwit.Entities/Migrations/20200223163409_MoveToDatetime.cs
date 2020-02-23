@@ -9,7 +9,7 @@ namespace MiniTwit.Entities.Migrations
         {
             migrationBuilder.Sql(
                 "ALTER TABLE \"Messages\" ALTER COLUMN \"PubDate\" TYPE timestamp without time zone USING to_timestamp(\"PubDate\")"
-                );
+            );
             
        
         }
