@@ -22,6 +22,7 @@ namespace MiniTwit.Models
             {
                 return (Conflict, 0);
             }
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return (Created, user.Id);
@@ -29,7 +30,7 @@ namespace MiniTwit.Models
 
         public async Task<IEnumerable<User>> ReadAsync()
         {
-            var query = 
+            var query =
                 from u in _context.Users
                 orderby u.UserName
                 select u;
@@ -38,7 +39,7 @@ namespace MiniTwit.Models
 
         public async Task<User> ReadAsync(int userId)
         {
-            var users = 
+            var users =
                 from u in _context.Users
                 where u.Id == userId
                 select u;
@@ -52,10 +53,12 @@ namespace MiniTwit.Models
             {
                 return NotFound;
             }
+
             if (await UserExists(user.Id, user.Email))
             {
                 return Conflict;
             }
+
             entity.UserName = user.UserName;
             entity.Email = user.Email;
             await _context.SaveChangesAsync();
@@ -69,6 +72,7 @@ namespace MiniTwit.Models
             {
                 return NotFound;
             }
+
             _context.Users.Remove(entity);
             await _context.SaveChangesAsync();
             return Deleted;
@@ -77,6 +81,17 @@ namespace MiniTwit.Models
         private async Task<bool> UserExists(int userId, string emailAddress)
         {
             return await _context.Users.AnyAsync(u => u.Id != userId && u.Email == emailAddress);
+        }
+
+        public async Task AddFollowerAsync(int followerId, int followeeId)
+        {
+            _context.Follows.Add(new Follows
+            {
+                FollowerId = followerId,
+                FolloweeId = followeeId
+            });
+
+            await _context.SaveChangesAsync();
         }
     }
 }
