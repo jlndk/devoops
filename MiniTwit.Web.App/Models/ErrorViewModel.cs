@@ -1,5 +1,3 @@
-using System;
-
 namespace MiniTwit.Web.App.Models
 {
     public class ErrorViewModel

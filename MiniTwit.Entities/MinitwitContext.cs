@@ -1,38 +1,33 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+using MiniTwit.Utils;
 
 namespace MiniTwit.Entities
 {
     public class MiniTwitContext : IdentityDbContext<User, IdentityRole<int>, int>, IMiniTwitContext
     {
+        public MiniTwitContext(DbContextOptions<MiniTwitContext> options) : base(options) {}
+
         public DbSet<Message> Messages { get; set; }
-
-        public MiniTwitContext(DbContextOptions<MiniTwitContext> options)
-            : base(options)
-        {
-        }
-
-        public MiniTwitContext() : base()
-        {
-
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+            if (optionsBuilder.IsConfigured)
             {
-                var builder = new ConfigurationBuilder();
-                var connectionString = @"Host=database;Database=MiniTwit;Username=postgres;Password=test";
-
-                optionsBuilder.UseNpgsql(connectionString);
+                return;
             }
+
+            var connectionString = Misc.IsDevelopment()
+                ? @"Host=localhost;Database=MiniTwit;Username=postgres;Password=test"
+                : @"Host=database;Database=MiniTwit;Username=postgres;Password=test";
+
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseIdentityColumns();
             base.OnModelCreating(modelBuilder);
         }
     }

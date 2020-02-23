@@ -19,6 +19,7 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+mono_crash.mem.*
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

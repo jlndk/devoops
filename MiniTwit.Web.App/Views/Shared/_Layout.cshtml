@@ -4,58 +4,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] @("|") MiniTwit</title>
-    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/site.css"/>
 </head>
 <body>
-    <div class="page">
-        <h1>MiniTwit</h1>
-        <div class="navigation">
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <a asp-area="" asp-controller="Home" asp-action="Index">my timeline</a>
-                @("|")
+<div class="page">
+    <h1>MiniTwit</h1>
+    <div class="navigation">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-area="" asp-controller="Home" asp-action="Index">my timeline</a>
+            @("|")
                 @*<a asp-area="" asp-controller="Home" asp-action="Public_TimeLine">public timeline</a>
                 @("|")*@
-                
-                <a asp-area="" asp-controller="Account" asp-action="LogOut">Sign out @ViewData["username"]</a>
-            }
-            else
-            {
-                <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
-                @("|")
-                <a asp-area="" asp-controller="Account" asp-action="Register">sign up</a>
-                @("|")
-                <a asp-area="" asp-controller="Account" asp-action="LogIn">sign in</a>
-            }
-        </div>
-        @*
+
+            <a asp-area="" asp-controller="Account" asp-action="LogOut">Sign out @ViewData["username"]</a>
+        }
+        else
+        {
+            <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
+            @("|")
+            <a asp-area="" asp-controller="Account" asp-action="Register">sign up</a>
+            @("|")
+            <a asp-area="" asp-controller="Account" asp-action="LogIn">sign in</a>
+        }
+    </div>
+    @*
             Should be replaced with a resource via "using"
             Translated from:
             {% with flashes = get_flashed_messages() %}
             {% endwith %}
         *@
-        @if (ViewData["flashes"] != null)
-        {
-            <ul class="flashes">
-                @foreach (var flash in (IEnumerable<string>)ViewData["flashes"])
-                {
-                    <li>@flash</li>
-                }
-            </ul>
-        }
-        <div class="body">
-            @RenderBody()
-        </div>
-        <div class="footer">
-            MiniTwit &mdash; A C# Application
-        </div>
+    @if (ViewData["flashes"] != null)
+    {
+        <ul class="flashes">
+            @foreach (var flash in (IEnumerable<string>) ViewData["flashes"])
+            {
+                <li>@flash</li>
+            }
+        </ul>
+    }
+    <div class="body">
+        @RenderBody()
     </div>
+    <div class="footer">
+        MiniTwit &mdash; A C# Application
+    </div>
+</div>
 
 
-
-    @RenderSection("Scripts", required: false)
+@RenderSection("Scripts", false)
 </body>
 </html>
