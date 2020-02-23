@@ -1,4 +1,5 @@
-﻿using MiniTwit.Entities;
+﻿using System;
+using MiniTwit.Entities;
 using System.Threading.Tasks;
 
 namespace MiniTwit.Models.Tests
@@ -7,16 +8,23 @@ namespace MiniTwit.Models.Tests
     {
         
 
-        public static async Task Add_dummy_data(UserRepository repository)
+        public static async Task Add_dummy_data(UserRepository userRepository, MessageRepository messageRepository)
         {
-            for (int i = 1; i < 10; i++)
+            for (var i = 1; i < 10; i++)
             {
                 var user1 = new User
                 {
                     UserName = "user" + i,
                     Email = "user" + i + "@kanban.com"
                 };
-                var (_, _) = await repository.CreateAsync(user1);
+                var message1 = new Message
+                {
+                    Author = user1,
+                    Pubdate = new DateTime(2019, 1, i),
+                    Text = "waddup" + i
+                };
+                await userRepository.CreateAsync(user1);
+                await messageRepository.CreateAsync(message1);
             }
         }
     }

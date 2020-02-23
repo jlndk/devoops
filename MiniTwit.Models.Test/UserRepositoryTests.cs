@@ -18,9 +18,9 @@ namespace MiniTwit.Models.Tests
         public async Task User_Is_Created_Succesfully()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
+            UserRepository userRepo = new UserRepository(context);
 
-            var result = await repo.CreateAsync(new User() { UserName = "TestCreate", Email = "qwdq@gqqw.com" });
+            var result = await userRepo.CreateAsync(new User() { UserName = "TestCreate", Email = "qwdq@gqqw.com" });
 
             Assert.Equal(Response.Created, result.response);
             Assert.Equal(1, result.userId);
@@ -87,7 +87,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
 
             var user = new User
@@ -107,7 +108,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
             var users = await repo.ReadAsync();
 
@@ -119,7 +121,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
             var users = await repo.ReadAsync();
 
@@ -131,7 +134,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
             var users = await repo.ReadAsync();
 
@@ -182,7 +186,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
             var user = new User { Id = 1, UserName = "user120", Email = "user2@kanban.com" };
 
@@ -196,7 +201,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
             var user = new User { Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com" };
 
@@ -213,7 +219,8 @@ namespace MiniTwit.Models.Tests
         {
             var context = CreateMiniTwitContext();
             UserRepository repo = new UserRepository(context);
-            await Add_dummy_data(repo);
+            MessageRepository messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
             var user = new User { Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com" };
 
@@ -221,8 +228,5 @@ namespace MiniTwit.Models.Tests
 
             Assert.Equal(Response.Updated, response);
         }
-
-
-
     }
 }
