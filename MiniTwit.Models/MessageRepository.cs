@@ -28,21 +28,21 @@ namespace MiniTwit.Models
         public async Task<IEnumerable<Message>> ReadAsync()
         {
             var query = from m in _context.Messages
-                        where m.Flagged <= 0
-                        orderby m.PubDate
-                        join user in _context.Users on m.AuthorId equals user.Id
-                        select new Message()
-                        {
-                            Author = user,
-                            AuthorId = user.Id,
-                            Flagged = m.Flagged,
-                            Id = m.Id,
-                            PubDate = m.PubDate,
-                            Text = m.Text
-                        };
+                where m.Flagged <= 0
+                orderby m.PubDate
+                join user in _context.Users on m.AuthorId equals user.Id
+                select new Message()
+                {
+                    Author = user,
+                    AuthorId = user.Id,
+                    Flagged = m.Flagged,
+                    Id = m.Id,
+                    PubDate = m.PubDate,
+                    Text = m.Text
+                };
 
 
-                        return await query.ToListAsync();
+            return await query.ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> ReadCountAsync(int count)
@@ -61,23 +61,24 @@ namespace MiniTwit.Models
                     Text = m.Text
                 };
 
-                return await query.Take(count).ToListAsync();
+            return await query.Take(count).ToListAsync();
         }
 
         public async Task<Message> ReadAsync(int messageId)
         {
             var messages = from m in _context.Messages
-                        where m.Id == messageId
-                        join user in _context.Users on m.AuthorId equals user.Id
-                        select new Message()
-                        {
-                            Author = user,
-                            AuthorId = user.Id,
-                            Flagged = m.Flagged,
-                            Id = m.Id,
-                            PubDate = m.PubDate,
-                            Text = m.Text
-                        };
+                where m.Id == messageId && m.Flagged <= 0
+                join user in _context.Users on m.AuthorId equals user.Id
+                select new Message()
+                {
+                    Author = user,
+                    AuthorId = user.Id,
+                    Flagged = m.Flagged,
+                    Id = m.Id,
+                    PubDate = m.PubDate,
+                    Text = m.Text
+                };
+
 
             return await messages.FirstOrDefaultAsync();
         }
@@ -85,18 +86,18 @@ namespace MiniTwit.Models
         public async Task<List<Message>> ReadAllMessagesFromUserAsync(int userId)
         {
             var messages = from m in _context.Messages
-                           where m.AuthorId == userId && m.Flagged <= 0
-                           orderby m.PubDate
-                           join user in _context.Users on m.AuthorId equals user.Id
-                           select new Message()
-                           {
-                               Author = user,
-                               AuthorId = user.Id,
-                               Flagged = m.Flagged,
-                               Id = m.Id,
-                               PubDate = m.PubDate,
-                               Text = m.Text
-                           };
+                where m.AuthorId == userId && m.Flagged <= 0
+                orderby m.PubDate
+                join user in _context.Users on m.AuthorId equals user.Id
+                select new Message()
+                {
+                    Author = user,
+                    AuthorId = user.Id,
+                    Flagged = m.Flagged,
+                    Id = m.Id,
+                    PubDate = m.PubDate,
+                    Text = m.Text
+                };
 
             return await messages.ToListAsync();
         }
@@ -131,6 +132,5 @@ namespace MiniTwit.Models
             await _context.SaveChangesAsync();
             return Deleted;
         }
-
     }
 }

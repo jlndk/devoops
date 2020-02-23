@@ -52,10 +52,40 @@ namespace MiniTwit.Models.Tests
         }
 
         [Fact]
-        public async Task Read_messages_in_pubDate_order()
+        public async Task Read_messages_in_PubDate_order()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
             var result = await _messageRepository.ReadAsync();
+            DateTime prev = DateTime.MinValue;
+            foreach (var message in result)
+            {
+                Assert.True(DateTime.Compare(prev, message.PubDate) < 0);
+                _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
+                prev = message.PubDate;
+            
+            }
+        }
+        
+        [Fact]
+        public async Task ReadCount_messages_in_PubDate_order()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadCountAsync(12);
+            DateTime prev = DateTime.MinValue;
+            foreach (var message in result)
+            {
+                Assert.True(DateTime.Compare(prev, message.PubDate) < 0);
+                _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
+                prev = message.PubDate;
+            
+            }
+        }
+        
+        [Fact]
+        public async Task ReadAllMessagesFromUser_messages_in_PubDate_order()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadAllMessagesFromUserAsync(1);
             DateTime prev = DateTime.MinValue;
             foreach (var message in result)
             {
@@ -71,6 +101,28 @@ namespace MiniTwit.Models.Tests
         {
             await Add_dummy_data(_userRepository, _messageRepository);
             var result = await _messageRepository.ReadAsync();
+            foreach (var message in result)
+            {
+                Assert.True(message.Flagged <= 0);
+            }
+        }
+        
+        [Fact]
+        public async Task ReadCount_messages_contains_no_flagged()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadCountAsync(12);
+            foreach (var message in result)
+            {
+                Assert.True(message.Flagged <= 0);
+            }
+        }
+        
+        [Fact]
+        public async Task ReadMessagesFromUser_messages_contains_no_flagged()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var result = await _messageRepository.ReadAllMessagesFromUserAsync(1);
             foreach (var message in result)
             {
                 Assert.True(message.Flagged <= 0);
