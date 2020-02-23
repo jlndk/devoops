@@ -10,6 +10,7 @@ namespace MiniTwit.Models.Tests
 
         public static async Task Add_dummy_data(UserRepository userRepository, MessageRepository messageRepository)
         {
+            var extrauser = new User();
             for (var i = 1; i < 10; i++)
             {
                 var user1 = new User
@@ -23,9 +24,18 @@ namespace MiniTwit.Models.Tests
                     Pubdate = new DateTime(2019, 1, i),
                     Text = "waddup" + i
                 };
+                extrauser = user1;
                 await userRepository.CreateAsync(user1);
                 await messageRepository.CreateAsync(message1);
             }
+
+            var extraMessage = new Message
+            {
+                Author = extrauser,
+                Pubdate = new DateTime(2018, 1, 1),
+                Text = "waddup"
+            };
+            await messageRepository.CreateAsync(extraMessage);
         }
     }
 }

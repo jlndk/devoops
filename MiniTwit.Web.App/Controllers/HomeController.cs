@@ -46,6 +46,7 @@ namespace MiniTwit.Web.App.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             int actualId = 0;
+            // ReSharper disable once Mvc.ViewNotResolved
             if (!Int32.TryParse(id, out actualId)) return View(model);
             model.AuthorId = actualId;
             model.Author = await _userRepository.ReadAsync(actualId);
