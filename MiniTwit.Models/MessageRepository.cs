@@ -18,7 +18,7 @@ namespace MiniTwit.Models
 
         public async Task<(Response response, int messageId)> CreateAsync(Message message)
         {
-
+            //TODO: Add timestamp and user if they are not already in message. 
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 

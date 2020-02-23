@@ -50,6 +50,7 @@ namespace MiniTwit.Web.App.Controllers
             if (!Int32.TryParse(userId, out var actualId)) return View("Index");
             message.AuthorId = actualId;
             message.Author = await _userRepository.ReadAsync(actualId);
+            message.PubDate = DateTime.Now;
 
             var (result, messageId) = await _messageRepository.CreateAsync(message);
 
