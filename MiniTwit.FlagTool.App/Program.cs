@@ -3,19 +3,19 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 
-namespace MiniTwit.FlagTool.App
+namespace MiniTwit.FlagTool
 {
     public class Program
     {
-        public static readonly string docStr =
-            "ITU-MiniTwit Tweet Flagging Tool\n\n" +
-            "Usage:\n" +
-            "  flag_tool <tweet_id>...\n" +
-            "  flag_tool -i\n" +
-            "  flag_tool -h\n" +
-            "Options:\n" +
-            "-h            Show this screen.\n" +
-            "-i            Dump all tweets and authors to STDOUT.";
+        public static readonly string DocString =
+@"ITU-MiniTwit Tweet Flagging Tool
+Usage:
+    flag_tool <tweet_id>...
+    flag_tool -i
+    flag_tool -h
+Options:
+    -h            Show this screen.
+    -i            Dump all tweets and authors to STDOUT.";
 
         private string _connectionString;
 
@@ -23,12 +23,16 @@ namespace MiniTwit.FlagTool.App
         {
             get
             {
-                if (_connectionString == null)
+                if (_connectionString != null)
                 {
-                    var b = new SQLiteConnectionStringBuilder();
-                    b.DataSource = "/tmp/MiniTwit.db";
-                    _connectionString = b.ToString();
+                    return _connectionString;
                 }
+
+                var stringBuilder = new SQLiteConnectionStringBuilder
+                {
+                    DataSource = "/tmp/MiniTwit.db"
+                };
+                _connectionString = stringBuilder.ToString();
 
                 return _connectionString;
             }
@@ -42,67 +46,50 @@ namespace MiniTwit.FlagTool.App
             switch (cmd)
             {
                 case "-i":
-                    printAllMessages();
+                    PrintAllMessages();
                     break;
                 case "-h":
-                    printHelp();
+                    PrintHelp();
                     break;
                 default:
                     if (cmd == "")
-                        printHelp();
+                        PrintHelp();
                     else
-                        flagMessage(int.Parse(cmd));
+                        FlagMessage(int.Parse(cmd));
                     break;
             }
         }
 
-        private void flagMessage(int messageId)
+        private void FlagMessage(int messageId)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using var connection = new SQLiteConnection(ConnectionString);
+            connection.Open();
+            const string sql = @"UPDATE message SET flagged=1 WHERE message_id=@messageId";
+            var cmd = new SQLiteCommand(sql, connection);
+            var idParam = new SQLiteParameter("@messageId", DbType.Int32)
             {
-                connection.Open();
-
-                var sql = "UPDATE message SET flagged=1 WHERE message_id=@messageId";
-
-                var cmd = new SQLiteCommand(sql, connection);
-
-                //Use prepared statement to prevent sql injection
-                var idParam = new SQLiteParameter("@messageId", DbType.Int32);
-                idParam.Value = messageId;
-                cmd.Parameters.Add(idParam);
-
-                cmd.ExecuteNonQuery();
-            }
-
-            Console.WriteLine("Flagged entry: {0}", messageId);
+                Value = messageId
+            };
+            cmd.Parameters.Add(idParam);
+            cmd.ExecuteNonQuery();
+            Console.WriteLine($"Flagged entry: {messageId}");
         }
 
-        private void printHelp()
+        private static void PrintHelp()
         {
-            Console.WriteLine(docStr);
+            Console.WriteLine(DocString);
         }
 
-        private void printAllMessages()
+        private void PrintAllMessages()
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using var connection = new SQLiteConnection(ConnectionString);
+            connection.Open();
+            const string sql = @"SELECT message_id, author_id, text, flagged FROM message;";
+            var cmd = new SQLiteCommand(sql, connection);
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
-                connection.Open();
-
-                var sql = "SELECT message_id, author_id, text, flagged FROM message;";
-
-                var cmd = new SQLiteCommand(sql, connection);
-
-                var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    var messageId = (long) reader["message_id"];
-                    var authorId = (long) reader["author_id"];
-                    var text = reader["text"] as string;
-                    var flagged = (long) reader["flagged"];
-
-                    Console.WriteLine("{0},{1},{2},{3}", messageId, authorId, text, flagged);
-                }
+                Console.WriteLine($"{reader["message_id"]}, {reader["author_id"]}, {reader["text"]}, {reader["flagged"]}");
             }
         }
 

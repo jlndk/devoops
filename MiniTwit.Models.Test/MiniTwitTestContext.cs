@@ -15,8 +15,10 @@ namespace MiniTwit.Models.Tests
             _connection = connection;
         }
 
-        public static MiniTwitTestContext CreateMiniTwitContext([CallerMemberName] string testName = "",
-            [CallerFilePath] string testNamePart2 = "")
+        public static MiniTwitTestContext CreateMiniTwitContext(
+            [CallerMemberName] string testName = "",
+            [CallerFilePath] string testNamePart2 = ""
+        )
         {
             var connection = new SqliteConnection("Datasource=:memory:");
             connection.Open();
@@ -28,8 +30,8 @@ namespace MiniTwit.Models.Tests
 
         public override void Dispose()
         {
-            Dispose();
-            if (_connection != null) _connection.Dispose();
+            base.Dispose();
+            _connection?.Dispose();
         }
     }
 }

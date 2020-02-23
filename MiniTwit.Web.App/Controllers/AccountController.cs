@@ -45,25 +45,27 @@ namespace MiniTwit.Web.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Register model, string returnUrl = null)
         {
-            Console.WriteLine();
             ViewData["Error"] = "Success";
             ViewData["ReturnUrl"] = returnUrl;
-            if (!ModelState.IsValid) return View(model);
-            var user = new User {UserName = model.UserName, Email = model.Email};
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
+            if (!ModelState.IsValid)
             {
-                _logger.LogInformation("User created a new account with password.");
-
-                await _signInManager.SignInAsync(user, false);
-                _logger.LogInformation("User created a new account with password.");
-                return RedirectToLocal(returnUrl);
+                return View(model);
             }
-
-            AddErrors(result);
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            var user = new User
+            {
+                UserName = model.UserName,
+                Email = model.Email
+            };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                AddErrors(result);
+                return View(model);
+            }
+            _logger.LogInformation("User created a new account with password.");
+            await _signInManager.SignInAsync(user, false);
+            _logger.LogInformation("User created a new account with password.");
+            return RedirectToLocal(returnUrl);
         }
 
         [Route("/login")]
@@ -73,7 +75,6 @@ namespace MiniTwit.Web.App.Controllers
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -85,35 +86,24 @@ namespace MiniTwit.Web.App.Controllers
         public async Task<IActionResult> Login(Login model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (!ModelState.IsValid) return View(model);
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result =
-                await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
-            if (result.Succeeded)
+            if (!ModelState.IsValid)
             {
-                _logger.LogInformation("User logged in.");
-                return RedirectToLocal(returnUrl);
+                return View(model);
             }
-            /*if (result.IsLockedOut)
+            var result = await _signInManager.PasswordSignInAsync(
+                model.UserName,
+                model.Password,
+                model.RememberMe,
+                false
+            );
+            if (!result.Succeeded)
             {
-                _logger.LogWarning("User account locked out.");
-                return RedirectToAction(nameof(Lockout));
-            }*/
-
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return View(model);
-
-            // If we got this far, something failed, redisplay form
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
+            }
+            _logger.LogInformation("User logged in.");
+            return RedirectToLocal(returnUrl);
         }
-
-        /*[Route("/logout")]
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Lockout()
-        {
-            return View();
-        }*/
 
         public IActionResult LogIn()
         {
@@ -140,13 +130,18 @@ namespace MiniTwit.Web.App.Controllers
 
         private void AddErrors(IdentityResult result)
         {
-            foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
+            {
                 return Redirect(returnUrl);
+            }
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 

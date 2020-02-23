@@ -15,8 +15,7 @@ namespace MiniTwit.Web.App.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
-
-
+        
         public HomeController(ILogger<HomeController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
         {
@@ -40,27 +39,31 @@ namespace MiniTwit.Web.App.Controllers
             ViewData["Messages"] = await _messageRepository.ReadAsync(id);
             return View();
         }
-
-        // THIS SHOULD PROBALY NOT BE HERE. [Route("/msgs/{id}")] 
+        
+        // TODO: Move to Message Controller?
         [HttpPost]
         public async Task<IActionResult> PostMessage(Message message, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userId, out var actualId)) return View("Index");
+            if (!int.TryParse(userId, out var actualId))
+            {
+                return View("Index");
+            }
             message.AuthorId = actualId;
             message.Author = await _userRepository.ReadAsync(actualId);
             message.PubDate = DateTime.Now;
-
-            var (result, messageId) = await _messageRepository.CreateAsync(message);
-
+            await _messageRepository.CreateAsync(message);
             return RedirectToAction(nameof(Index), "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }

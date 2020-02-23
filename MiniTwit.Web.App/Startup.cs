@@ -37,9 +37,8 @@ namespace MiniTwit.Web.App
                 })
                 .AddEntityFrameworkStores<MiniTwitContext>()
                 .AddDefaultTokenProviders();
-            services
-                .AddScoped<IMessageRepository, MessageRepository
-                >(); //todo: this should perhaps be something other than scoped
+            // TODO: This should perhaps be something other than scoped
+            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
         }
 
@@ -53,29 +52,22 @@ namespace MiniTwit.Web.App
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
             });
-
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<MiniTwitContext>();
-                context.Database.Migrate();
-            }
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<MiniTwitContext>();
+            context.Database.Migrate();
         }
     }
 }
