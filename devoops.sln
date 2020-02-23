@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.FlagTool", "MiniTwit.FlagTool.App\MiniTwit.FlagTool.csproj", "{D6A871FB-22BF-47F9-A19D-2D5027B176F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.FlagTool", "MiniTwit.FlagTool\MiniTwit.FlagTool.csproj", "{D6A871FB-22BF-47F9-A19D-2D5027B176F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.FlagTool.Tests", "MiniTwit.FlagTool.Tests\MiniTwit.FlagTool.Tests.csproj", "{5C9B748E-4463-40C9-BC54-BC4B57DF2231}"
 EndProject
