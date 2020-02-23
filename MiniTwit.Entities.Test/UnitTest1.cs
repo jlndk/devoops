@@ -1,4 +1,3 @@
-using System;
 using Xunit;
 
 namespace MiniTwit.Entities.Test
@@ -8,7 +7,6 @@ namespace MiniTwit.Entities.Test
         [Fact]
         public void Test1()
         {
-
         }
     }
 }

@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc;
-using MiniTwit.Entities;
-using Microsoft.AspNetCore.Authorization;
-using MiniTwit.Web.App.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MiniTwit.Entities;
 using MiniTwit.Models;
+using MiniTwit.Web.App.Models;
 
 namespace MiniTwit.Web.App.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly ILogger _logger;
         private readonly IMessageRepository _repository;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
         public AccountController(
             UserManager<User> userManager,
@@ -32,31 +29,6 @@ namespace MiniTwit.Web.App.Controllers
             _logger = logger;
             _repository = repository;
         }
-
-
-        #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
-
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-        }
-
-        #endregion
 
         [Route("/register")]
         [HttpGet]
@@ -77,16 +49,17 @@ namespace MiniTwit.Web.App.Controllers
             ViewData["Error"] = "Success";
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(model);
-            var user = new User { UserName = model.UserName, Email = model.Email };
+            var user = new User {UserName = model.UserName, Email = model.Email};
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, false);
                 _logger.LogInformation("User created a new account with password.");
                 return RedirectToLocal(returnUrl);
             }
+
             AddErrors(result);
 
             // If we got this far, something failed, redisplay form
@@ -115,7 +88,8 @@ namespace MiniTwit.Web.App.Controllers
             if (!ModelState.IsValid) return View(model);
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+            var result =
+                await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in.");
@@ -126,11 +100,9 @@ namespace MiniTwit.Web.App.Controllers
                 _logger.LogWarning("User account locked out.");
                 return RedirectToAction(nameof(Lockout));
             }*/
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
-            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
 
             // If we got this far, something failed, redisplay form
         }
@@ -147,12 +119,12 @@ namespace MiniTwit.Web.App.Controllers
         {
             return View();
         }
-        
+
         public IActionResult Register()
         {
             return View();
         }
-        
+
         [Route("/logout")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -162,5 +134,22 @@ namespace MiniTwit.Web.App.Controllers
             _logger.LogInformation("User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+
+
+        #region Helpers
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        private IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        #endregion
     }
 }

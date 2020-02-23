@@ -9,17 +9,15 @@ namespace MiniTwit.Entities.Migrations
         {
             migrationBuilder.Sql(
                 "ALTER TABLE \"Messages\" ALTER COLUMN \"PubDate\" TYPE timestamp without time zone USING to_timestamp(\"PubDate\")"
-                );
-            
-       
+            );
         }
-       
+
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "PubDate",
-                table: "Messages",
-                type: "integer",
+                "PubDate",
+                "Messages",
+                "integer",
                 nullable: false,
                 oldClrType: typeof(DateTime));
         }

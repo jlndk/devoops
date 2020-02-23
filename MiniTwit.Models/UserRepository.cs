@@ -18,10 +18,7 @@ namespace MiniTwit.Models
 
         public async Task<(Response response, int userId)> CreateAsync(User user)
         {
-            if (await UserExists(0, user.Email))
-            {
-                return (Conflict, 0);
-            }
+            if (await UserExists(0, user.Email)) return (Conflict, 0);
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -32,8 +29,8 @@ namespace MiniTwit.Models
         public async Task<IEnumerable<User>> ReadAsync()
         {
             var query = from u in _context.Users
-                        orderby u.UserName
-                        select u;
+                orderby u.UserName
+                select u;
 
             return await query.ToListAsync();
         }
@@ -41,8 +38,8 @@ namespace MiniTwit.Models
         public async Task<User> ReadAsync(int userId)
         {
             var users = from u in _context.Users
-                        where u.Id == userId
-                        select u;
+                where u.Id == userId
+                select u;
 
             return await users.FirstOrDefaultAsync();
         }
@@ -51,15 +48,9 @@ namespace MiniTwit.Models
         {
             var entity = await _context.Users.FindAsync(user.Id);
 
-            if (entity == null)
-            {
-                return NotFound;
-            }
+            if (entity == null) return NotFound;
 
-            if (await UserExists(user.Id, user.Email))
-            {
-                return Conflict;
-            }
+            if (await UserExists(user.Id, user.Email)) return Conflict;
 
             entity.UserName = user.UserName;
             entity.Email = user.Email;
@@ -73,10 +64,7 @@ namespace MiniTwit.Models
         {
             var entity = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (entity == null)
-            {
-                return NotFound;
-            }
+            if (entity == null) return NotFound;
 
             _context.Users.Remove(entity);
             await _context.SaveChangesAsync();
@@ -84,6 +72,9 @@ namespace MiniTwit.Models
             return Deleted;
         }
 
-        private async Task<bool> UserExists(int userId, string emailAddress) => await _context.Users.AnyAsync(u => u.Id != userId && u.Email == emailAddress);
+        private async Task<bool> UserExists(int userId, string emailAddress)
+        {
+            return await _context.Users.AnyAsync(u => u.Id != userId && u.Email == emailAddress);
+        }
     }
 }

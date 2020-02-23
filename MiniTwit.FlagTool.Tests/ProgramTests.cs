@@ -1,18 +1,26 @@
 using System;
+using System.Data.SQLite;
 using System.IO;
 using System.Text;
-using Xunit;
 using MiniTwit.FlagTool.App;
-using System.Data.SQLite;
+using Xunit;
 
 namespace MiniTwit.FlagTool.Tests
 {
     public class ProgramTests
     {
-        private StringBuilder output;
+        public ProgramTests()
+        {
+            output = new StringBuilder();
+            Console.SetOut(new StringWriter(output));
+        }
 
-        private string TestConnectionString {
-            get {
+        private readonly StringBuilder output;
+
+        private string TestConnectionString
+        {
+            get
+            {
                 var b = new SQLiteConnectionStringBuilder();
                 b.DataSource = "ProgramTestsInMemoryDb";
                 b.Add("Cache", "Shared");
@@ -20,36 +28,36 @@ namespace MiniTwit.FlagTool.Tests
                 return b.ToString();
             }
         }
-        
-        public ProgramTests() {
-            output = new StringBuilder();
-            Console.SetOut(new StringWriter(output));
-        }
 
-        [Fact]
-        public void Run_prints_instructions_if_no_args_supplied()
+        private void applySchema(SQLiteConnection connection)
         {
-            var args = new string[0];
-            var program = new Program();
+            var sql = @"
+                drop table if exists user;
+                create table user (
+                    user_id integer primary key autoincrement,
+                    username string not null,
+                    email string not null,
+                    pw_hash string not null
+                );
 
-            program.Run(args);
+                drop table if exists follower;
+                    create table follower (
+                    who_id integer,
+                    whom_id integer
+                );
 
-            var actual = output.ToString().Trim();
-            
-            Assert.Equal(Program.docStr, actual);
-        }
+                drop table if exists message;
+                create table message (
+                    message_id integer primary key autoincrement,
+                    author_id integer not null,
+                    text string not null,
+                    pub_date integer,
+                    flagged integer
+                );
+            ";
 
-        [Fact]
-        public void Run_prints_instructions_if_h_flag_is_supplied()
-        {
-            var args = new string[] { "-h" };
-            var program = new Program();
-
-            program.Run(args);
-
-            var actual = output.ToString().Trim();
-
-            Assert.Equal(Program.docStr, actual);
+            var command = new SQLiteCommand(sql, connection);
+            command.ExecuteNonQuery();
         }
 
         [Fact]
@@ -68,7 +76,7 @@ namespace MiniTwit.FlagTool.Tests
         public void Run_prints_all_tweets_and_authors_if_i_flag_is_supplied()
         {
             var connection = new SQLiteConnection(TestConnectionString);
-            
+
             connection.Open();
             applySchema(connection);
 
@@ -88,7 +96,7 @@ namespace MiniTwit.FlagTool.Tests
             var program = new Program();
             program.ConnectionString = TestConnectionString;
 
-            var args = new string[] { "-i" };
+            var args = new[] {"-i"};
 
             program.Run(args);
 
@@ -126,7 +134,7 @@ namespace MiniTwit.FlagTool.Tests
             var program = new Program();
             program.ConnectionString = TestConnectionString;
 
-            var args = new string[] { "1" };
+            var args = new[] {"1"};
             program.Run(args);
 
             //Assert output
@@ -136,7 +144,7 @@ namespace MiniTwit.FlagTool.Tests
             //Assert that the message has actually been flagged in db
             var assertSql = "SELECT COUNT(*) FROM message WHERE message_id = 1 AND flagged=1;";
             var assertCmd = new SQLiteCommand(assertSql, connection);
-            var assertRes = (Int64)assertCmd.ExecuteScalar();
+            var assertRes = (long) assertCmd.ExecuteScalar();
 
             Assert.True(assertRes == 1);
 
@@ -144,34 +152,30 @@ namespace MiniTwit.FlagTool.Tests
             connection.Close();
         }
 
-        private void applySchema(SQLiteConnection connection) {
-            var sql = @"
-                drop table if exists user;
-                create table user (
-                    user_id integer primary key autoincrement,
-                    username string not null,
-                    email string not null,
-                    pw_hash string not null
-                );
+        [Fact]
+        public void Run_prints_instructions_if_h_flag_is_supplied()
+        {
+            var args = new[] {"-h"};
+            var program = new Program();
 
-                drop table if exists follower;
-                    create table follower (
-                    who_id integer,
-                    whom_id integer
-                );
+            program.Run(args);
 
-                drop table if exists message;
-                create table message (
-                    message_id integer primary key autoincrement,
-                    author_id integer not null,
-                    text string not null,
-                    pub_date integer,
-                    flagged integer
-                );
-            ";
+            var actual = output.ToString().Trim();
 
-            var command = new SQLiteCommand(sql, connection);
-            command.ExecuteNonQuery();
+            Assert.Equal(Program.docStr, actual);
+        }
+
+        [Fact]
+        public void Run_prints_instructions_if_no_args_supplied()
+        {
+            var args = new string[0];
+            var program = new Program();
+
+            program.Run(args);
+
+            var actual = output.ToString().Trim();
+
+            Assert.Equal(Program.docStr, actual);
         }
     }
 }

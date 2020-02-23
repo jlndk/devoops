@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiniTwit.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
 using MiniTwit.Models;
 
 namespace MiniTwit.Web.App
@@ -38,7 +37,9 @@ namespace MiniTwit.Web.App
                 })
                 .AddEntityFrameworkStores<MiniTwitContext>()
                 .AddDefaultTokenProviders();
-            services.AddScoped<IMessageRepository, MessageRepository>(); //todo: this should perhaps be something other than scoped
+            services
+                .AddScoped<IMessageRepository, MessageRepository
+                >(); //todo: this should perhaps be something other than scoped
             services.AddScoped<IUserRepository, UserRepository>();
         }
 
@@ -55,6 +56,7 @@ namespace MiniTwit.Web.App
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
@@ -65,16 +67,15 @@ namespace MiniTwit.Web.App
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<MiniTwitContext>();
                 context.Database.Migrate();
             }
-
         }
     }
 }

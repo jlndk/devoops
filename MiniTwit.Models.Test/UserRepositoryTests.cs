@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MiniTwit.Entities;
@@ -12,36 +10,31 @@ namespace MiniTwit.Models.Tests
 {
     public class UserRepositoryTests
     {
-
-
         [Fact]
-        public async Task User_Is_Created_Succesfully()
+        public async Task CreateAsync_creates_user_with_properties()
         {
             var context = CreateMiniTwitContext();
-            UserRepository userRepo = new UserRepository(context);
+            var repo = new UserRepository(context);
 
-            var result = await userRepo.CreateAsync(new User() { UserName = "TestCreate", Email = "qwdq@gqqw.com" });
+            var user = new User
+            {
+                UserName = "user4",
+                Email = "user4@kanban.com"
+            };
 
-            Assert.Equal(Response.Created, result.response);
-            Assert.Equal(1, result.userId);
+            var (_, id) = await repo.CreateAsync(user);
 
-        }
+            var entity = await context.Users.FindAsync(id);
 
-        [Fact]
-        public async Task User_without_mails_fails()
-        {
-            var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-
-            await Assert.ThrowsAsync<DbUpdateException>(() => repo.CreateAsync(new User() { UserName = "TestCreate" }));
-
+            Assert.Equal("user4", entity.UserName);
+            Assert.Equal("user4@kanban.com", entity.Email);
         }
 
         [Fact]
         public async Task CreateAsync_given_existing_user_returns_Conflict_and_id_0()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
+            var repo = new UserRepository(context);
 
             var user1 = new User
             {
@@ -63,31 +56,11 @@ namespace MiniTwit.Models.Tests
         }
 
         [Fact]
-        public async Task CreateAsync_creates_user_with_properties()
-        {
-            var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-
-            var user = new User
-            {
-                UserName = "user4",
-                Email = "user4@kanban.com"
-            };
-
-            var (_, id) = await repo.CreateAsync(user);
-
-            var entity = await context.Users.FindAsync(id);
-
-            Assert.Equal("user4", entity.UserName);
-            Assert.Equal("user4@kanban.com", entity.Email);
-        }
-
-        [Fact]
         public async Task CreateAsync_returns_Created_and_id()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
 
 
@@ -104,37 +77,31 @@ namespace MiniTwit.Models.Tests
         }
 
         [Fact]
-        public async Task ReadAsync_returns_all_users()
+        public async Task ReadAsync_given_non_existing_user_returns_null()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
-            await Add_dummy_data(repo, messageRepo);
+            var repo = new UserRepository(context);
+            var user = await repo.ReadAsync(2);
 
-            var users = await repo.ReadAsync();
-
-            Assert.Equal(9, users.Count());
+            Assert.Null(user);
         }
 
         [Fact]
-        public async Task ReadAsync_returns_all_sorted_by_name()
+        public async Task ReadAsync_given_non_existing_user_returns_Null()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
-            await Add_dummy_data(repo, messageRepo);
+            var repo = new UserRepository(context);
+            var user = await repo.ReadAsync(42);
 
-            var users = await repo.ReadAsync();
-
-            Assert.Equal(new[] { "user1", "user2", "user3" }, users.Where(u => u.Id < 4).Select(u => u.UserName));
+            Assert.Null(user);
         }
 
         [Fact]
         public async Task ReadAsync_maps_user_properties()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
 
             var users = await repo.ReadAsync();
@@ -147,34 +114,38 @@ namespace MiniTwit.Models.Tests
         }
 
         [Fact]
-        public async Task ReadAsync_given_non_existing_user_returns_Null()
+        public async Task ReadAsync_returns_all_sorted_by_name()
         {
-
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            var user = await repo.ReadAsync(42);
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
-            Assert.Null(user);
+            var users = await repo.ReadAsync();
+
+            Assert.Equal(new[] {"user1", "user2", "user3"}, users.Where(u => u.Id < 4).Select(u => u.UserName));
         }
 
         [Fact]
-        public async Task ReadAsync_given_non_existing_user_returns_null()
+        public async Task ReadAsync_returns_all_users()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            var user = await repo.ReadAsync(2);
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
 
-            Assert.Null(user);
+            var users = await repo.ReadAsync();
+
+            Assert.Equal(9, users.Count());
         }
-
 
 
         [Fact]
         public async Task Update_given_non_existing_user_returns_NotFound()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            var user = new User { Id = 42 };
+            var repo = new UserRepository(context);
+            var user = new User {Id = 42};
 
             var response = await repo.UpdateAsync(user);
 
@@ -185,11 +156,11 @@ namespace MiniTwit.Models.Tests
         public async Task Update_given_user_with_another_users_emailAddress_returns_Conflict()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
 
-            var user = new User { Id = 1, UserName = "user120", Email = "user2@kanban.com" };
+            var user = new User {Id = 1, UserName = "user120", Email = "user2@kanban.com"};
 
             var response = await repo.UpdateAsync(user);
 
@@ -197,14 +168,29 @@ namespace MiniTwit.Models.Tests
         }
 
         [Fact]
+        public async Task Update_returns_Updated()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
+
+            var user = new User {Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com"};
+
+            var response = await repo.UpdateAsync(user);
+
+            Assert.Equal(Response.Updated, response);
+        }
+
+        [Fact]
         public async Task Update_updates_user()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
+            var repo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
 
-            var user = new User { Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com" };
+            var user = new User {Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com"};
 
             await repo.UpdateAsync(user);
 
@@ -214,19 +200,26 @@ namespace MiniTwit.Models.Tests
             Assert.Equal("newuser2@kanban.com", entity.Email);
         }
 
+
         [Fact]
-        public async Task Update_returns_Updated()
+        public async Task User_Is_Created_Succesfully()
         {
             var context = CreateMiniTwitContext();
-            UserRepository repo = new UserRepository(context);
-            MessageRepository messageRepo = new MessageRepository(context);
-            await Add_dummy_data(repo, messageRepo);
+            var userRepo = new UserRepository(context);
 
-            var user = new User { Id = 2, UserName = "newuser2", Email = "newuser2@kanban.com" };
+            var result = await userRepo.CreateAsync(new User {UserName = "TestCreate", Email = "qwdq@gqqw.com"});
 
-            var response = await repo.UpdateAsync(user);
+            Assert.Equal(Response.Created, result.response);
+            Assert.Equal(1, result.userId);
+        }
 
-            Assert.Equal(Response.Updated, response);
+        [Fact]
+        public async Task User_without_mails_fails()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context);
+
+            await Assert.ThrowsAsync<DbUpdateException>(() => repo.CreateAsync(new User {UserName = "TestCreate"}));
         }
     }
 }

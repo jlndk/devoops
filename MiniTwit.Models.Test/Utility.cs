@@ -1,13 +1,11 @@
 ﻿using System;
-using MiniTwit.Entities;
 using System.Threading.Tasks;
+using MiniTwit.Entities;
 
 namespace MiniTwit.Models.Tests
 {
-    static class Utility
+    internal static class Utility
     {
-        
-
         public static async Task Add_dummy_data(UserRepository userRepository, MessageRepository messageRepository)
         {
             var extrauser = new User();

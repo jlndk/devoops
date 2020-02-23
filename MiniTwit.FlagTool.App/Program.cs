@@ -8,19 +8,23 @@ namespace MiniTwit.FlagTool.App
     public class Program
     {
         public static readonly string docStr =
-                "ITU-MiniTwit Tweet Flagging Tool\n\n" +
-                "Usage:\n" +
-                "  flag_tool <tweet_id>...\n" +
-                "  flag_tool -i\n" +
-                "  flag_tool -h\n" +
-                "Options:\n" +
-                "-h            Show this screen.\n" +
-                "-i            Dump all tweets and authors to STDOUT.";
+            "ITU-MiniTwit Tweet Flagging Tool\n\n" +
+            "Usage:\n" +
+            "  flag_tool <tweet_id>...\n" +
+            "  flag_tool -i\n" +
+            "  flag_tool -h\n" +
+            "Options:\n" +
+            "-h            Show this screen.\n" +
+            "-i            Dump all tweets and authors to STDOUT.";
 
-        private string _connectionString = null;
-        public string ConnectionString {
-            get {
-                if(_connectionString == null) {
+        private string _connectionString;
+
+        public string ConnectionString
+        {
+            get
+            {
+                if (_connectionString == null)
+                {
                     var b = new SQLiteConnectionStringBuilder();
                     b.DataSource = "/tmp/MiniTwit.db";
                     _connectionString = b.ToString();
@@ -28,15 +32,15 @@ namespace MiniTwit.FlagTool.App
 
                 return _connectionString;
             }
-            set {
-                _connectionString = value;
-            }
+            set => _connectionString = value;
         }
 
-        public void Run(string[] args) {
+        public void Run(string[] args)
+        {
             var cmd = args.ElementAtOrDefault(0) ?? "";
 
-            switch(cmd) {
+            switch (cmd)
+            {
                 case "-i":
                     printAllMessages();
                     break;
@@ -44,12 +48,10 @@ namespace MiniTwit.FlagTool.App
                     printHelp();
                     break;
                 default:
-                    if(cmd == "") {
+                    if (cmd == "")
                         printHelp();
-                    }
-                    else {
+                    else
                         flagMessage(int.Parse(cmd));
-                    }
                     break;
             }
         }
@@ -71,6 +73,7 @@ namespace MiniTwit.FlagTool.App
 
                 cmd.ExecuteNonQuery();
             }
+
             Console.WriteLine("Flagged entry: {0}", messageId);
         }
 
@@ -93,10 +96,10 @@ namespace MiniTwit.FlagTool.App
 
                 while (reader.Read())
                 {
-                    var messageId = (Int64) reader["message_id"];
-                    var authorId = (Int64) reader["author_id"];
+                    var messageId = (long) reader["message_id"];
+                    var authorId = (long) reader["author_id"];
                     var text = reader["text"] as string;
-                    var flagged = (Int64) reader["flagged"];
+                    var flagged = (long) reader["flagged"];
 
                     Console.WriteLine("{0},{1},{2},{3}", messageId, authorId, text, flagged);
                 }
