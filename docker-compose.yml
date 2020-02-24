@@ -16,6 +16,7 @@ services:
         environment:
             - "ASPNETCORE_ENVIRONMENT=Development"
             - "MINITWIT_ENVIRONMENT=docker"
+            - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
         ports:
             - "5001:5001"
             - "5000:5000"

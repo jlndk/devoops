@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,9 @@ namespace MiniTwit.Entities
                 return;
             }
 
-            var connectionString = Misc.RunsInDocker()
+            var connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTIONSTRING");
+
+            connectionString ??= Misc.RunsInDocker()
                 ? @"Host=database;Database=MiniTwit;Username=postgres;Password=test"
                 : @"Host=localhost;Database=MiniTwit;Username=postgres;Password=test";
 
