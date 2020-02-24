@@ -114,8 +114,7 @@ namespace MiniTwit.Web.App.Controllers
         {
             return View();
         }
-
-        [Route("/logout")]
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()

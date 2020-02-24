@@ -67,8 +67,20 @@ div.page {
             color: #444;
             font-weight: bold;
         }
+        
+        div.page div.navigation input {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #444;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
 
-    div.page h2 {
+        
+div.page h2 {
         margin: 0 0 15px 0;
         color: #105751;
         text-shadow: 0 1px 2px #ccc;
