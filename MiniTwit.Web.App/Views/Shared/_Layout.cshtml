@@ -15,11 +15,16 @@
     <div class="navigation">
         @if (SignInManager.IsSignedIn(User))
         {
-            <a asp-area="" asp-controller="Home" asp-action="My_Timeline">my timeline</a>
-            @("|")
-            <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
-            @("|")
-            <a asp-area="" asp-controller="Account" asp-action="LogOut">Sign out @ViewData["username"]</a>
+            //This method of putting the logout button in a form and wrapping all of the navigation in the form is a bit
+            //hacky, but its the easiest way to get them inline.
+
+            <form method="post" asp-area="" asp-controller="Account" asp-action="LogOut">
+                <a asp-area="" asp-controller="Home" asp-action="My_Timeline">My Timeline</a>
+                @("|")
+                <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
+                @("|")
+                <input id="LogoutButton" type="submit" value="Logout"/>
+            </form>
         }
         else
         {
