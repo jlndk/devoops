@@ -1,0 +1,13 @@
+version: "3.4"
+services:
+    database:
+        build: ./DatabaseDocker/
+    webapp:
+        build: .
+        environment:
+            - "ASPNETCORE_ENVIRONMENT=Production"
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - database

@@ -7,7 +7,7 @@ namespace MiniTwit.Entities
 {
     public class MiniTwitContext : IdentityDbContext<User, IdentityRole<int>, int>, IMiniTwitContext
     {
-        public MiniTwitContext(DbContextOptions<MiniTwitContext> options) : base(options) {}
+        public MiniTwitContext(DbContextOptions<MiniTwitContext> options) : base(options) { }
 
         public DbSet<Message> Messages { get; set; }
 
@@ -18,9 +18,9 @@ namespace MiniTwit.Entities
                 return;
             }
 
-            var connectionString = Misc.IsDevelopment()
-                ? @"Host=localhost;Database=MiniTwit;Username=postgres;Password=test"
-                : @"Host=database;Database=MiniTwit;Username=postgres;Password=test";
+            var connectionString = Misc.RunsInDocker()
+                ? @"Host=database;Database=MiniTwit;Username=postgres;Password=test"
+                : @"Host=localhost;Database=MiniTwit;Username=postgres;Password=test";
 
             optionsBuilder.UseNpgsql(connectionString);
         }
