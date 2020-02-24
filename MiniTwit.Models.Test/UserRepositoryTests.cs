@@ -260,6 +260,7 @@ namespace MiniTwit.Models.Tests
             
             
             Assert.Equal(9, followee.FollowedBy.Count());
+            Assert.True(followee.FollowedBy.All(f => f.Follower.Follows.Any(ff => ff.FolloweeId == followeeReturnedId)));
         }
     }
 }
