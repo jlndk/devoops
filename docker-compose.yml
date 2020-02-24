@@ -1,7 +1,9 @@
 version: "3.4"
 services:
     database:
-        build: ./DatabaseDocker/
+        image: postgres
+        environment:
+            - "POSTGRES_PASSWORD=test"
         ports:
             - "5432:5432"
     webapp:
