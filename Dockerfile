@@ -5,8 +5,8 @@ WORKDIR /source
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY MiniTwit.Entities/*.csproj ./MiniTwit.Entities/
-COPY MiniTwit.Entities.Test/*.csproj ./MiniTwit.Entities.Test/
-COPY MiniTwit.FlagTool.App/*.csproj ./MiniTwit.FlagTool.App/
+COPY MiniTwit.Entities.Tests/*.csproj ./MiniTwit.Entities.Tests/
+COPY MiniTwit.FlagTool/*.csproj ./MiniTwit.FlagTool/
 COPY MiniTwit.FlagTool.Tests/*.csproj ./MiniTwit.FlagTool.Tests/
 COPY MiniTwit.Models.Test/*.csproj ./MiniTwit.Models.Test/
 COPY MiniTwit.Models/*.csproj ./MiniTwit.Models/
@@ -15,8 +15,8 @@ RUN dotnet restore
 
 # copy everything else and build app
 COPY MiniTwit.Entities/. ./MiniTwit.Entities/
-COPY MiniTwit.Entities.Test/. ./MiniTwit.Entities.Test/
-COPY MiniTwit.FlagTool.App/. ./MiniTwit.FlagTool.App/
+COPY MiniTwit.Entities.Tests/. ./MiniTwit.Entities.Tests/
+COPY MiniTwit.FlagTool/. ./MiniTwit.FlagTool/
 COPY MiniTwit.FlagTool.Tests/. ./MiniTwit.FlagTool.Tests/
 COPY MiniTwit.Models.Test/. ./MiniTwit.Models.Test/
 COPY MiniTwit.Models/. ./MiniTwit.Models/
