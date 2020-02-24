@@ -8,7 +8,16 @@ namespace MiniTwit.Utils
         {
             return string.Equals(
                 Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
-                "development", 
+                "development",
+                StringComparison.InvariantCultureIgnoreCase
+            );
+        }
+
+        public static bool RunsInDocker()
+        {
+            return string.Equals(
+                Environment.GetEnvironmentVariable("MINITWIT_ENVIRONMENT"),
+                "docker",
                 StringComparison.InvariantCultureIgnoreCase
             );
         }
