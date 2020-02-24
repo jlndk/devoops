@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
@@ -17,10 +18,12 @@ namespace MiniTwit.Web.App.Controllers
         private readonly ILogger<ApiController> _logger;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
-        
-        public ApiController(ILogger<ApiController> logger, IMessageRepository messageRepository,
+        private readonly UserManager<User> _userManager;
+
+        public ApiController(UserManager<User> userManager, ILogger<ApiController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
         {
+            _userManager = userManager;
             _logger = logger;
             _messageRepository = messageRepository;
             _userRepository = userRepository;
@@ -89,13 +92,49 @@ namespace MiniTwit.Web.App.Controllers
             await _messageRepository.CreateAsync(message);
             return StatusCode(204, "");
         }
-        
-        [Route("[controller]/user/{id:int}")]
+
+        public class RegisterPost
+        {
+            public string Username { get; set; }
+            public string Email { get; set; }
+            public string Pwd { get; set; }
+            
+        }
+        [Route("[controller]/register")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> UserPost(int id)
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterPost registerPost)
         {
-            return Json("Not implemented");
+            if (registerPost?.Username == null)
+            {
+                return StatusCode(403,
+                    Json(new {status = 400, error_msg = "You have to enter a username"}));
+            }
+            if (registerPost.Email == null || !registerPost.Email.Contains("@"))
+            {
+                return StatusCode(403,
+                    Json(new {status = 400, error_msg = "You have to enter a valid email address"}));
+            }
+            if (registerPost.Pwd == null)
+            {
+                return StatusCode(403,
+                    Json(new {status = 400, error_msg = "You have to enter a password"}));
+            }
+            if ((await _userRepository.ReadAsyncByUsername(registerPost.Username)) != null)
+            {
+                return StatusCode(403,
+                    Json(new {status = 400, error_msg = "The username is already taken"}));
+            }
+            var user = new User
+            {
+                UserName = registerPost.Username,
+                Email = registerPost.Email
+            };
+            var result = await _userManager.CreateAsync(user, registerPost.Pwd);
+            _logger.LogInformation(registerPost.Username + " created a new account with password.");
+            return StatusCode(204, "");
         }
+        
+        
     }
 }

@@ -64,7 +64,6 @@ namespace MiniTwit.Web.App.Controllers
             }
             _logger.LogInformation("User created a new account with password.");
             await _signInManager.SignInAsync(user, false);
-            _logger.LogInformation("User created a new account with password.");
             return RedirectToLocal(returnUrl);
         }
 
