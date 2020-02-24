@@ -13,6 +13,6 @@ namespace MiniTwit.Models
         Task<Message> ReadAsync(int messageId);
         Task<Response> UpdateAsync(Message message);
         Task<Response> DeleteAsync(int messageId, bool force = false);
-        Task<IEnumerable<Message>> ReadAllMessagesFromFollowedAsync(int parse);
+        Task<IEnumerable<Message>> ReadAllMessagesFromFollowedAsync(int followeeId);
     }
 }
