@@ -85,6 +85,12 @@ namespace MiniTwit.Models
 
         public async Task AddFollowerAsync(int followerId, int followeeId)
         {
+            if (followeeId == followerId)
+            {
+                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                return;
+            }
+            
             _context.Follows.Add(new Follows
             {
                 FollowerId = followerId,
@@ -93,5 +99,7 @@ namespace MiniTwit.Models
 
             await _context.SaveChangesAsync();
         }
+
+  
     }
 }

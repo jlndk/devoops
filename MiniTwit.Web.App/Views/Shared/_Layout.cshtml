@@ -15,11 +15,10 @@
     <div class="navigation">
         @if (SignInManager.IsSignedIn(User))
         {
-            <a asp-area="" asp-controller="Home" asp-action="Index">my timeline</a>
+            <a asp-area="" asp-controller="Home" asp-action="My_Timeline">my timeline</a>
             @("|")
-                @*<a asp-area="" asp-controller="Home" asp-action="Public_TimeLine">public timeline</a>
-                @("|")*@
-
+            <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
+            @("|")
             <a asp-area="" asp-controller="Account" asp-action="LogOut">Sign out @ViewData["username"]</a>
         }
         else

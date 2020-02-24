@@ -29,7 +29,7 @@ namespace MiniTwit.Models
             var query = 
                 from m in _context.Messages
                 where m.Flagged <= 0
-                orderby m.PubDate
+                orderby m.PubDate descending
                 join user in _context.Users on m.AuthorId equals user.Id
                 select new Message
                 {
@@ -48,7 +48,7 @@ namespace MiniTwit.Models
             var query = 
                 from m in _context.Messages
                 where m.Flagged <= 0
-                orderby m.PubDate
+                orderby m.PubDate descending
                 join user in _context.Users on m.AuthorId equals user.Id
                 select new Message
                 {
@@ -85,7 +85,7 @@ namespace MiniTwit.Models
             var messages = 
                 from m in _context.Messages
                 where m.AuthorId == userId && m.Flagged <= 0
-                orderby m.PubDate
+                orderby m.PubDate descending
                 join user in _context.Users on m.AuthorId equals user.Id
                 select new Message
                 {
@@ -123,6 +123,34 @@ namespace MiniTwit.Models
             _context.Messages.Remove(entity);
             await _context.SaveChangesAsync();
             return Deleted;
+        }
+
+        private async Task<IEnumerable<Follows>> GetFollowedAsync(int followerId)
+        {
+            var query =
+                from f in _context.Follows
+                where f.FollowerId == followerId
+                select f;
+            return await query.ToListAsync();
+        }
+        public async Task<IEnumerable<Message>> ReadAllMessagesFromFollowedAsync(int followerId)
+        {
+            var followedList = (await GetFollowedAsync(followerId)).Select(f => f.FolloweeId);
+            var messages = 
+                from m in _context.Messages
+                join user in _context.Users on m.AuthorId equals user.Id 
+                where followedList.Contains(user.Id) || user.Id == followerId
+                orderby m.PubDate descending
+                select new Message
+                {
+                    Author = user,
+                    AuthorId = user.Id,
+                    Flagged = m.Flagged,
+                    Id = m.Id,
+                    PubDate = m.PubDate,
+                    Text = m.Text
+                };
+            return await messages.ToListAsync();
         }
     }
 }
