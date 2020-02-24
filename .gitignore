@@ -3,6 +3,7 @@
 ##
 .vscode
 postgresdata
+aspnetkeys
 
 # Created by https://www.gitignore.io/api/c,cmake,flask,python,aspnetcore
 # Edit at https://www.gitignore.io/?templates=c,cmake,flask,python,aspnetcore

@@ -24,5 +24,6 @@ services:
             - "443:443"
         volumes:
             - ./:/app
+            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
         depends_on:
             - database

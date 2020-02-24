@@ -19,5 +19,7 @@ services:
         ports:
             - "80:80"
             - "443:443"
+        volumes:
+            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
         depends_on:
             - database
