@@ -100,6 +100,13 @@ namespace MiniTwit.Models
             await _context.SaveChangesAsync();
         }
 
-  
+        public async Task<User> ReadAsyncByUsername(string username)
+        {
+            var users =
+                from u in _context.Users
+                where u.UserName == username
+                select u;
+            return await users.FirstOrDefaultAsync();
+        }
     }
 }
