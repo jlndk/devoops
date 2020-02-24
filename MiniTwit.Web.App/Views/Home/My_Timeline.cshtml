@@ -8,6 +8,18 @@
 
 <h2>@ViewData["Title"]</h2>
 <div>
+     <div class="twitbox">
+         <h3>What's on your mind @* TODO: @ViewData["UserName"] *@?</h3>
+         <form
+             asp-route-returnurl="@ViewData["ReturnUrl"]"
+             method="post"
+             asp-area=""
+             asp-controller="Home"
+             asp-action="PostMessage">
+             <p/><input asp-for="Text" size="60"/><!--
+             --><input type="submit" value="share"/>
+         </form>
+     </div>
     <ul class="messages">
         @{
             var messages = ((IEnumerable<Message>) ViewData["Messages"]).ToList();
