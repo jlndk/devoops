@@ -23,6 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Watch Include="**\*.cshtml"/>
+    <Watch Include="**\*.cshtml" />
   </ItemGroup>
 </Project>

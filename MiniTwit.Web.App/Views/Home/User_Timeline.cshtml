@@ -8,32 +8,5 @@
 
 <h2>@ViewData["Title"]</h2>
 <div>
-    <ul class="messages">
-        @{
-            var messages = ((IEnumerable<Message>) ViewData["Messages"]).ToList();
-        }
-        @if (messages.Any())
-        {
-            @foreach (var msg in messages)
-            {
-                <li>
-                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48"/> <!--TODO remember to softcode-->
-                    <strong>
-                        <a asp-area="" asp-controller="Home" asp-action="User_Timeline" asp-route-id=@msg.Author.Id>@msg.Author.UserName</a>
-                    </strong>
-                    @msg.Text
-                    <small>
-                        &mdash; @msg.PubDate
-                    </small>
-                </li>
-            }
-        }
-        else
-        {
-            <li>
-                <em>There's no message so far.</em>
-            </li>
-        }
-
-    </ul>
+    @await Html.PartialAsync("_Messages", ViewData["Messages"])
 </div>

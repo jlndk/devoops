@@ -8,44 +8,9 @@
 
 <h2>@ViewData["Title"]</h2>
 <div>
-    <div class="twitbox">
-        <h3>What's on your mind @* TODO: @ViewData["UserName"] *@?</h3>
-        <form
-            asp-route-returnurl="@ViewData["ReturnUrl"]"
-            method="post"
-            asp-area=""
-            asp-controller="Home"
-            asp-action="PostMessage">
-            <p/><input asp-for="Text" size="60"/><!--
-            --><input type="submit" value="share"/>
-        </form>
-    </div>
-    <ul class="messages">
-        @{
-            var messages = ((IEnumerable<Message>) ViewData["Messages"]).ToList();
-        }
-        @if (messages.Any())
-        {
-            @foreach (var msg in messages)
-            {
-                <li>
-                    <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48"/> <!--TODO remember to softcode-->
-                    <strong>
-                        <a asp-area="" asp-controller="Home" asp-action="User_Timeline" asp-route-id=@msg.Author.Id>@msg.Author.UserName</a>
-                    </strong>
-                    @msg.Text
-                    <small>
-                        &mdash; @msg.PubDate
-                    </small>
-                </li>
-            }
-        }
-        else
-        {
-            <li>
-                <em>There's no message so far.</em>
-            </li>
-        }
-
-    </ul>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @await Html.PartialAsync("_Twitbox")
+    }
+    @await Html.PartialAsync("_Messages", ViewData["Messages"])
 </div>
