@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="3.1.1" />
@@ -23,6 +22,7 @@
     <ProjectReference Include="..\MiniTwit.Models\MiniTwit.Models.csproj" />
   </ItemGroup>
 
-  
-
+  <ItemGroup>
+    <Watch Include="**\*.cshtml"/>
+  </ItemGroup>
 </Project>
