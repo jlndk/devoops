@@ -19,6 +19,7 @@ namespace MiniTwit.Web.App.Controllers
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
+        private static string _latest = "0";
 
         public ApiController(UserManager<User> userManager, ILogger<ApiController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
@@ -39,12 +40,34 @@ namespace MiniTwit.Web.App.Controllers
 
             return (true, StatusCode(403, Json(new {status = 403, error_msg = "You are not authorized to use this resource!"})));
         }
+
+
+        public class LatestMessage
+        {
+            public string Latest { get; set; }
+        }
+        [Route("[controller]/latest/")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetLatest()
+        {
+            return Json(new {latest=_latest});
+        }
+
+        private void UpdateLatest(LatestMessage latestMessage)
+        {
+            if (latestMessage?.Latest != null)
+            {
+                _latest = latestMessage.Latest;
+            }
+        }
         
         [Route("[controller]/msgs/")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetMessages([FromQuery(Name = "no")] int number = 100)
+        public async Task<IActionResult> GetMessages([FromBody] LatestMessage latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
+            UpdateLatest(latestMessage);
             var messages= (await _messageRepository.ReadAsync())
                             .Take(number)
                             .Select(m => new {content=m.Text, pub_date=m.PubDate, user=m.Author.UserName});
@@ -57,8 +80,9 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/msgs/{id}")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> UserGetMessages(int id, [FromQuery(Name = "no")] int number = 100)
+        public async Task<IActionResult> UserGetMessages(int id, [FromBody] LatestMessage latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
+            UpdateLatest(latestMessage);
             var messages = (await _messageRepository.ReadAllMessagesFromUserAsync(id))
                 .Take(number)
                 .Select(m => new {content=m.Text, pub_date=m.PubDate, user=m.Author.UserName});
@@ -74,8 +98,9 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/msgs/{id}")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> UserPostMessages(int id, [FromBody] MessagePost messagePost)
+        public async Task<IActionResult> UserPostMessages(int id, [FromBody] LatestMessage latestMessage, [FromBody] MessagePost messagePost)
         {
+            UpdateLatest(latestMessage);
             var user = await _userRepository.ReadAsync(id);
             if (user == null || messagePost?.Content == null)
             {
@@ -104,8 +129,9 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/register")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterPost registerPost)
+        public async Task<IActionResult> RegisterUser([FromBody] LatestMessage latestMessage, [FromBody] RegisterPost registerPost)
         {
+            UpdateLatest(latestMessage);
             if (registerPost?.Username == null)
             {
                 return StatusCode(403,
@@ -139,9 +165,9 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/fllws/{id}")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> UserGetFollows(int id, [FromQuery(Name = "no")] int number = 100)
+        public async Task<IActionResult> UserGetFollows(int id, [FromBody] LatestMessage latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
-           
+            UpdateLatest(latestMessage);
             var followers = (await _userRepository.GetFollows(id))?
                 .Take(number)
                 .Select(u => new {follows=u.UserName});
@@ -156,8 +182,9 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/fllws/{id}")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> UserFollow(int id, [FromBody] FollowPost followPost)
+        public async Task<IActionResult> UserFollow(int id, [FromBody] LatestMessage latestMessage, [FromBody] FollowPost followPost)
         {
+            UpdateLatest(latestMessage);
             if (followPost?.Follow != null)
             {
                 var followee = await _userRepository.ReadAsyncByUsername(followPost.Follow);
