@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Entities", "MiniTw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Models", "MiniTwit.Models\MiniTwit.Models.csproj", "{E443ACF3-FEDA-4B30-B7D7-E0BF73F78810}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Entities.Test", "MiniTwit.Entities.Test\MiniTwit.Entities.Test.csproj", "{C7539665-D53C-4AEF-96CD-0F88EAFD0CED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Entities.Tests", "MiniTwit.Entities.Tests\MiniTwit.Entities.Tests.csproj", "{C7539665-D53C-4AEF-96CD-0F88EAFD0CED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniTwit.Models.Tests", "MiniTwit.Models.Test\MiniTwit.Models.Tests.csproj", "{947F0782-FF1C-42AC-9047-5C084C547B9F}"
 EndProject
