@@ -51,10 +51,7 @@ namespace MiniTwit.Models.Tests
        [Fact]
         public async Task Message_without_author_fails()
         {
-            await Assert.ThrowsAsync<DbUpdateException>(() =>
-            {
-                return _messageRepository.CreateAsync(new Message {Text = "qwdqg"});
-            });
+            await Assert.ThrowsAsync<DbUpdateException>(() => _messageRepository.CreateAsync(new Message {Text = "qwdqg"}));
         }
 
         [Fact]
@@ -65,7 +62,7 @@ namespace MiniTwit.Models.Tests
             DateTime prev = DateTime.MaxValue;
             foreach (var message in result)
             {
-                Assert.Equal(1, DateTime.Compare(prev, message.PubDate));
+                Assert.True(DateTime.Compare(prev, message.PubDate) >= 0);
                 _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
                 prev = message.PubDate;
             
@@ -80,7 +77,7 @@ namespace MiniTwit.Models.Tests
             DateTime prev = DateTime.MaxValue;
             foreach (var message in result)
             {
-                Assert.Equal(1, DateTime.Compare(prev, message.PubDate));
+                Assert.True(DateTime.Compare(prev, message.PubDate)  >= 0);
                 _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
                 prev = message.PubDate;
             
@@ -150,7 +147,7 @@ namespace MiniTwit.Models.Tests
       
             var (_, followeeReturnedId) = await userRepo.CreateAsync(followee);
             Assert.Null(followee.Follows);
-            Assert.Equal(0, (await messageRepo.ReadAllMessagesFromFollowedAsync(followeeReturnedId)).Count());
+            Assert.Empty((await messageRepo.ReadAllMessagesFromFollowedAsync(followeeReturnedId)));
         }
         
         [Fact]
