@@ -4,6 +4,8 @@ services:
         image: postgres
         environment:
             - "POSTGRES_PASSWORD=test"
+        volumes:
+            - ./postgresdata:/var/lib/postgresql/data
 
     webapp:
         build:
