@@ -8,49 +8,6 @@
 
 <h2>@ViewData["Title"]</h2>
 <div>
-    @if (SignInManager.IsSignedIn(User))
-    {
-        var userid = UserManager.GetUserId(User);
-        var viewedUserId = (string) ViewData["ViewedUserId"];
-        if (viewedUserId != null) @* TODO: user timeline *@
-        {
-            <div class="followstatus">
-                @if (userid == viewedUserId) @* TODO: current user is page user *@
-                {
-                    <span>This is you, @User.Identity.Name!</span>
-                }
-                else if (false) @* TODO: user is following *@
-                {
-                    <span>You are currently following this user.</span>
-                    @* TODO: This link should point at the unfollow 
-                             hook in a controller *@
-                    <a class="unfollow" href="#">Unfollow user</a>
-                }
-                else
-                {
-                    <span>You are not yet following this user.</span>
-                    @* TODO: This link should point at the follow 
-                             hook in a controller *@
-                    <a class="follow" href="#">Unfollow user</a>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="twitbox">
-                <h3>What's on your mind @* TODO: @ViewData["UserName"] *@?</h3>
-                <form
-                    asp-route-returnurl="@ViewData["ReturnUrl"]"
-                    method="post"
-                    asp-area=""
-                    asp-controller="Home"
-                    asp-action="PostMessage">
-                    <p/><input asp-for="Text" size="60"/><!--
-                    --><input type="submit" value="share"/>
-                </form>
-            </div>
-        }
-    }
     <ul class="messages">
         @{
             var messages = ((IEnumerable<Message>) ViewData["Messages"]).ToList();
@@ -62,11 +19,11 @@
                 <li>
                     <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48"/> <!--TODO remember to softcode-->
                     <strong>
-                        <a href="#">@msg.Author.UserName</a>
+                        <a asp-area="" asp-controller="Home" asp-action="User_Timeline" asp-route-id=@msg.Author.Id>@msg.Author.UserName</a>
                     </strong>
                     @msg.Text
                     <small>
-                        &mdash; @msg.PubDate @*todo check if this look right*@
+                        &mdash; @msg.PubDate
                     </small>
                 </li>
             }
