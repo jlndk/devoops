@@ -35,7 +35,6 @@ ENTRYPOINT ["dotnet", "watch", "--project", "MiniTwit.Web.App", "run", "--urls",
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 as production
 EXPOSE 80
 EXPOSE 443
-ENV applicationUrl=https://localhost:5001;http://localhost:5000
 WORKDIR /app
 COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "MiniTwit.Web.App.dll"]

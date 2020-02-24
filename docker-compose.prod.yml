@@ -1,11 +1,18 @@
 version: "3.4"
 services:
     database:
-        build: ./DatabaseDocker/
+        image: postgres
+        environment:
+            - "POSTGRES_PASSWORD=test"
+
     webapp:
-        build: .
+        build:
+            context: "."
+            dockerfile: "Dockerfile"
+            target: production
         environment:
             - "ASPNETCORE_ENVIRONMENT=Production"
+            - "MINITWIT_ENVIRONMENT=docker"
         ports:
             - "80:80"
             - "443:443"
