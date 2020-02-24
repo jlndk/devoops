@@ -62,7 +62,7 @@ namespace MiniTwit.Web.App.Controllers
             var messages = (await _messageRepository.ReadAllMessagesFromUserAsync(id))
                 .Take(number)
                 .Select(m => new {content=m.Text, pub_date=m.PubDate, user=m.Author.UserName});
-            return Json(messages.Take(number));
+            return Json(messages);
         }
 
 
@@ -100,6 +100,7 @@ namespace MiniTwit.Web.App.Controllers
             public string Pwd { get; set; }
             
         }
+        
         [Route("[controller]/register")]
         [HttpPost]
         [AllowAnonymous]
@@ -135,6 +136,51 @@ namespace MiniTwit.Web.App.Controllers
             return StatusCode(204, "");
         }
         
-        
+        [Route("[controller]/fllws/{id}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> UserGetFollows(int id, [FromQuery(Name = "no")] int number = 100)
+        {
+           
+            var followers = (await _userRepository.GetFollows(id))?
+                .Take(number)
+                .Select(u => new {follows=u.UserName});
+            return Json(followers);
+        }
+
+        public class FollowPost
+        {
+            public string Follow { get; set; }
+            public string UnFollow { get; set; }
+        }
+        [Route("[controller]/fllws/{id}")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> UserFollow(int id, [FromBody] FollowPost followPost)
+        {
+            if (followPost?.Follow != null)
+            {
+                var followee = await _userRepository.ReadAsyncByUsername(followPost.Follow);
+                if (followee == null)
+                {
+                    // TODO: This has to be another error, likely 500???
+                    return StatusCode(404, "");
+                }
+
+                await _userRepository.AddFollowerAsync(followerId: id, followeeId: followee.Id);
+            }
+            else if (followPost?.UnFollow != null)
+            {
+                var followee = await _userRepository.ReadAsyncByUsername(followPost.UnFollow);
+                if (followee == null)
+                {
+                    // TODO: This has to be another error, likely 500???
+                    return StatusCode(404, "");
+                }
+
+                await _userRepository.RemoveFollowerAsync(followerId: id, followeeId: followee.Id);
+            }
+            return StatusCode(204, "");
+        }
     }
 }

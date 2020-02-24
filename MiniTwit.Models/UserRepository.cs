@@ -90,6 +90,12 @@ namespace MiniTwit.Models
                 //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
                 return;
             }
+
+            if (_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
+            {
+                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                return;
+            }
             
             _context.Follows.Add(new Follows
             {
@@ -100,6 +106,25 @@ namespace MiniTwit.Models
             await _context.SaveChangesAsync();
         }
 
+        public async Task RemoveFollowerAsync(int followerId, int followeeId)
+        {
+            if (followeeId == followerId)
+            {
+                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                return;
+            }
+
+            if (!_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
+            {
+                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                return;
+            }
+
+            var follow = await _context.Follows.FirstAsync(f => f.FolloweeId == followeeId && f.FollowerId == followerId);
+            _context.Follows.Remove(follow);
+            await _context.SaveChangesAsync();
+        } 
+        
         public async Task<User> ReadAsyncByUsername(string username)
         {
             var users =
@@ -108,5 +133,27 @@ namespace MiniTwit.Models
                 select u;
             return await users.FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<User>> GetFollows(int userId)
+        {
+            var users =
+                from f in _context.Follows
+                where f.FollowerId == userId
+                join u in _context.Users on f.FolloweeId equals u.Id
+                select u;
+            return await users.ToListAsync();
+        }
+        
+        public async Task<IEnumerable<User>> GetFollowedBy(int userId)
+        {
+            var users =
+                from f in _context.Follows
+                where f.FolloweeId == userId
+                join u in _context.Users on f.FolloweeId equals u.Id
+                select u;
+            return await users.ToListAsync();
+        }
+
+       
     }
 }
