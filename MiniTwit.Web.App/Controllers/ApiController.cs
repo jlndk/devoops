@@ -47,7 +47,7 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/latest/")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetLatest()
+        public IActionResult GetLatest()
         {
             return Json(new {latest = _latest});
         }
