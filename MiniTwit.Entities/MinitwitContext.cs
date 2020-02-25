@@ -53,7 +53,6 @@ namespace MiniTwit.Entities
                 .HasOne(f => f.Followee)
                 .WithMany(u => u.FollowedBy)
                 .HasForeignKey(f => f.FolloweeId);
-
         }
     }
 }

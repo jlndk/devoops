@@ -1,8 +1,13 @@
 using System;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MiniTwit.Entities;
 using MiniTwit.FlagTool;
+using MiniTwit.Models;
 using Xunit;
 
 namespace MiniTwit.FlagTool.Tests
@@ -17,88 +22,40 @@ namespace MiniTwit.FlagTool.Tests
 
         private readonly StringBuilder _output;
 
-        private static string TestConnectionString
-        {
-            get
-            {
-                var stringBuilder = new SQLiteConnectionStringBuilder
-                {
-                    DataSource = "ProgramTestsInMemoryDb"
-                };
-                stringBuilder.Add("Cache", "Shared");
-                stringBuilder.Add("Mode", "Memory");
-                return stringBuilder.ToString();
-            }
-        }
-
-        private void applySchema(SQLiteConnection connection)
-        {
-            const string sql = @"
-                drop table if exists user;
-                create table user (
-                    user_id integer primary key autoincrement,
-                    username string not null,
-                    email string not null,
-                    pw_hash string not null
-                );
-
-                drop table if exists follower;
-                    create table follower (
-                    who_id integer,
-                    whom_id integer
-                );
-
-                drop table if exists message;
-                create table message (
-                    message_id integer primary key autoincrement,
-                    author_id integer not null,
-                    text string not null,
-                    pub_date integer,
-                    flagged integer
-                );
-            ";
-
-            var command = new SQLiteCommand(sql, connection);
-            command.ExecuteNonQuery();
-        }
-
         [Fact]
-        public void Program_default_ConnectionString_is_correct()
+        public async Task Run_prints_all_tweets_and_authors_if_i_flag_is_supplied()
         {
-            var stringBuilder = new SQLiteConnectionStringBuilder
+            var context = MiniTwitTestContext.CreateMiniTwitContext();
+            context.Users.Add(new User
             {
-                DataSource = "/tmp/MiniTwit.db"
-            };
-            var expected = stringBuilder.ToString();
-            var program = new Program();
-            Assert.Equal(expected, program.ConnectionString);
-        }
+                UserName = "itu",
+                Email = "itu@itu.dk",
+                PasswordHash = "abc123"
+            });
+            context.Messages.Add(new Message
+            {
+                AuthorId = 1,
+                Text = "hello world",
+                Flagged = 0,
+            });
+            context.Messages.Add(new Message
+            {
+                AuthorId = 1,
+                Text = "foobar",
+                Flagged = 0,
+            });
+            context.Messages.Add(new Message
+            {
+                AuthorId = 1,
+                Text = "fricking heck",
+                Flagged = 1,
+            });
+            context.SaveChanges();
+            
 
-        [Fact]
-        public void Run_prints_all_tweets_and_authors_if_i_flag_is_supplied()
-        {
-            var connection = new SQLiteConnection(TestConnectionString);
-            connection.Open();
-            applySchema(connection);
-            const string sql = @"
-                INSERT INTO user (username, email, pw_hash)
-                VALUES
-                ('itu', 'itu@itu.dk', 'abc123');
-                INSERT INTO message (author_id, text, flagged)
-                VALUES
-                (1, 'hello world', 0),
-                (1, 'foobar', 0),
-                (1, 'fricking heck', 1);
-            ";
-            var command = new SQLiteCommand(sql, connection);
-            command.ExecuteNonQuery();
-            var program = new Program
-            {
-                ConnectionString = TestConnectionString
-            };
-            var args = new[] {"-i"};
-            program.Run(args);
-            connection.Close();
+            var p = new Program(context);
+            await p.Run(new[] {"-i"});
+
             var actual = _output.ToString().Trim();
             var expected = new StringBuilder();
             expected.Append("1,1,hello world,0" + Environment.NewLine);
@@ -108,39 +65,34 @@ namespace MiniTwit.FlagTool.Tests
         }
 
         [Fact]
-        public void Run_prints_flags_twit_if_id_is_supplied()
+        public async Task Run_prints_flags_twit_if_id_is_supplied()
         {
-            var connection = new SQLiteConnection(TestConnectionString);
-            connection.Open();
-            applySchema(connection);
-            const string sql = @"
-                INSERT INTO user (username, email, pw_hash)
-                VALUES
-                ('itu', 'itu@itu.dk', 'abc123');
-                INSERT INTO message (author_id, text, flagged)
-                VALUES
-                (1, 'fricking heck', 0);
-            ";
-            var command = new SQLiteCommand(sql, connection);
-            command.ExecuteNonQuery();
-            var program = new Program
+            var context = MiniTwitTestContext.CreateMiniTwitContext();
+            
+            context.Users.Add(new User
             {
-                ConnectionString = TestConnectionString
-            };
-            var args = new[] {"1"};
-            program.Run(args);
+                UserName = "itu",
+                Email = "itu@itu.dk",
+                PasswordHash = "abc123"
+            });
+            context.Messages.Add(new Message
+            {
+                AuthorId = 1,
+                Text = "fricking heck",
+                Flagged = 0,
+            });
+            context.SaveChanges();
+            
+            var p = new Program(context);
+            await p.Run(new[] {"1"});
             
             //Assert output
             var actual = _output.ToString().Trim();
-            Assert.Equal("Flagged entry: 1", actual);
+            Assert.Equal("Flagged post with id 1", actual);
 
             //Assert that the message has actually been flagged in db
-            var assertSql = "SELECT COUNT(*) FROM message WHERE message_id = 1 AND flagged=1;";
-            var assertCmd = new SQLiteCommand(assertSql, connection);
-            var assertRes = (long) assertCmd.ExecuteScalar();
-            Assert.True(assertRes == 1);
-
-            connection.Close();
+            var messages = context.Messages.Where(m => m.Flagged == 1 && m.Id == 1);
+            Assert.Equal(1, messages.Count());
         }
 
         [Fact]

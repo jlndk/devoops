@@ -21,9 +21,12 @@ namespace MiniTwit.Web.App.Controllers
         private readonly UserManager<User> _userManager;
         private static int _latest = 0;
 
-        public ApiController(UserManager<User> userManager, ILogger<ApiController> logger,
+        public ApiController(
+            UserManager<User> userManager, 
+            ILogger<ApiController> logger,
             IMessageRepository messageRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository
+        )
         {
             _userManager = userManager;
             _logger = logger;

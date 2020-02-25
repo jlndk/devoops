@@ -24,11 +24,11 @@ namespace MiniTwit.Models
             return (Created, message.Id);
         }
 
-        public async Task<IEnumerable<Message>> ReadAsync()
+        public async Task<IEnumerable<Message>> ReadAsync(bool includeFlagged = false)
         {
             var query = 
                 from m in _context.Messages
-                where m.Flagged <= 0
+                where includeFlagged || m.Flagged <= 0
                 orderby m.PubDate descending
                 join user in _context.Users on m.AuthorId equals user.Id
                 select new Message

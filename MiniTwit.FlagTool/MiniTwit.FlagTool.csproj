@@ -8,7 +8,8 @@
 
 
   <ItemGroup>
-    
+    <ProjectReference Include="..\MiniTwit.Entities\MiniTwit.Entities.csproj" />
+    <ProjectReference Include="..\MiniTwit.Models\MiniTwit.Models.csproj" />
   </ItemGroup>
 
 
