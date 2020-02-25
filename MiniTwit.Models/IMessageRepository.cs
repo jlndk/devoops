@@ -7,7 +7,7 @@ namespace MiniTwit.Models
     public interface IMessageRepository
     {
         Task<(Response response, int messageId)> CreateAsync(Message message);
-        Task<IEnumerable<Message>> ReadAsync();
+        Task<IEnumerable<Message>> ReadAsync(bool includeFlagged = false);
         Task<IEnumerable<Message>> ReadCountAsync(int count);
         Task<List<Message>> ReadAllMessagesFromUserAsync(int userId);
         Task<Message> ReadAsync(int messageId);

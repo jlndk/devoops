@@ -2,6 +2,9 @@
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
+using MiniTwit.Entities;
+using MiniTwit.Models;
 
 namespace MiniTwit.FlagTool
 {
@@ -17,36 +20,20 @@ Options:
     -h            Show this screen.
     -i            Dump all tweets and authors to STDOUT.";
 
-        private string _connectionString;
-
-        public string ConnectionString
+        private readonly IMessageRepository _messageRepo;
+        
+        public Program(IMiniTwitContext context = null)
         {
-            get
-            {
-                if (_connectionString != null)
-                {
-                    return _connectionString;
-                }
-
-                var stringBuilder = new SQLiteConnectionStringBuilder
-                {
-                    DataSource = "/tmp/MiniTwit.db"
-                };
-                _connectionString = stringBuilder.ToString();
-
-                return _connectionString;
-            }
-            set => _connectionString = value;
+            _messageRepo = new MessageRepository(context ?? new MiniTwitContext());
         }
 
-        public void Run(string[] args)
+        public async Task Run(string[] args)
         {
             var cmd = args.ElementAtOrDefault(0) ?? "";
-
             switch (cmd)
             {
                 case "-i":
-                    PrintAllMessages();
+                    await PrintAllMessages();
                     break;
                 case "-h":
                     PrintHelp();
@@ -55,24 +42,27 @@ Options:
                     if (cmd == "")
                         PrintHelp();
                     else
-                        FlagMessage(int.Parse(cmd));
+                        await FlagMessage(int.Parse(cmd));
                     break;
             }
         }
 
-        private void FlagMessage(int messageId)
+        private async Task FlagMessage(int messageId)
         {
-            using var connection = new SQLiteConnection(ConnectionString);
-            connection.Open();
-            const string sql = @"UPDATE message SET flagged=1 WHERE message_id=@messageId";
-            var cmd = new SQLiteCommand(sql, connection);
-            var idParam = new SQLiteParameter("@messageId", DbType.Int32)
+            var message = await _messageRepo.ReadAsync(messageId);
+            if (message == null)
             {
-                Value = messageId
-            };
-            cmd.Parameters.Add(idParam);
-            cmd.ExecuteNonQuery();
-            Console.WriteLine($"Flagged entry: {messageId}");
+                Console.WriteLine($"No post with id {messageId}");
+                return;
+            }
+            message.Flagged = 1;
+            var response = await _messageRepo.UpdateAsync(message);
+            if (response != Response.Updated)
+            {
+                Console.WriteLine($"Message wasn't updated, got response: {response}");
+                return;
+            }
+            Console.WriteLine($"Flagged post with id {messageId}");
         }
 
         private static void PrintHelp()
@@ -80,23 +70,19 @@ Options:
             Console.WriteLine(DocString);
         }
 
-        private void PrintAllMessages()
+        private async Task PrintAllMessages()
         {
-            using var connection = new SQLiteConnection(ConnectionString);
-            connection.Open();
-            const string sql = @"SELECT message_id, author_id, text, flagged FROM message;";
-            var cmd = new SQLiteCommand(sql, connection);
-            var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            var messages = await _messageRepo.ReadAsync(true);
+            foreach (var message in messages)
             {
-                Console.WriteLine($"{reader["message_id"]},{reader["author_id"]},{reader["text"]},{reader["flagged"]}");
+                Console.WriteLine($"{message.Id},{message.AuthorId},{message.Text},{message.Flagged}");
             }
         }
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var p = new Program();
-            p.Run(args);
+            await p.Run(args);
         }
     }
 }

@@ -33,8 +33,6 @@ namespace MiniTwit.Models.Tests
             _messageRepository = new MessageRepository(_context);
         }
 
-        
-
         [Fact]
         public async Task Message_Is_Created_Successfully()
         {
