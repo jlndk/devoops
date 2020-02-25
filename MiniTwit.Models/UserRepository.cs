@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
 using static MiniTwit.Models.Response;
 
@@ -10,9 +11,11 @@ namespace MiniTwit.Models
     public class UserRepository : IUserRepository
     {
         private readonly IMiniTwitContext _context;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(IMiniTwitContext context)
+        public UserRepository(IMiniTwitContext context, ILogger<UserRepository> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -87,13 +90,13 @@ namespace MiniTwit.Models
         {
             if (followeeId == followerId)
             {
-                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                _logger.LogInformation($"{followeeId} tried to follow themself");
                 return;
             }
 
             if (_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
             {
-                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                _logger.LogInformation($"{followerId} tried to follow {followeeId} but was already following");
                 return;
             }
             
@@ -110,13 +113,13 @@ namespace MiniTwit.Models
         {
             if (followeeId == followerId)
             {
-                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                _logger.LogInformation($"{followeeId} tried to unfollow themself");
                 return;
             }
 
             if (!_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
             {
-                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                _logger.LogInformation($"{followerId} tried to follow {followeeId} but was not following");
                 return;
             }
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
 using MiniTwit.Models;
+using MiniTwit.Web.App.Models.Api;
 using Newtonsoft.Json;
 
 namespace MiniTwit.Web.App.Controllers
@@ -89,13 +90,7 @@ namespace MiniTwit.Web.App.Controllers
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
             return Json(messages);
         }
-
-
-        public class MessagePost
-        {
-            public string Content { get; set; }
-            public int? Latest { get; set; }
-        }
+        
 
         [Route("[controller]/msgs/{username}")]
         [HttpPost]
@@ -187,25 +182,20 @@ namespace MiniTwit.Web.App.Controllers
             return Json(new {follows = followers});
         }
 
-        public class FollowPost
-        {
-            public string Follow { get; set; }
-            public string UnFollow { get; set; }
-            public int? Latest { get; set; }
-        }
+        
 
         [Route("[controller]/fllws/{username}")]
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> UserFollow(string username, [FromQuery(Name = "latest")] int? latestMessage,
-            [FromBody] FollowPost followPost)
+            [FromBody] PostFollow postFollow)
         {
             UpdateLatest(latestMessage);
-            UpdateLatest(followPost.Latest);
-            if (followPost?.Follow != null)
+            UpdateLatest(postFollow.Latest);
+            if (postFollow?.Follow != null)
             {
                 var follower = await _userRepository.ReadAsyncByUsername(username);
-                var followee = await _userRepository.ReadAsyncByUsername(followPost.Follow);
+                var followee = await _userRepository.ReadAsyncByUsername(postFollow.Follow);
                 if (followee == null)
                 {
                     // TODO: This has to be another error, likely 500???
@@ -214,10 +204,10 @@ namespace MiniTwit.Web.App.Controllers
 
                 await _userRepository.AddFollowerAsync(followerId: follower.Id, followeeId: followee.Id);
             }
-            else if (followPost?.UnFollow != null)
+            else if (postFollow?.UnFollow != null)
             {
                 var follower = await _userRepository.ReadAsyncByUsername(username);
-                var followee = await _userRepository.ReadAsyncByUsername(followPost.UnFollow);
+                var followee = await _userRepository.ReadAsyncByUsername(postFollow.UnFollow);
                 if (followee == null)
                 {
                     // TODO: This has to be another error, likely 500???
