@@ -2,6 +2,7 @@ version: "3.4"
 services:
     database:
         image: postgres:12
+        restart: unless-stopped
         environment:
             - "POSTGRES_PASSWORD=test"
         volumes:
@@ -12,6 +13,7 @@ services:
             context: "."
             dockerfile: "Dockerfile"
             target: production
+        restart: unless-stopped
         environment:
             - "ASPNETCORE_ENVIRONMENT=Production"
             - "MINITWIT_ENVIRONMENT=docker"
