@@ -48,8 +48,7 @@ namespace MiniTwit.Web.App.Controllers
             ViewData["ViewedUserName"] = (await _userRepository.ReadAsync(id.Value)).UserName;
             return View();
         }
-
-        // TODO: Move to Message Controller?
+        
         [HttpPost]
         public async Task<IActionResult> PostMessage(Message message, string returnUrl = null)
         {

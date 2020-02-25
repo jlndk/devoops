@@ -4,7 +4,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
+using Moq;
 using Xunit;
 using Xunit.Abstractions;
 using static MiniTwit.Models.Tests.Utility;
@@ -18,14 +20,16 @@ namespace MiniTwit.Models.Tests
         private readonly MiniTwitTestContext _context;
         private readonly UserRepository _userRepository;
         private readonly MessageRepository _messageRepository;
+        private ILogger<UserRepository> _loggerUser;
 
         public MessageRepositoryTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
+            _loggerUser = Mock.Of<ILogger<UserRepository>>();
             _context = CreateMiniTwitContext();
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
-            _userRepository = new UserRepository(_context);
+            _userRepository = new UserRepository(_context, _loggerUser);
             _messageRepository = new MessageRepository(_context);
         }
 
@@ -136,7 +140,7 @@ namespace MiniTwit.Models.Tests
         public async Task No_Messages_If_Not_Following_Anyone()
         {
             var context = CreateMiniTwitContext();
-            var userRepo = new UserRepository(context);
+            var userRepo = new UserRepository(context, _loggerUser);
             var messageRepo = new MessageRepository(context);
             await Add_dummy_data(userRepo, messageRepo);
             var followee = new User
@@ -154,7 +158,7 @@ namespace MiniTwit.Models.Tests
         public async Task All_Messages_If_Following_Everyone()
         {
             var context = CreateMiniTwitContext();
-            var userRepo = new UserRepository(context);
+            var userRepo = new UserRepository(context, _loggerUser);
             var messageRepo = new MessageRepository(context);
             await Add_dummy_data(userRepo, messageRepo);
             var follower = new User

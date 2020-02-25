@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
 using static MiniTwit.Models.Response;
 
@@ -10,9 +11,11 @@ namespace MiniTwit.Models
     public class UserRepository : IUserRepository
     {
         private readonly IMiniTwitContext _context;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(IMiniTwitContext context)
+        public UserRepository(IMiniTwitContext context, ILogger<UserRepository> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -87,11 +90,17 @@ namespace MiniTwit.Models
         {
             if (followeeId == followerId)
             {
-                //TODO: Log this to the file, but no logger is sent into the repo, so its a bit hard.
+                _logger.LogInformation($"{followeeId} tried to follow themself");
+                return;
+            }
+
+            if (_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
+            {
+                _logger.LogInformation($"{followerId} tried to follow {followeeId} but was already following");
                 return;
             }
             
-            _context.Follows.Add(new Follows
+            _context.Follows.Add(new Follow
             {
                 FollowerId = followerId,
                 FolloweeId = followeeId
@@ -100,6 +109,54 @@ namespace MiniTwit.Models
             await _context.SaveChangesAsync();
         }
 
-  
+        public async Task RemoveFollowerAsync(int followerId, int followeeId)
+        {
+            if (followeeId == followerId)
+            {
+                _logger.LogInformation($"{followeeId} tried to unfollow themself");
+                return;
+            }
+
+            if (!_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
+            {
+                _logger.LogInformation($"{followerId} tried to follow {followeeId} but was not following");
+                return;
+            }
+
+            var follow = await _context.Follows.FirstAsync(f => f.FolloweeId == followeeId && f.FollowerId == followerId);
+            _context.Follows.Remove(follow);
+            await _context.SaveChangesAsync();
+        } 
+        
+        public async Task<User> ReadAsyncByUsername(string username)
+        {
+            var users =
+                from u in _context.Users
+                where u.UserName == username
+                select u;
+            return await users.FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetFollows(int userId)
+        {
+            var users =
+                from f in _context.Follows
+                where f.FollowerId == userId
+                join u in _context.Users on f.FolloweeId equals u.Id
+                select u;
+            return await users.ToListAsync();
+        }
+        
+        public async Task<IEnumerable<User>> GetFollowedBy(int userId)
+        {
+            var users =
+                from f in _context.Follows
+                where f.FolloweeId == userId
+                join u in _context.Users on f.FolloweeId equals u.Id
+                select u;
+            return await users.ToListAsync();
+        }
+
+       
     }
 }

@@ -13,7 +13,7 @@ namespace MiniTwit.Entities
         [MinLength(5)]
         public override string Email { get; set; }
         
-        public ICollection<Follows> Follows { get; set;  }
-        public ICollection<Follows> FollowedBy { get; set;  }
+        public ICollection<Follow> Follows { get; set;  }
+        public ICollection<Follow> FollowedBy { get; set;  }
     }
 }
