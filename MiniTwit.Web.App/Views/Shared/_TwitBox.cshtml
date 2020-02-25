@@ -1,0 +1,15 @@
+@model Message
+
+
+<div class="twitbox">
+    <h3>What's on your mind @User.Identity.Name ?</h3>
+    <form
+        asp-route-returnurl="@ViewData["ReturnUrl"]"
+        method="post"
+        asp-area=""
+        asp-controller="Home"
+        asp-action="PostMessage">
+        <p/><input asp-for="Text" size="60"/><!--
+        --><input type="submit" value="share"/>
+    </form>
+</div>
