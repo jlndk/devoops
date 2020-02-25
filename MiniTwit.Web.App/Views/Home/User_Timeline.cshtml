@@ -3,14 +3,10 @@
 @using Microsoft.AspNetCore.Identity
 @model Message
 @{
-    ViewData["Title"] = "Public Timeline";
+    ViewData["Title"] = ViewData["ViewedUserName"] + "'s Timeline";
 }
 
 <h2>@ViewData["Title"]</h2>
 <div>
-    @if (SignInManager.IsSignedIn(User))
-    {
-        @await Html.PartialAsync("_Twitbox")
-    }
     @await Html.PartialAsync("_Messages", ViewData["Messages"])
 </div>

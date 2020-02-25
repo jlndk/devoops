@@ -211,5 +211,56 @@ namespace MiniTwit.Models.Tests
                 return repo.CreateAsync(new User {UserName = "TestCreate"});
             });
         }
+        
+        [Fact]
+        public async Task Can_Follow()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context);
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwdq@gqqw.com"
+            };
+            var (_, followerReturnedId) = await userRepo.CreateAsync(follower);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeReturnedId) = await userRepo.CreateAsync(followee);
+
+            await userRepo.AddFollowerAsync(followerId: followerReturnedId, followeeId: followeeReturnedId);
+            
+            Assert.Contains(followee.FollowedBy, (f => f.FollowerId == followerReturnedId));
+            Assert.Contains(follower.Follows, (f => f.FolloweeId == followeeReturnedId));
+        }
+        
+        [Fact]
+        public async Task Can_Get_Followers()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context);
+            var messageRepo = new MessageRepository(context);
+            await Add_dummy_data(userRepo, messageRepo);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+      
+            var (_, followeeReturnedId) = await userRepo.CreateAsync(followee);
+            
+            await foreach (var user in context.Users)
+            {
+                if (user.Id == followeeReturnedId) 
+                    continue;
+                await userRepo.AddFollowerAsync(followerId: user.Id, followeeId: followeeReturnedId);
+            }
+            
+            
+            Assert.Equal(9, followee.FollowedBy.Count());
+            Assert.True(followee.FollowedBy.All(f => f.Follower.Follows.Any(ff => ff.FolloweeId == followeeReturnedId)));
+        }
     }
 }

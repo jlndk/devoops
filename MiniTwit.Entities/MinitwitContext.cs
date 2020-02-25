@@ -10,7 +10,15 @@ namespace MiniTwit.Entities
     {
         public MiniTwitContext(DbContextOptions<MiniTwitContext> options) : base(options) { }
 
+        // Dont delete this, it is used by migrations.
+        // ReSharper disable once UnusedMember.Global
+        public MiniTwitContext() : base()
+        {
+        }
+
         public DbSet<Message> Messages { get; set; }
+        
+        public DbSet<Follows> Follows { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,6 +40,20 @@ namespace MiniTwit.Entities
         {
             modelBuilder.UseIdentityColumns();
             base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.Entity<Follows>()
+                .HasKey(f => new { f.FollowerId, f.FolloweeId});
+            
+            modelBuilder.Entity<Follows>()
+                .HasOne(f => f.Follower)
+                .WithMany(u => u.Follows)
+                .HasForeignKey(f => f.FollowerId);
+
+            modelBuilder.Entity<Follows>()
+                .HasOne(f => f.Followee)
+                .WithMany(u => u.FollowedBy)
+                .HasForeignKey(f => f.FolloweeId);
+
         }
     }
 }
