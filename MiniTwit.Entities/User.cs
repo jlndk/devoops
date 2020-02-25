@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace MiniTwit.Entities
@@ -11,5 +12,8 @@ namespace MiniTwit.Entities
         [Required(AllowEmptyStrings = false)]
         [MinLength(5)]
         public override string Email { get; set; }
+        
+        public ICollection<Follow> Follows { get; set;  }
+        public ICollection<Follow> FollowedBy { get; set;  }
     }
 }
