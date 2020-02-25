@@ -31,6 +31,7 @@ namespace MiniTwit.Web.App.Controllers
         }
 
         //This function is defined, dont know if we need to use it.
+        //The tests doesnt test for it.
         private (bool, IActionResult) NotRequestFromSimulator()
         {
             if (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"))
@@ -40,12 +41,6 @@ namespace MiniTwit.Web.App.Controllers
 
             return (true,
                 StatusCode(403, Json(new {status = 403, error_msg = "You are not authorized to use this resource!"})));
-        }
-
-
-        public class LatestMessage
-        {
-            public int? Latest { get; set; }
         }
 
         [Route("[controller]/latest/")]
@@ -63,14 +58,7 @@ namespace MiniTwit.Web.App.Controllers
                 _latest = latestMessage.Value;
             }
         }
-
-        private void UpdateLatest(LatestMessage latestMessage)
-        {
-            if (latestMessage?.Latest != null)
-            {
-                _latest = latestMessage.Latest.Value;
-            }
-        }
+        
 
         [Route("[controller]/msgs/")]
         [HttpGet]
