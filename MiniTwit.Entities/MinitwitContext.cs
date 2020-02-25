@@ -18,7 +18,7 @@ namespace MiniTwit.Entities
 
         public DbSet<Message> Messages { get; set; }
         
-        public DbSet<Follows> Follows { get; set; }
+        public DbSet<Follow> Follows { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,15 +41,15 @@ namespace MiniTwit.Entities
             modelBuilder.UseIdentityColumns();
             base.OnModelCreating(modelBuilder);
             
-            modelBuilder.Entity<Follows>()
+            modelBuilder.Entity<Follow>()
                 .HasKey(f => new { f.FollowerId, f.FolloweeId});
             
-            modelBuilder.Entity<Follows>()
+            modelBuilder.Entity<Follow>()
                 .HasOne(f => f.Follower)
                 .WithMany(u => u.Follows)
                 .HasForeignKey(f => f.FollowerId);
 
-            modelBuilder.Entity<Follows>()
+            modelBuilder.Entity<Follow>()
                 .HasOne(f => f.Followee)
                 .WithMany(u => u.FollowedBy)
                 .HasForeignKey(f => f.FolloweeId);

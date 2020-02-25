@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiniTwit.Entities
 {
-    public class Follows
+    public class Follow
     {
         public int FollowerId { get; set; }
         public int FolloweeId { get; set; }

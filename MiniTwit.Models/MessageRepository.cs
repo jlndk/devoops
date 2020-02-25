@@ -125,7 +125,7 @@ namespace MiniTwit.Models
             return Deleted;
         }
 
-        private async Task<IEnumerable<Follows>> GetFollowedAsync(int followerId)
+        private async Task<IEnumerable<Follow>> GetFollowedAsync(int followerId)
         {
             var query =
                 from f in _context.Follows

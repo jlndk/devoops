@@ -100,7 +100,7 @@ namespace MiniTwit.Models
                 return;
             }
             
-            _context.Follows.Add(new Follows
+            _context.Follows.Add(new Follow
             {
                 FollowerId = followerId,
                 FolloweeId = followeeId
