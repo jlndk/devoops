@@ -1,4 +1,6 @@
 # MiniTwit DevOps project
+> Check our uptime and maintenance status here: https://status.minitwit.tk
+
 A Twitter clone made a long time ago, in a galaxy far, far away. Over the course of the semester, we will bring this application up to date and deploy it using all the DevOps skills we learn.
 
 **Currently in the middle of a rewrite. This documentation will be rewritten once complete.**
