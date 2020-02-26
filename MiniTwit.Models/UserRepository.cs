@@ -119,7 +119,7 @@ namespace MiniTwit.Models
 
             if (!_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
             {
-                _logger.LogInformation($"{followerId} tried to follow {followeeId} but was not following");
+                _logger.LogInformation($"{followerId} tried to unfollow {followeeId} but was not following");
                 return;
             }
 

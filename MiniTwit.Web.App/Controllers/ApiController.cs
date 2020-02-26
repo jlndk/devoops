@@ -34,17 +34,21 @@ namespace MiniTwit.Web.App.Controllers
             _userRepository = userRepository;
         }
 
+        private void LogInfo (string message)
+        {
+            _logger.LogInformation($"Latest:{_latest}, {message}");
+        }
+
         //This function is defined, dont know if we need to use it.
         //The tests doesnt test for it.
-        private (bool, IActionResult) NotRequestFromSimulator()
+        private bool RequestFromSimulator()
         {
-            if (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"))
-            {
-                return (false, null);
-            }
+            return (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"));
+        }
 
-            return (true,
-                StatusCode(403, Json(new {status = 403, error_msg = "You are not authorized to use this resource!"})));
+        private IActionResult NotAuthorizedError()
+        {
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         [Route("[controller]/latest/")]
@@ -71,6 +75,10 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "no")] int number = 100)
         {
             UpdateLatest(latestMessage);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var messages = (await _messageRepository.ReadAsync())
                 .Take(number)
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
@@ -87,6 +95,10 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "latest")] int? latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
             UpdateLatest(latestMessage);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var user = await _userRepository.ReadAsyncByUsername(username);
             var messages = (await _messageRepository.ReadAllMessagesFromUserAsync(user.Id))
                 .Take(number)
@@ -103,6 +115,10 @@ namespace MiniTwit.Web.App.Controllers
         {
             UpdateLatest(latestMessage);
             UpdateLatest(messagePost.Latest);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var user = await _userRepository.ReadAsyncByUsername(username);
             if (user == null || messagePost?.Content == null)
             {
@@ -137,28 +153,28 @@ namespace MiniTwit.Web.App.Controllers
         {
             UpdateLatest(latestMessage);
             UpdateLatest(registerPost.Latest);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             if (registerPost?.Username == null)
             {
-                return StatusCode(403,
-                    Json(new {status = 400, error_msg = "You have to enter a username"}));
+                return StatusCode(403, new {status = 400, error_msg = "You have to enter a username"});
             }
 
             if (registerPost.Email == null || !registerPost.Email.Contains("@"))
             {
-                return StatusCode(403,
-                    Json(new {status = 400, error_msg = "You have to enter a valid email address"}));
+                return StatusCode(403,new {status = 400, error_msg = "You have to enter a valid email address"});
             }
 
             if (registerPost.Pwd == null)
             {
-                return StatusCode(403,
-                    Json(new {status = 400, error_msg = "You have to enter a password"}));
+                return StatusCode(403,new {status = 400, error_msg = "You have to enter a password"});
             }
 
             if ((await _userRepository.ReadAsyncByUsername(registerPost.Username)) != null)
             {
-                return StatusCode(403,
-                    Json(new {status = 400, error_msg = "The username is already taken"}));
+                return StatusCode(403,new {status = 400, error_msg = "The username is already taken"});
             }
 
             var user = new User
@@ -167,7 +183,12 @@ namespace MiniTwit.Web.App.Controllers
                 Email = registerPost.Email
             };
             var result = await _userManager.CreateAsync(user, registerPost.Pwd);
-            _logger.LogInformation(registerPost.Username + " created a new account with password.");
+            if (!result.Succeeded)
+            {
+                LogInfo(registerPost.Username + " failed at creation, with result: " + result);
+                return BadRequest(result.Errors);
+            }
+            LogInfo(registerPost.Username + " created a new account");
             return StatusCode(204, "");
         }
 
@@ -178,6 +199,10 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "latest")] int? latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
             UpdateLatest(latestMessage);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var user = await _userRepository.ReadAsyncByUsername(username);
             var followers = (await _userRepository.GetFollows(user.Id))?
                 .Take(number)
@@ -195,28 +220,41 @@ namespace MiniTwit.Web.App.Controllers
         {
             UpdateLatest(latestMessage);
             UpdateLatest(postFollow.Latest);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
+            var follower = await _userRepository.ReadAsyncByUsername(username);
+            
+            if (follower == null)
+            {
+                LogInfo($"Invalid follower username '{username}' in follow/unfollow action");
+                // TODO: This has to be another error, likely 500???
+                return StatusCode(404, "");
+            }
+
             if (postFollow?.Follow != null)
             {
-                var follower = await _userRepository.ReadAsyncByUsername(username);
                 var followee = await _userRepository.ReadAsyncByUsername(postFollow.Follow);
                 if (followee == null)
                 {
+                    LogInfo($"Invalid followee username '{postFollow.Follow}' in follow operation");
                     // TODO: This has to be another error, likely 500???
                     return StatusCode(404, "");
                 }
-
+                LogInfo($"'{username}' followed '{postFollow.Follow}'");
                 await _userRepository.AddFollowerAsync(followerId: follower.Id, followeeId: followee.Id);
             }
             else if (postFollow?.UnFollow != null)
             {
-                var follower = await _userRepository.ReadAsyncByUsername(username);
                 var followee = await _userRepository.ReadAsyncByUsername(postFollow.UnFollow);
                 if (followee == null)
                 {
+                    LogInfo($"Invalid followee username '{postFollow.UnFollow}' in unfollow operation");
                     // TODO: This has to be another error, likely 500???
                     return StatusCode(404, "");
                 }
-
+                LogInfo($"'{username}' unfollowed '{postFollow.UnFollow}'");
                 await _userRepository.RemoveFollowerAsync(followerId: follower.Id, followeeId: followee.Id);
             }
 
