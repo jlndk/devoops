@@ -41,15 +41,14 @@ namespace MiniTwit.Web.App.Controllers
 
         //This function is defined, dont know if we need to use it.
         //The tests doesnt test for it.
-        private (bool, IActionResult) NotRequestFromSimulator()
+        private bool RequestFromSimulator()
         {
-            if (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"))
-            {
-                return (false, null);
-            }
+            return (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"));
+        }
 
-            return (true,
-                StatusCode(403, Json(new {status = 403, error_msg = "You are not authorized to use this resource!"})));
+        private IActionResult NotAuthorizedError()
+        {
+            return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
         [Route("[controller]/latest/")]
@@ -76,6 +75,10 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "no")] int number = 100)
         {
             UpdateLatest(latestMessage);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var messages = (await _messageRepository.ReadAsync())
                 .Take(number)
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
@@ -92,6 +95,10 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "latest")] int? latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
             UpdateLatest(latestMessage);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var user = await _userRepository.ReadAsyncByUsername(username);
             var messages = (await _messageRepository.ReadAllMessagesFromUserAsync(user.Id))
                 .Take(number)
@@ -108,6 +115,10 @@ namespace MiniTwit.Web.App.Controllers
         {
             UpdateLatest(latestMessage);
             UpdateLatest(messagePost.Latest);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var user = await _userRepository.ReadAsyncByUsername(username);
             if (user == null || messagePost?.Content == null)
             {
@@ -142,6 +153,10 @@ namespace MiniTwit.Web.App.Controllers
         {
             UpdateLatest(latestMessage);
             UpdateLatest(registerPost.Latest);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             if (registerPost?.Username == null)
             {
                 return StatusCode(403, new {status = 400, error_msg = "You have to enter a username"});
@@ -184,6 +199,10 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "latest")] int? latestMessage, [FromQuery(Name = "no")] int number = 100)
         {
             UpdateLatest(latestMessage);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var user = await _userRepository.ReadAsyncByUsername(username);
             var followers = (await _userRepository.GetFollows(user.Id))?
                 .Take(number)
@@ -201,6 +220,10 @@ namespace MiniTwit.Web.App.Controllers
         {
             UpdateLatest(latestMessage);
             UpdateLatest(postFollow.Latest);
+            if (!RequestFromSimulator())
+            {
+                return NotAuthorizedError();
+            }
             var follower = await _userRepository.ReadAsyncByUsername(username);
             
             if (follower == null)
