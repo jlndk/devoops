@@ -35,6 +35,8 @@ namespace MiniTwit.Web.App
                     options.Password.RequiredLength = 1;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ0123456789-._@+ ";
                 })
                 .AddEntityFrameworkStores<MiniTwitContext>()
                 .AddDefaultTokenProviders();
