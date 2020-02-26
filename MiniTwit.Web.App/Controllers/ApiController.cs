@@ -82,10 +82,8 @@ namespace MiniTwit.Web.App.Controllers
             var messages = (await _messageRepository.ReadAsync())
                 .Take(number)
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
-            if (messages.Any())
-                return Json(messages);
-            else
-                return StatusCode(204, Json(""));
+            
+            return Json(messages);
         }
 
         [Route("[controller]/msgs/{username}")]
@@ -100,6 +98,12 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
+            if (user == null)
+            {
+                LogInfo($"Invalid username '{username}' to get messages for");
+                // TODO: This has to be another error, likely 500???
+                return NotFound();
+            }
             var messages = (await _messageRepository.ReadAllMessagesFromUserAsync(user.Id))
                 .Take(number)
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
@@ -159,22 +163,22 @@ namespace MiniTwit.Web.App.Controllers
             }
             if (registerPost?.Username == null)
             {
-                return StatusCode(403, new {status = 400, error_msg = "You have to enter a username"});
+                return StatusCode(400, new {status = 400, error_msg = "You have to enter a username"});
             }
 
             if (registerPost.Email == null || !registerPost.Email.Contains("@"))
             {
-                return StatusCode(403,new {status = 400, error_msg = "You have to enter a valid email address"});
+                return StatusCode(400,new {status = 400, error_msg = "You have to enter a valid email address"});
             }
 
             if (registerPost.Pwd == null)
             {
-                return StatusCode(403,new {status = 400, error_msg = "You have to enter a password"});
+                return StatusCode(400,new {status = 400, error_msg = "You have to enter a password"});
             }
 
             if ((await _userRepository.ReadAsyncByUsername(registerPost.Username)) != null)
             {
-                return StatusCode(403,new {status = 400, error_msg = "The username is already taken"});
+                return StatusCode(400,new {status = 400, error_msg = "The username is already taken"});
             }
 
             var user = new User
