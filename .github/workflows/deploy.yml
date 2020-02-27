@@ -25,12 +25,12 @@ jobs:
                 known_hosts: ${{ secrets.SSH_HOST }}
             # Deploy
             - name: Deploy to Production
-              uses: appleboy/ssh-action@master
+              uses: fifsky/ssh-action@master
               with:
                 host: ${{ secrets.SSH_HOST }}
-                username: ${{ secrets.USERNAME }}
+                user: ${{ secrets.USERNAME }}
                 key: ${{ secrets.SSH_PRIVATE_KEY }}
-                script: |
+                command: |
                     cd devoops
                     git pull
                     ./deploy.sh
