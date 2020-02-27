@@ -26,7 +26,7 @@ jobs:
             # Deploy
             - name: Deploy to Staging
               uses: JorgenVatle/docker-compose-deploy@v1.0
-                with:
+              with:
                 deploy_targets: '${{ secrets.SSH_HOST }}' # required, comma separated list of servers to deploy to.
 
                 ssh_user: '${{ secrets.SSH_USERNAME }}' # optional, user to connect to deploy targets with. Defaults to 'root'
