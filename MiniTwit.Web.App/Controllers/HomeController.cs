@@ -15,7 +15,7 @@ namespace MiniTwit.Web.App.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
-        
+
         public HomeController(ILogger<HomeController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
         {
@@ -24,19 +24,22 @@ namespace MiniTwit.Web.App.Controllers
             _userRepository = userRepository;
         }
 
+		[Route("/my")]
         public async Task<IActionResult> My_Timeline()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromFollowedAsync(int.Parse(userId));
             return View();
         }
-        
+
+		[Route("/")]
         public async Task<IActionResult> Index()
         {
             ViewData["Messages"] = await _messageRepository.ReadAsync();
             return View();
         }
-        
+
+		[Route("/user/{id:int}")]
         public async Task<IActionResult> User_Timeline(int? id)
         {
             if (id == null)
@@ -48,7 +51,8 @@ namespace MiniTwit.Web.App.Controllers
             ViewData["ViewedUserName"] = (await _userRepository.ReadAsync(id.Value)).UserName;
             return View();
         }
-        
+
+		[Route("/post")]
         [HttpPost]
         public async Task<IActionResult> PostMessage(Message message, string returnUrl = null)
         {
@@ -73,7 +77,5 @@ namespace MiniTwit.Web.App.Controllers
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
         }
-
-       
     }
 }
