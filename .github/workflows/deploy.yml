@@ -19,9 +19,16 @@ jobs:
             - name: Push docker images to docker hub
               run: docker-compose -f docker-compose.prod.yml push
             - name: Configure deployment credentials
-              uses: webfactory/ssh-agent@v0.2.0
+              uses: shimatoro/ssh-key-action@v2
               with:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+                known_hosts: ${{ secrets.SSH_HOST }}
             # Deploy
-            - name: Deploy on production
-              run: docker-compose -H "ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" up -d
+            - name: Deploy to Staging
+              uses: JorgenVatle/docker-compose-deploy@v1.0
+                with:
+                deploy_targets: '${{ secrets.SSH_HOST }}' # required, comma separated list of servers to deploy to.
+
+                ssh_user: '${{ secrets.SSH_USERNAME }}' # optional, user to connect to deploy targets with. Defaults to 'root'
+                compose_file: 'docker-compose.prod.yml' # optional, path/filename of your docker-compose file. Defaults to 'docker-compose.yml'
+                #validate_container: 'devoops_webapp_1' # optional, validate that the given container name is running. Otherwise, throw an error. Defaults to 'app'   
