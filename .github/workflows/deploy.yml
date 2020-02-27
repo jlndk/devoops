@@ -18,9 +18,10 @@ jobs:
               run: docker-compose -f docker-compose.prod.yml build
             - name: Push docker images to docker hub
               run: docker-compose -f docker-compose.prod.yml push
-
             - name: Configure deployment credentials
-              run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+              uses: webfactory/ssh-agent@v0.2.0
+              with:
+                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
             # Deploy
             - name: Deploy on production
               run: docker-compose -H "ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" up -d
