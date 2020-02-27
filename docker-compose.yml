@@ -1,13 +1,24 @@
 version: "3.4"
 services:
-    database:
-        image: postgres:12
-        environment:
-            - "POSTGRES_PASSWORD=test"
+    traefik:
+        image: traefik:v2.1
+        # Enables the web UI and tells Traefik to listen to docker
+        # @TODO: Secure traefik api/dashboard
+        command:
+            #- "--log.level=DEBUG"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.http.address=:80"
         ports:
-            - "5432:5432"
+            # The HTTP port
+            - "80:80"
+            # The Web UI (enabled by --api.insecure=true)
+            - "8080:8080"
         volumes:
-            - ./postgresdata:/var/lib/postgresql/data
+            # So that Traefik can listen to the Docker events
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+
     webapp:
         build:
             context: "."
@@ -17,10 +28,24 @@ services:
             - "ASPNETCORE_ENVIRONMENT=Development"
             - "MINITWIT_ENVIRONMENT=docker"
             - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
-        ports:
-            - "80:80"
         volumes:
             - ./:/app
             - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
+        labels:
+            # Tell traefik that this container should be exposed to the public
+            - "traefik.enable=true"
+            # Tell where the service should be available
+            - "traefik.http.routers.webapp.rule=Path(`/{path:.*}`)"
+            - "traefik.http.routers.webapp.entrypoints=http"
+            - "traefik.http.services.webapp.loadbalancer.server.port=80"
         depends_on:
             - database
+
+    database:
+        image: postgres:12
+        environment:
+            - "POSTGRES_PASSWORD=test"
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./postgresdata:/var/lib/postgresql/data
