@@ -24,15 +24,19 @@ services:
 
             # The HTTPS port
             - "443:443"
-
-            # The Web UI (enabled by --api.insecure=true)
-            - "8080:8080"
         volumes:
             # So that Traefik can listen to the Docker events
             - /var/run/docker.sock:/var/run/docker.sock:ro
 
             # So that Traefik can persist the HTTP certificate
             - ./letsencrypt:/letsencrypt
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.api.rule=Host(`traefik.localhost`)||Host(`traefik.minitwit.tk`)"
+            - "traefik.http.routers.api.entrypoints=http"
+            - "traefik.http.routers.api.service=api@internal"
+            - "traefik.http.routers.api.middlewares=auth"
+            - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$vVJRD/Hd$$pzWF/71kOPnIfPqS6/t0D."
 
     webapp:
         build:
