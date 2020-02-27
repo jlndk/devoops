@@ -25,10 +25,11 @@ jobs:
                 known_hosts: ${{ secrets.SSH_HOST }}
             # Deploy
             - name: Deploy to Production
-              uses: JorgenVatle/docker-compose-deploy@v1.0
+              uses: appleboy/ssh-action@master
               with:
-                deploy_targets: '${{ secrets.SSH_HOST }}' # required, comma separated list of servers to deploy to.
-
-                ssh_user: '${{ secrets.SSH_USERNAME }}' # optional, user to connect to deploy targets with. Defaults to 'root'
-                compose_file: 'docker-compose.prod.yml' # optional, path/filename of your docker-compose file. Defaults to 'docker-compose.yml'
-                #validate_container: 'devoops_webapp_1' # optional, validate that the given container name is running. Otherwise, throw an error. Defaults to 'app'   
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.USERNAME }}
+                script: |
+                    cd devoops
+                    git pull
+                    ./deploy.sh
