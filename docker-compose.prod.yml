@@ -36,6 +36,7 @@ services:
             - "traefik.http.routers.api.entrypoints=http"
             - "traefik.http.routers.api.service=api@internal"
             - "traefik.http.routers.api.middlewares=auth"
+            # Generate new user and password with `echo $(htpasswd -nb admin admin) | sed -e s/\\$/\\$\\$/g`
             - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$vVJRD/Hd$$pzWF/71kOPnIfPqS6/t0D."
 
     webapp:
