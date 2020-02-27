@@ -21,10 +21,10 @@ jobs:
             - name: Configure deployment credentials
               uses: shimataro/ssh-key-action@v2
               with:
-                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
                 known_hosts: ${{ secrets.SSH_HOST }}
             # Deploy
-            - name: Deploy to Staging
+            - name: Deploy to Production
               uses: JorgenVatle/docker-compose-deploy@v1.0
               with:
                 deploy_targets: '${{ secrets.SSH_HOST }}' # required, comma separated list of servers to deploy to.
