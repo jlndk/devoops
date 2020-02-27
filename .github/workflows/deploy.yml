@@ -1,0 +1,28 @@
+name: Build, push and deploy on push to master
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Log into dockerhub
+            - run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            # Investigate Caching
+            - name: Build with docker compose
+            - run: docker-compose -f docker-compose.prod.yml build
+            - name: Push docker images to docker hub
+            - run: docker-compose -f docker-compose.prod.yml push
+
+            # Deploy
+            - name: Deploy on production
+            - run: docker-compose -H "ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" up
+    # deploy:
+    #     name: Build
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         -
