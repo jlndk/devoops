@@ -86,18 +86,18 @@ namespace MiniTwit.Models
             return await _context.Users.AnyAsync(u => u.Id != userId && u.Email == emailAddress);
         }
 
-        public async Task AddFollowerAsync(int followerId, int followeeId)
+        public async Task<Response> AddFollowerAsync(int followerId, int followeeId)
         {
             if (followeeId == followerId)
             {
                 _logger.LogInformation($"{followeeId} tried to follow themself");
-                return;
+                return Conflict;
             }
 
             if (_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
             {
                 _logger.LogInformation($"{followerId} tried to follow {followeeId} but was already following");
-                return;
+                return Conflict;
             }
             
             _context.Follows.Add(new Follow
@@ -107,27 +107,34 @@ namespace MiniTwit.Models
             });
 
             await _context.SaveChangesAsync();
+            return Created;
         }
 
-        public async Task RemoveFollowerAsync(int followerId, int followeeId)
+        public async Task<Response> RemoveFollowerAsync(int followerId, int followeeId)
         {
             if (followeeId == followerId)
             {
                 _logger.LogInformation($"{followeeId} tried to unfollow themself");
-                return;
+                return Conflict;
             }
 
             if (!_context.Follows.Any(f => f.FolloweeId == followeeId && f.FollowerId == followerId))
             {
                 _logger.LogInformation($"{followerId} tried to unfollow {followeeId} but was not following");
-                return;
+                return Conflict;
             }
 
             var follow = await _context.Follows.FirstAsync(f => f.FolloweeId == followeeId && f.FollowerId == followerId);
             _context.Follows.Remove(follow);
             await _context.SaveChangesAsync();
-        } 
-        
+            return Deleted;
+        }
+
+        public async Task<bool> IsUserFollowing(int followerId, int followeeId)
+        {
+            return await _context.Follows.FirstOrDefaultAsync(f => f.FolloweeId == followeeId && f.FollowerId == followerId) != null;
+        }
+
         public async Task<User> ReadAsyncByUsername(string username)
         {
             var users =

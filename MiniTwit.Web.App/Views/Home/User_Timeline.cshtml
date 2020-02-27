@@ -8,5 +8,16 @@
 
 <h2>@ViewData["Title"]</h2>
 <div>
+    @if (User?.Identity?.Name != null && User.Identity.Name != (string) ViewData["ViewedUserName"])
+    {
+        @if (ViewData["IsFollowingUser"] != null && (bool) ViewData["IsFollowingUser"])
+        {
+            <span>You are already following this user. <a asp-controller="Home" asp-action="Unfollow" asp-route-followeeId="@ViewData["ViewedUserId"]">Unfollow this user.</a></span>
+        }
+        else
+        {
+            <span>You are not yet following this user. <a asp-controller="Home" asp-action="Follow" asp-route-followeeId="@ViewData["ViewedUserId"]">Follow this user.</a></span>
+        }
+    }
     @await Html.PartialAsync("_Messages", ViewData["Messages"])
 </div>
