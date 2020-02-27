@@ -1,9 +1,10 @@
 name: Build, push and deploy on push to master
 
-on:
-    push:
-        branches:
-            - master
+# on:
+#     push:
+#         branches:
+#             - master
+on: [push]
 
 jobs:
     build:
@@ -18,11 +19,8 @@ jobs:
             - name: Push docker images to docker hub
             - run: docker-compose -f docker-compose.prod.yml push
 
+            - name: Configure deployment credentials
+            - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
             # Deploy
             - name: Deploy on production
-            - run: docker-compose -H "ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" up
-    # deploy:
-    #     name: Build
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         -
+            - run: docker-compose -H "ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" up -d
