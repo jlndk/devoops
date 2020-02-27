@@ -44,7 +44,7 @@ namespace MiniTwit.Models
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<Message>> ReadCountAsync(int count = 100, int skip = 0)
+        public async Task<IEnumerable<Message>> ReadCountAsync(int count = 100)
         {
             var query = 
                 from m in _context.Messages
@@ -60,7 +60,7 @@ namespace MiniTwit.Models
                     PubDate = m.PubDate,
                     Text = m.Text
                 };
-            return await query.Skip(skip).Take(count).ToListAsync();
+            return await query.Take(count).ToListAsync();
         }
         
         public async Task<IEnumerable<Message>> ReadCountBeforeTimeAsync(int count, DateTime beforeDateTime)

@@ -9,7 +9,7 @@ namespace MiniTwit.Models
     {
         Task<(Response response, int messageId)> CreateAsync(Message message);
         Task<IEnumerable<Message>> ReadAsync(bool includeFlagged = false);
-        Task<IEnumerable<Message>> ReadCountAsync(int count = 100, int skip = 0);
+        Task<IEnumerable<Message>> ReadCountAsync(int count = 100);
         Task<IEnumerable<Message>> ReadCountBeforeTimeAsync(int count, DateTime beforeDateTime);
         Task<List<Message>> ReadAllMessagesFromUserAsync(int userId);
         Task<Message> ReadAsync(int messageId);
