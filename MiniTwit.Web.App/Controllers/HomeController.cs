@@ -27,7 +27,11 @@ namespace MiniTwit.Web.App.Controllers
 		[Route("/my")]
         public async Task<IActionResult> My_Timeline()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromFollowedAsync(int.Parse(userId));
             return View();
         }
