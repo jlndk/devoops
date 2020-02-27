@@ -92,7 +92,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
-            return await User_Timeline(followeeId);
+            return RedirectToAction("User_Timeline", new {id = followeeId});
         }
 
         public async Task<IActionResult> Unfollow(int followeeId)
@@ -107,7 +107,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
-            return await User_Timeline(followeeId);
+            return RedirectToAction("User_Timeline", new {id = followeeId});
         }
     }
 }
