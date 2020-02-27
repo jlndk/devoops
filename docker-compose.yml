@@ -18,10 +18,7 @@ services:
             - "MINITWIT_ENVIRONMENT=docker"
             - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
         ports:
-            - "5001:5001"
-            - "5000:5000"
             - "80:80"
-            - "443:443"
         volumes:
             - ./:/app
             - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
