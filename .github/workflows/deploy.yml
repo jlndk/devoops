@@ -24,4 +24,4 @@ jobs:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
             # Deploy
             - name: Deploy on production
-              run: docker-compose -H "ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}" up -d
+              run: docker-compose -H "ssh://root@${{ secrets.SSH_HOST }}" up -d
