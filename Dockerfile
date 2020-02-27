@@ -30,13 +30,9 @@ RUN dotnet publish -c release -o /app --no-restore
 
 FROM build AS development
 WORKDIR /app
-EXPOSE 5000
-EXPOSE 5001
-ENTRYPOINT ["dotnet", "watch", "--project", "MiniTwit.Web.App", "run", "--urls", "https://0.0.0.0:5001;http://0.0.0.0:5000"]
+ENTRYPOINT ["dotnet", "watch", "--project", "MiniTwit.Web.App", "run", "--urls", "http://0.0.0.0:80"]
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 as production
-EXPOSE 80
-EXPOSE 443
 WORKDIR /app
 COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "MiniTwit.Web.App.dll"]
