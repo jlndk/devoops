@@ -51,14 +51,19 @@ services:
             - "traefik.enable=true"
             # Tell traefik which port our container listens on
             - "traefik.http.services.webapp.loadbalancer.server.port=80"
-            # Tell where the service should be available
+
+            # Add http entrypoint (Tell where the service should be available)
             - "traefik.http.routers.webapp.rule=Host(`minitwit.tk`) || Path(`/{path:.*}`)"
             - "traefik.http.routers.webapp.entrypoints=http"
-            # - "traefik.http.routers.webapp.tls.certresolver=webappresolver"
-            # - "traefik.http.routers.webapp.middlewares=webappredirecthttp@docker"
             # Redirect http to https
-            # - "traefik.http.middlewares.webappredirecthttp.redirectscheme.scheme=https"
-            # - "traefik.http.middlewares.webappredirecthttp.redirectscheme.permanent=true"
+            - "traefik.http.routers.webapp.middlewares=redirect-https@docker"
+            - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+
+            # Add https entrypoint
+            - "traefik.http.routers.webapp-secure.rule=Host(`minitwit.tk`) || Path(`/{path:.*}`)"
+            - "traefik.http.routers.webapp-secure.entrypoints=https"
+            - "traefik.http.routers.webapp-secure.tls.certresolver=webappresolver"
         depends_on:
             - database
 
