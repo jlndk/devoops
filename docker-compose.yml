@@ -5,6 +5,7 @@ services:
         # Enables the web UI and tells Traefik to listen to docker
         # @TODO: Secure traefik api/dashboard
         command:
+            # General Config
             #- "--log.level=DEBUG"
             - "--api.insecure=true"
             - "--providers.docker=true"
@@ -34,10 +35,11 @@ services:
         labels:
             # Tell traefik that this container should be exposed to the public
             - "traefik.enable=true"
+            # Tell traefik which port our container listens on
+            - "traefik.http.services.webapp.loadbalancer.server.port=80"
             # Tell where the service should be available
             - "traefik.http.routers.webapp.rule=Path(`/{path:.*}`)"
             - "traefik.http.routers.webapp.entrypoints=http"
-            - "traefik.http.services.webapp.loadbalancer.server.port=80"
         depends_on:
             - database
 
