@@ -52,7 +52,12 @@ namespace MiniTwit.Web.App.Controllers
             }
             ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(id.Value);
             ViewData["ViewedUserId"] = id.Value;
-            ViewData["ViewedUserName"] = (await _userRepository.ReadAsync(id.Value)).UserName;
+            var user = await _userRepository.ReadAsync(id.Value);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ViewData["ViewedUserName"] = user.UserName;
             return View();
         }
 
