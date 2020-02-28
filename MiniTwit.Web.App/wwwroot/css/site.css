@@ -83,6 +83,21 @@ div.page div.navigation {
 div.page div.navigation .link {
     color: #444;
     font-weight: bold;
+    text-decoration: none;
+}
+
+div.page div.navigation .link .content {
+    text-decoration: underline;
+}
+
+div.page div.navigation .link:after
+{
+  content: ' |';
+}
+
+div.page div.navigation .link:last-child:after
+{
+  content: '';
 }
 
 div.page div.navigation input {
@@ -107,10 +122,12 @@ div.page div.body {
 }
 
 div.page div.footer {
+    display: flex;
     background: #eee;
     color: #888;
     padding: 5px 10px;
     font-size: 12px;
+    justify-content: space-between;
 }
 
 div.page div.followstatus {
@@ -227,5 +244,21 @@ div.error {
     input[type="password"],
     input[type="email"] { 
         width: 100%;
+    }
+
+    div.page div.footer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    div.page div.footer .links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 14px; 
+    }
+
+    .page .footer .links > * {
+        padding: 5px 0;
     }
 }
