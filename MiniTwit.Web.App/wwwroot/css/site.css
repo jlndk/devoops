@@ -83,10 +83,13 @@ div.page div.navigation {
 div.page div.navigation .link {
     color: #444;
     font-weight: bold;
+}
+
+div.page div.navigation a.link {
     text-decoration: none;
 }
 
-div.page div.navigation .link .content {
+div.page div.navigation a.link .content {
     text-decoration: underline;
 }
 
@@ -107,7 +110,6 @@ div.page div.navigation input {
     color: #444;
     text-decoration: underline;
     cursor: pointer;
-    font-size: 16px;
     letter-spacing: 0.5px;
 }
 
