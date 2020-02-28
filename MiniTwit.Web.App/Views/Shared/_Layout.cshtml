@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>@ViewData["Title"] @("|") MiniTwit</title>
     <link rel="stylesheet" type="text/css" href="~/css/site.css"/>
 </head>
@@ -19,20 +19,30 @@
             //hacky, but its the easiest way to get them inline.
 
             <form method="post" asp-area="" asp-controller="Account" asp-action="LogOut">
-                <a asp-area="" asp-controller="Home" asp-action="My_Timeline">My Timeline</a>
-                @("|")
-                <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
-                @("|")
-                <input id="LogoutButton" type="submit" value="Logout"/>
+                <a asp-area="" asp-controller="Home" asp-action="My_Timeline" class="link">
+                    <span class="content">my timeline</span>
+                </a>
+                
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="link">
+                    <span class="content">public timeline</span>
+                </a>
+                
+                <input id="LogoutButton" type="submit" value="sign out" class="link"/>
             </form>
         }
         else
         {
-            <a asp-area="" asp-controller="Home" asp-action="Index">public timeline</a>
-            @("|")
-            <a asp-area="" asp-controller="Account" asp-action="Register">sign up</a>
-            @("|")
-            <a asp-area="" asp-controller="Account" asp-action="LogIn">sign in</a>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="link">
+                <span class="content">public timeline</span>
+            </a>
+            
+            <a asp-area="" asp-controller="Account" asp-action="Register" class="link">
+                <span class="content">sign up</span>
+            </a>
+            
+            <a asp-area="" asp-controller="Account" asp-action="LogIn" class="link">
+                <span class="content">sign in</span>
+            </a>
         }
     </div>
     @*
@@ -55,6 +65,11 @@
     </div>
     <div class="footer">
         MiniTwit &mdash; A C# Application
+
+        <div class="links">
+            <a target="_blank" rel="noopener noreferrer" href="https://status.minitwit.tk">Status page</a>
+            <a target="_blank" rel="noopener noreferrer" href="https://github.com/jlndk/devoops">Source Code</a>
+        </div>
     </div>
 </div>
 
