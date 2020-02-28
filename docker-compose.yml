@@ -1,13 +1,24 @@
 version: "3.4"
 services:
-    database:
-        image: postgres:12
-        environment:
-            - "POSTGRES_PASSWORD=test"
+    traefik:
+        image: traefik:v2.1
+        # Enables the web UI and tells Traefik to listen to docker
+        # @TODO: Secure traefik api/dashboard
+        command:
+            # General Config
+            #- "--log.level=DEBUG"
+            - "--api=true"
+            - "--api.dashboard=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.http.address=:80"
         ports:
-            - "5432:5432"
+            # The HTTP port
+            - "80:80"
         volumes:
-            - ./postgresdata:/var/lib/postgresql/data
+            # So that Traefik can listen to the Docker events
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+
     webapp:
         build:
             context: "."
@@ -17,13 +28,25 @@ services:
             - "ASPNETCORE_ENVIRONMENT=Development"
             - "MINITWIT_ENVIRONMENT=docker"
             - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
-        ports:
-            - "5001:5001"
-            - "5000:5000"
-            - "80:80"
-            - "443:443"
         volumes:
             - ./:/app
             - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
+        labels:
+            # Tell traefik that this container should be exposed to the public
+            - "traefik.enable=true"
+            # Tell traefik which port our container listens on
+            - "traefik.http.services.webapp.loadbalancer.server.port=80"
+            # Tell where the service should be available
+            - "traefik.http.routers.webapp.rule=Path(`/{path:.*}`)"
+            - "traefik.http.routers.webapp.entrypoints=http"
         depends_on:
             - database
+
+    database:
+        image: postgres:12
+        environment:
+            - "POSTGRES_PASSWORD=test"
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./postgresdata:/var/lib/postgresql/data

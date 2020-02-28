@@ -58,6 +58,11 @@ namespace MiniTwit.Web.App.Controllers
                 return NotFound();
             }
             ViewData["ViewedUserName"] = user.UserName;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (int.TryParse(userId, out var followerId))
+            {
+                ViewData["IsFollowingUser"] = await _userRepository.IsUserFollowing(followerId, (int) id);
+            }
             return View();
         }
 
@@ -85,6 +90,36 @@ namespace MiniTwit.Web.App.Controllers
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             });
+        }
+
+        public async Task<IActionResult> Follow(int followeeId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userId, out var followerId))
+            {
+                return View("Index");
+            }
+            var result = await _userRepository.AddFollowerAsync(followerId, followeeId);
+            if (result != MiniTwit.Models.Response.Created)
+            {
+                return View("Index");
+            }
+            return RedirectToAction("User_Timeline", new {id = followeeId});
+        }
+
+        public async Task<IActionResult> Unfollow(int followeeId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userId, out var followerId))
+            {
+                return View("Index");
+            }
+            var result = await _userRepository.RemoveFollowerAsync(followerId, followeeId);
+            if (result != MiniTwit.Models.Response.Deleted)
+            {
+                return View("Index");
+            }
+            return RedirectToAction("User_Timeline", new {id = followeeId});
         }
     }
 }
