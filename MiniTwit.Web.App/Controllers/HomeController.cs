@@ -43,25 +43,28 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
-		[Route("/user/{id:int}")]
-        public async Task<IActionResult> User_Timeline(int? id)
+		[Route("/user/{username}")]
+        public async Task<IActionResult> User_Timeline(string username)
         {
-            if (id == null)
+            if (username == null)
             {
                 return Error();
             }
-            ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(id.Value);
-            ViewData["ViewedUserId"] = id.Value;
-            var user = await _userRepository.ReadAsync(id.Value);
+
+            var user = await _userRepository.ReadAsyncByUsername(username);
             if (user == null)
             {
                 return NotFound();
             }
-            ViewData["ViewedUserName"] = user.UserName;
+            ViewData["ViewedUserName"] = username;
+
+            ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(user.Id);
+            ViewData["ViewedUserId"] = user.Id;
+            
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (int.TryParse(userId, out var followerId))
             {
-                ViewData["IsFollowingUser"] = await _userRepository.IsUserFollowing(followerId, (int) id);
+                ViewData["IsFollowingUser"] = await _userRepository.IsUserFollowing(followerId, user.Id);
             }
             return View();
         }
