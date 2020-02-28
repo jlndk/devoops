@@ -1,168 +1,202 @@
-﻿body {
-    background: #CAECE9;
-    font-family: 'Trebuchet MS', sans-serif;
+﻿* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #caece9;
+    font-family: "Trebuchet MS", sans-serif;
     font-size: 14px;
 }
 
 a {
-    color: #26776F;
+    color: #26776f;
 }
 
-    a:hover {
-        color: #333;
-    }
+a:hover {
+    color: #333;
+}
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="email"] {
     background: white;
-    border: 1px solid #BFE6E2;
-    padding: 2px;
-    font-family: 'Trebuchet MS', sans-serif;
+    border: 1px solid #bfe6e2;
+    padding: 5px;
+    font-family: "Trebuchet MS", sans-serif;
     font-size: 14px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
+    border-radius: 5px;
     color: #105751;
 }
 
 input[type="submit"] {
     background: #105751;
-    border: 1px solid #073B36;
-    padding: 1px 3px;
-    font-family: 'Trebuchet MS', sans-serif;
+    border: 1px solid #073b36;
+    padding: 5px 15px;
+    font-family: "Trebuchet MS", sans-serif;
     font-size: 14px;
     font-weight: bold;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
+    border-radius: 2px;
     color: white;
+}
+
+label {
+    display: block;
+}
+
+.form-group {
+    padding-bottom: 5px;
+}
+
+.text-danger {
+    display: block;
+    color: #dd2525;
 }
 
 div.page {
     background: white;
-    border: 1px solid #6ECCC4;
-    width: 700px;
+    border: 1px solid #6eccc4;
+    width: 100%;
+    max-width: 700px;
     margin: 30px auto;
 }
 
-    div.page h1 {
-        background: #6ECCC4;
-        margin: 0;
-        padding: 10px 14px;
-        color: white;
-        letter-spacing: 1px;
-        text-shadow: 0 0 3px #24776F;
-        font-weight: normal;
-    }
+div.page h1 {
+    background: #6eccc4;
+    margin: 0;
+    padding: 10px 14px;
+    color: white;
+    letter-spacing: 1px;
+    text-shadow: 0 0 3px #24776f;
+    font-weight: normal;
+}
 
-    div.page div.navigation {
-        background: #DEE9E8;
-        padding: 4px 10px;
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #eee;
-        color: #888;
-        font-size: 12px;
-        letter-spacing: 0.5px;
-    }
+div.page div.navigation {
+    background: #dee9e8;
+    padding: 10px 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #eee;
+    color: #888;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
 
-        div.page div.navigation a {
-            color: #444;
-            font-weight: bold;
-        }
-        
-        div.page div.navigation input {
-            background: none;
-            border: none;
-            padding: 0;
-            color: #444;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
+div.page div.navigation .link {
+    color: #444;
+    font-weight: bold;
+}
 
-        
+div.page div.navigation a.link {
+    text-decoration: none;
+}
+
+div.page div.navigation a.link .content {
+    text-decoration: underline;
+}
+
+div.page div.navigation .link:after
+{
+  content: ' |';
+}
+
+div.page div.navigation .link:last-child:after
+{
+  content: '';
+}
+
+div.page div.navigation input {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #444;
+    text-decoration: underline;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+}
+
 div.page h2 {
-        margin: 0 0 15px 0;
-        color: #105751;
-        text-shadow: 0 1px 2px #ccc;
-    }
+    margin: 0 0 15px 0;
+    color: #105751;
+    text-shadow: 0 1px 2px #ccc;
+}
 
-    div.page div.body {
-        padding: 10px;
-    }
+div.page div.body {
+    padding: 10px;
+}
 
-    div.page div.footer {
-        background: #eee;
-        color: #888;
-        padding: 5px 10px;
-        font-size: 12px;
-    }
+div.page div.footer {
+    display: flex;
+    background: #eee;
+    color: #888;
+    padding: 5px 10px;
+    font-size: 12px;
+    justify-content: space-between;
+}
 
-    div.page div.followstatus {
-        border: 1px solid #ccc;
-        background: #E3EBEA;
-        -moz-border-radius: 2px;
-        -webkit-border-radius: 2px;
-        padding: 3px;
-        font-size: 13px;
-    }
+div.page div.followstatus {
+    border: 1px solid #ccc;
+    background: #e3ebea;
+    border-radius: 2px;
+    padding: 3px;
+    font-size: 13px;
+}
 
-    div.page ul.messages {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
+div.page ul.messages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 
-        div.page ul.messages li {
-            margin: 10px 0;
-            padding: 5px;
-            background: #F0FAF9;
-            border: 1px solid #DBF3F1;
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
-            min-height: 48px;
-        }
+div.page ul.messages li {
+    margin: 10px 0;
+    padding: 5px;
+    background: #f0faf9;
+    border: 1px solid #dbf3f1;
+    border-radius: 5px;
+    min-height: 48px;
+    box-sizing: content-box;
+}
 
-        div.page ul.messages p {
-            margin: 0;
-        }
+div.page ul.messages p {
+    margin: 0;
+}
 
-        div.page ul.messages li img {
-            float: left;
-            padding: 0 10px 0 0;
-        }
+div.page ul.messages li img {
+    float: left;
+    padding: 0 10px 0 0;
+}
 
-        div.page ul.messages li small {
-            font-size: 0.9em;
-            color: #888;
-        }
+div.page ul.messages li small {
+    font-size: 0.9em;
+    color: #888;
+}
 
-    div.page div.twitbox {
-        margin: 10px 0;
-        padding: 5px;
-        background: #F0FAF9;
-        border: 1px solid #94E2DA;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-    }
+div.page div.twitbox {
+    margin: 10px 0;
+    padding: 5px;
+    background: #f0faf9;
+    border: 1px solid #94e2da;
+    border-radius: 5px;
+}
 
-        div.page div.twitbox h3 {
-            margin: 0;
-            font-size: 1em;
-            color: #2C7E76;
-        }
+div.page div.twitbox h3 {
+    margin: 0;
+    font-size: 1em;
+    color: #2c7e76;
+}
 
-        div.page div.twitbox p {
-            margin: 0;
-        }
+div.page div.twitbox p {
+    margin: 0;
+}
 
-        div.page div.twitbox input[type="text"] {
-            width: 585px;
-        }
+div.page div.twitbox input[type="text"] {
+    width: 100%;
+    max-width: 585px;
+}
 
-        div.page div.twitbox input[type="submit"] {
-            width: 70px;
-            margin-left: 5px;
-        }
+div.page div.twitbox input[type="submit"] {
+    width: 70px;
+    margin-left: 5px;
+}
 
 ul.flashes {
     list-style: none;
@@ -170,21 +204,63 @@ ul.flashes {
     padding: 0;
 }
 
-    ul.flashes li {
-        background: #B9F3ED;
-        border: 1px solid #81CEC6;
-        -moz-border-radius: 2px;
-        -webkit-border-radius: 2px;
-        padding: 4px;
-        font-size: 13px;
-    }
+ul.flashes li {
+    background: #b9f3ed;
+    border: 1px solid #81cec6;
+    border-radius: 2px;
+    padding: 4px;
+    font-size: 13px;
+}
 
 div.error {
     margin: 10px 0;
-    background: #FAE4E4;
-    border: 1px solid #DD6F6F;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
+    background: #fae4e4;
+    border: 1px solid #dd6f6f;
+    border-radius: 2px;
     padding: 4px;
     font-size: 13px;
+}
+
+@media(max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    div.page div.navigation {
+        font-size: 16px;
+    }
+}
+
+@media(max-width: 425px) {
+    div.page h1,
+    div.page h2 {
+        text-align: center;
+    }
+    
+
+    div.page div.navigation {
+        text-align: center;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] { 
+        width: 100%;
+    }
+
+    div.page div.footer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    div.page div.footer .links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 14px; 
+    }
+
+    .page .footer .links > * {
+        padding: 5px 0;
+    }
 }
