@@ -12,12 +12,34 @@ services:
             - "--providers.docker=true"
             - "--providers.docker.exposedbydefault=false"
             - "--entrypoints.http.address=:80"
+
+            # HTTPS Config
+            - "--entrypoints.https.address=:443"
+            - "--certificatesresolvers.webappresolver.acme.tlschallenge=true"
+            - "--certificatesresolvers.webappresolver.acme.email=joln@itu.dk"
+            - "--certificatesresolvers.webappresolver.acme.storage=/letsencrypt/acme.json"
+            # Use Let's encrypt staging server
+            # - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
         ports:
             # The HTTP port
             - "80:80"
+
+            # The HTTPS port
+            - "443:443"
         volumes:
             # So that Traefik can listen to the Docker events
             - /var/run/docker.sock:/var/run/docker.sock:ro
+
+            # So that Traefik can persist the HTTP certificate
+            - ./letsencrypt:/letsencrypt
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
+            - "traefik.http.routers.api.entrypoints=http"
+            - "traefik.http.routers.api.service=api@internal"
+            - "traefik.http.routers.api.middlewares=auth"
+            # Generate new user and password with `echo $(htpasswd -nb admin admin) | sed -e s/\\$/\\$\\$/g`
+            - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$vVJRD/Hd$$pzWF/71kOPnIfPqS6/t0D."
 
     webapp:
         build:
@@ -39,6 +61,15 @@ services:
             # Tell where the service should be available
             - "traefik.http.routers.webapp.rule=Path(`/{path:.*}`)"
             - "traefik.http.routers.webapp.entrypoints=http"
+            # Redirect http to https
+            - "traefik.http.routers.webapp.middlewares=redirect-https@docker"
+            - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+
+            # Add https entrypoint
+            - "traefik.http.routers.webapp-secure.rule=Path(`/{path:.*}`)"
+            - "traefik.http.routers.webapp-secure.entrypoints=https"
+            - "traefik.http.routers.webapp-secure.tls.certresolver=webappresolver"
         depends_on:
             - database
 
