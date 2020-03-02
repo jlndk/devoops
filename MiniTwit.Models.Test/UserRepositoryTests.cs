@@ -274,5 +274,29 @@ namespace MiniTwit.Models.Tests
             Assert.Equal(9, followee.FollowedBy.Count());
             Assert.True(followee.FollowedBy.All(f => f.Follower.Follows.Any(ff => ff.FolloweeId == followeeReturnedId)));
         }
+        
+        [Fact]
+        public async Task CanCheckFollow()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwdq@gqqw.com"
+            };
+            var (_, followerReturnedId) = await userRepo.CreateAsync(follower);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeReturnedId) = await userRepo.CreateAsync(followee);
+
+            await userRepo.AddFollowerAsync(followerId: followerReturnedId, followeeId: followeeReturnedId);
+
+            var actual = await userRepo.IsUserFollowing(followerReturnedId, followeeReturnedId);
+            Assert.True(actual);
+        }
     }
 }
