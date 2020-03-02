@@ -60,7 +60,7 @@ namespace MiniTwit.Web.App.Controllers
 
             ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(user.Id);
             ViewData["ViewedUserId"] = user.Id;
-            
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (int.TryParse(userId, out var followerId))
             {
@@ -95,7 +95,7 @@ namespace MiniTwit.Web.App.Controllers
             });
         }
 
-        public async Task<IActionResult> Follow(int followeeId)
+        public async Task<IActionResult> Follow(int followeeId, string viewedUserName)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userId, out var followerId))
@@ -107,10 +107,10 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
-            return RedirectToAction("User_Timeline", new {id = followeeId});
+            return RedirectToAction("User_Timeline", new {username = viewedUserName});
         }
 
-        public async Task<IActionResult> Unfollow(int followeeId)
+        public async Task<IActionResult> Unfollow(int followeeId, string viewedUserName)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userId, out var followerId))
@@ -122,7 +122,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
-            return RedirectToAction("User_Timeline", new {id = followeeId});
+            return RedirectToAction("User_Timeline", new {username = viewedUserName});
         }
     }
 }
