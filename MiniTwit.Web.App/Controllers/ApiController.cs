@@ -79,8 +79,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return NotAuthorizedError();
             }
-            var messages = (await _messageRepository.ReadAsync())
-                .Take(number)
+            var messages = (await _messageRepository.ReadCountAsync(number))
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
             
             return Json(messages);
@@ -103,9 +102,8 @@ namespace MiniTwit.Web.App.Controllers
                 LogInfo($"Invalid username '{username}' to get messages for");
                 // TODO: This has to be another error, likely 500???
                 return NotFound();
-            }
-            var messages = (await _messageRepository.ReadAllMessagesFromUserAsync(user.Id))
-                .Take(number)
+            }    
+            var messages = (await _messageRepository.ReadCountFromUserAsync(user.Id,number))
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
             return Json(messages);
         }
