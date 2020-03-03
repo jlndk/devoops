@@ -57,6 +57,8 @@ namespace MiniTwit.Web.App
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseStatusCodePages();
+            app.UseStatusCodePagesWithReExecute("/StatusCode/Status{0}");
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();

@@ -11,7 +11,7 @@
                 <li>
                     <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=48"/> <!--TODO remember to softcode-->
                     <strong>
-                        <a asp-area="" asp-controller="Home" asp-action="User_Timeline" asp-route-id=@msg.Author.Id>@msg.Author.UserName</a>
+                        <a asp-area="" asp-controller="Home" asp-action="User_Timeline" asp-route-username=@msg.Author.UserName>@msg.Author.UserName</a>
                     </strong>
                         @msg.Text
                     <small>
