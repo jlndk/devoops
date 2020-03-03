@@ -15,7 +15,7 @@ namespace MiniTwit.Web.App.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
-        
+
         public HomeController(ILogger<HomeController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
         {
@@ -24,37 +24,52 @@ namespace MiniTwit.Web.App.Controllers
             _userRepository = userRepository;
         }
 
+		[Route("/my")]
         public async Task<IActionResult> My_Timeline()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromFollowedAsync(int.Parse(userId));
             return View();
         }
-        
+
+		[Route("/")]
         public async Task<IActionResult> Index()
         {
             ViewData["Messages"] = await _messageRepository.ReadCountAsync();
             return View();
         }
-        
-        public async Task<IActionResult> User_Timeline(int? id)
+
+		[Route("/user/{username}")]
+        public async Task<IActionResult> User_Timeline(string username)
         {
-            if (id == null)
+            if (username == null)
             {
                 return Error();
             }
-            ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(id.Value);
-            ViewData["ViewedUserId"] = id.Value;
-            var user = await _userRepository.ReadAsync(id.Value);
-            ViewData["ViewedUserName"] = user.UserName;
+
+            var user = await _userRepository.ReadAsyncByUsername(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ViewData["ViewedUserName"] = username;
+
+            ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(user.Id);
+            ViewData["ViewedUserId"] = user.Id;
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (int.TryParse(userId, out var followerId))
             {
-                ViewData["IsFollowingUser"] = await _userRepository.IsUserFollowing(followerId, (int) id);
+                ViewData["IsFollowingUser"] = await _userRepository.IsUserFollowing(followerId, user.Id);
             }
             return View();
         }
-        
+
+		[Route("/post")]
         [HttpPost]
         public async Task<IActionResult> PostMessage(Message message, string returnUrl = null)
         {
@@ -80,7 +95,7 @@ namespace MiniTwit.Web.App.Controllers
             });
         }
 
-        public async Task<IActionResult> Follow(int followeeId)
+        public async Task<IActionResult> Follow(int followeeId, string viewedUserName)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userId, out var followerId))
@@ -92,10 +107,10 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
-            return RedirectToAction("User_Timeline", new {id = followeeId});
+            return RedirectToAction("User_Timeline", new {username = viewedUserName});
         }
 
-        public async Task<IActionResult> Unfollow(int followeeId)
+        public async Task<IActionResult> Unfollow(int followeeId, string viewedUserName)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!int.TryParse(userId, out var followerId))
@@ -107,7 +122,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
-            return RedirectToAction("User_Timeline", new {id = followeeId});
+            return RedirectToAction("User_Timeline", new {username = viewedUserName});
         }
     }
 }
