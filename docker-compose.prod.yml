@@ -44,6 +44,9 @@ services:
             context: "."
             dockerfile: "Dockerfile"
             target: production
+            cache_from:
+                - jlndk/devoops:latest
+        image: jlndk/devoops:latest
         restart: unless-stopped
         environment:
             - "ASPNETCORE_ENVIRONMENT=Production"
