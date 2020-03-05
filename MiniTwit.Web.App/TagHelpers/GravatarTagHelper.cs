@@ -14,7 +14,7 @@ namespace MiniTwit.Web.App.TagHelpers
         [HtmlAttributeName("gravatar-email")]
         public string Email { get; set; }
         [HtmlAttributeName("gravatar-mode")]
-        public Mode Mode { get; set; } = Mode.Mm;
+        public Mode Mode { get; set; } = Mode.Identicon;
         [HtmlAttributeName("gravatar-rating")]
         public Rating Rating { get; set; } = Rating.g;
         [HtmlAttributeName("gravatar-size")]
