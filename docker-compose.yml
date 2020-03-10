@@ -1,4 +1,9 @@
 version: "3.4"
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
 services:
     traefik:
         image: traefik:v2.1
@@ -41,6 +46,8 @@ services:
             - "traefik.http.routers.webapp.entrypoints=http"
         depends_on:
             - database
+            - prometheus
+            - grafana
 
     database:
         image: postgres:12
@@ -50,3 +57,21 @@ services:
             - "5432:5432"
         volumes:
             - ./postgresdata:/var/lib/postgresql/data
+
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        ports:
+            - "9090:9090"  
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+            - prometheus_data:/prometheus
+
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"  
+        volumes:
+            - grafana_data:/var/lib/grafana
+        depends_on: 
+            - prometheus

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiniTwit.Entities;
 using MiniTwit.Models;
+using Prometheus;
 
 namespace MiniTwit.Web.App
 {
@@ -57,6 +58,10 @@ namespace MiniTwit.Web.App
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             app.UseStatusCodePages();
             app.UseStatusCodePagesWithReExecute("/StatusCode/Status{0}");
             app.UseStaticFiles();
@@ -69,6 +74,9 @@ namespace MiniTwit.Web.App
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
+
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<MiniTwitContext>();
             context.Database.Migrate();
