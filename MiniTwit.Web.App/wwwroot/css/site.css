@@ -93,14 +93,12 @@ div.page div.navigation a.link .content {
     text-decoration: underline;
 }
 
-div.page div.navigation .link:after
-{
-  content: ' |';
+div.page div.navigation .link:after {
+    content: " |";
 }
 
-div.page div.navigation .link:last-child:after
-{
-  content: '';
+div.page div.navigation .link:last-child:after {
+    content: "";
 }
 
 div.page div.navigation input {
@@ -162,7 +160,10 @@ div.page ul.messages p {
 
 div.page ul.messages li img {
     float: left;
-    padding: 0 10px 0 0;
+    margin: 0 10px 0 0;
+    background-color: #cccccc;
+    min-width: 48px;
+    min-height: 48px;
 }
 
 div.page ul.messages li small {
@@ -221,7 +222,7 @@ div.error {
     font-size: 13px;
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
     body {
         font-size: 16px;
     }
@@ -231,12 +232,11 @@ div.error {
     }
 }
 
-@media(max-width: 425px) {
+@media (max-width: 425px) {
     div.page h1,
     div.page h2 {
         text-align: center;
     }
-    
 
     div.page div.navigation {
         text-align: center;
@@ -244,7 +244,7 @@ div.error {
 
     input[type="text"],
     input[type="password"],
-    input[type="email"] { 
+    input[type="email"] {
         width: 100%;
     }
 
@@ -257,7 +257,7 @@ div.error {
         display: flex;
         flex-direction: column;
         align-items: center;
-        font-size: 14px; 
+        font-size: 14px;
     }
 
     .page .footer .links > * {
