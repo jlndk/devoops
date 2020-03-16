@@ -24,6 +24,14 @@ namespace MiniTwit.Web.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLetsEncrypt(o =>
+            {
+                o.DomainNames = new[] { "minitwit.tk" , "www.minitwit.tk"};
+                //o.UseStagingServer = true; // <--- use staging
+
+                o.AcceptTermsOfService = true;
+                o.EmailAddress = "joln@itu.dk";
+            });
             services.AddControllersWithViews();
             services.AddDbContext<MiniTwitContext>();
             services.AddScoped<IMiniTwitContext>(provider => provider.GetService<MiniTwitContext>());
@@ -58,7 +66,7 @@ namespace MiniTwit.Web.App
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+            app.UseHttpsRedirection();
             app.UseMetricServer();
             app.UseHttpMetrics();
 
@@ -68,6 +76,7 @@ namespace MiniTwit.Web.App
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
