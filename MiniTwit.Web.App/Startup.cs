@@ -27,7 +27,7 @@ namespace MiniTwit.Web.App
             services.AddLetsEncrypt(o =>
             {
                 o.DomainNames = new[] { "metamagicgames.com" };
-                //o.UseStagingServer = true; // <--- use staging
+                o.UseStagingServer = true; // <--- use staging
 
                 o.AcceptTermsOfService = true;
                 o.EmailAddress = "jooln@itu.dk";
