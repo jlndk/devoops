@@ -26,11 +26,11 @@ namespace MiniTwit.Web.App
         {
             services.AddLetsEncrypt(o =>
             {
-                o.DomainNames = new[] { "minitwit.tk" , "www.minitwit.tk"};
+                o.DomainNames = new[] { "metamagicgames.com" };
                 //o.UseStagingServer = true; // <--- use staging
 
                 o.AcceptTermsOfService = true;
-                o.EmailAddress = "joln@itu.dk";
+                o.EmailAddress = "jooln@itu.dk";
             });
             services.AddControllersWithViews();
             services.AddDbContext<MiniTwitContext>();
