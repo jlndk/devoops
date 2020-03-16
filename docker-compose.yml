@@ -14,7 +14,7 @@ services:
             - "ASPNETCORE_ENVIRONMENT=Development"
             - "MINITWIT_ENVIRONMENT=docker"
             - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
-            - "ASPNETCORE_URLS=https://0.0.0.0:443"
+            - "ASPNETCORE_URLS=https://0.0.0.0:443;https://0.0.0.0:80"
         volumes:
             - ./:/app
             - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
