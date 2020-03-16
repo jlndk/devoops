@@ -30,7 +30,7 @@ RUN dotnet publish -c release -o /app --no-restore
 
 FROM build AS development
 WORKDIR /app
-ENTRYPOINT ["dotnet", "watch", "--project", "MiniTwit.Web.App", "run"]
+ENTRYPOINT ["dotnet", "watch", "--project", "MiniTwit.Web.App", "run", "--urls", "http://0.0.0.0:80;http://0.0.0.0:443"]
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 as production
 WORKDIR /app
