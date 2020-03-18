@@ -39,7 +39,7 @@ namespace MiniTwit.Web.App.Controllers
 		[Route("/")]
         public async Task<IActionResult> Index()
         {
-            ViewData["Messages"] = await _messageRepository.ReadCountAsync();
+            ViewData["Messages"] = await _messageRepository.ReadManyAsync();
             return View();
         }
 

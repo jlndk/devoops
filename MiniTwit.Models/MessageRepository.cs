@@ -44,7 +44,7 @@ namespace MiniTwit.Models
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<Message>> ReadCountAsync(int count = 100)
+        public async Task<IEnumerable<Message>> ReadManyAsync(int count = 100)
         {
             var query = 
                 from m in _context.Messages
@@ -63,7 +63,7 @@ namespace MiniTwit.Models
             return await query.Take(count).ToListAsync();
         }
         
-        public async Task<IEnumerable<Message>> ReadCountBeforeTimeAsync(int count, DateTime beforeDateTime)
+        public async Task<IEnumerable<Message>> ReadManyBeforeTimeAsync(int count, DateTime beforeDateTime)
         {
             var query = 
                 from m in _context.Messages
@@ -81,7 +81,7 @@ namespace MiniTwit.Models
                 };
             return await query.Take(count).ToListAsync();
         }
-        public async Task<IEnumerable<Message>> ReadCountFromUserBeforeTimeAsync(int count, int userId, DateTime beforeDateTime)
+        public async Task<IEnumerable<Message>> ReadManyFromUserBeforeTimeAsync(int count, int userId, DateTime beforeDateTime)
         {
             var query = 
                 from m in _context.Messages
@@ -118,7 +118,7 @@ namespace MiniTwit.Models
             return await messages.FirstOrDefaultAsync();
         }
         
-        public async Task<List<Message>> ReadCountFromUserAsync(int userId, int count = 100)
+        public async Task<List<Message>> ReadManyFromUserAsync(int userId, int count = 100)
         {
             var messages = 
                 from m in _context.Messages
