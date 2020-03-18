@@ -100,7 +100,6 @@ namespace MiniTwit.Web.App.Controllers
             if (user == null)
             {
                 LogInfo($"Invalid username '{username}' to get messages for");
-                // TODO: This has to be another error, likely 500???
                 return NotFound();
             }    
             var messages = (await _messageRepository.ReadCountFromUserAsync(user.Id,number))
@@ -122,9 +121,13 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
-            if (user == null || messagePost?.Content == null)
+            if (user == null)
             {
                 return NotFound();
+            }
+            if (messagePost?.Content == null)
+            {
+                return BadRequest();
             }
 
             var message = new Message
@@ -206,6 +209,10 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
             var followers = (await _userRepository.GetFollows(user.Id))?
                 .Take(number)
                 .Select(u => u.UserName);
@@ -231,7 +238,6 @@ namespace MiniTwit.Web.App.Controllers
             if (follower == null)
             {
                 LogInfo($"Invalid follower username '{username}' in follow/unfollow action");
-                // TODO: This has to be another error, likely 500???
                 return StatusCode(404, "");
             }
 
@@ -241,7 +247,6 @@ namespace MiniTwit.Web.App.Controllers
                 if (followee == null)
                 {
                     LogInfo($"Invalid followee username '{postFollow.Follow}' in follow operation");
-                    // TODO: This has to be another error, likely 500???
                     return StatusCode(404, "");
                 }
                 LogInfo($"'{username}' followed '{postFollow.Follow}'");
@@ -253,11 +258,14 @@ namespace MiniTwit.Web.App.Controllers
                 if (followee == null)
                 {
                     LogInfo($"Invalid followee username '{postFollow.UnFollow}' in unfollow operation");
-                    // TODO: This has to be another error, likely 500???
                     return StatusCode(404, "");
                 }
                 LogInfo($"'{username}' unfollowed '{postFollow.UnFollow}'");
                 await _userRepository.RemoveFollowerAsync(followerId: follower.Id, followeeId: followee.Id);
+            }
+            else
+            {
+                return BadRequest();
             }
 
             return StatusCode(204, "");
