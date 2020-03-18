@@ -40,4 +40,6 @@ jobs:
                       ./deploy.sh
             - name: GH Release
               uses: softprops/action-gh-release@v0.1.5
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 
