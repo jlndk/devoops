@@ -9,7 +9,8 @@ jobs:
 
       - name: Add dotnet format tool
         uses: joeltankam/dotnet-action@1.0.0
-        args: tool install -g dotnet-format
+        with:
+          args: tool install -g dotnet-format
 
       - name: Add dotnet-format problem matcher
         uses: xt0rted/dotnet-format-problem-matcher@v1
