@@ -37,18 +37,21 @@ namespace MiniTwit.FlagTool.Tests
                 AuthorId = 1,
                 Text = "hello world",
                 Flagged = 0,
+                PubDate =  DateTime.Now.AddDays(2)
             });
             context.Messages.Add(new Message
             {
                 AuthorId = 1,
                 Text = "foobar",
                 Flagged = 0,
+                PubDate =  DateTime.Now.AddDays(1)
             });
             context.Messages.Add(new Message
             {
                 AuthorId = 1,
                 Text = "fricking heck",
                 Flagged = 1,
+                PubDate =  DateTime.Now.AddDays(0)
             });
             context.SaveChanges();
             
