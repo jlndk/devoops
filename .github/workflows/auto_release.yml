@@ -13,14 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          tag_name: v0.1
-          release_name: AutoRelease
-          body: |
-            This part has not been automated yet
-          draft: false
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
