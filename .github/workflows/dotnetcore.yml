@@ -14,12 +14,12 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build
     - name: Test with dotnet
-      run: dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./result.xml'
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../CoverageResults/
     - name: Upload coverage to Codecov  
       uses: codecov/codecov-action@v1
       with:
-        file: ./result.xml
+        file: ./CoverageResults/coverage.opencover.xml
         flags: unittests
         fail_ci_if_error: true
