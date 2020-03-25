@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,10 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
 using MiniTwit.Models;
-using MiniTwit.Utils.CustomJson;
 using MiniTwit.Web.App.Models.Api;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace MiniTwit.Web.App.Controllers
 {
@@ -63,7 +58,7 @@ namespace MiniTwit.Web.App.Controllers
             }
             var messages = (await _messageRepository.ReadManyAsync(number))
                 .Select(GetMessageDTO.FromMessage);
-            return CustomJson(messages);
+            return Json(messages);
         }
 
         [Route("[controller]/msgs/{username}")]
@@ -88,7 +83,7 @@ namespace MiniTwit.Web.App.Controllers
             }    
             var messages = (await _messageRepository.ReadManyFromUserAsync(user.Id,number))
                 .Select(GetMessageDTO.FromMessage);
-            return CustomJson(messages);
+            return Json(messages);
         }
         
 
@@ -172,7 +167,7 @@ namespace MiniTwit.Web.App.Controllers
             var follows = (await _userRepository.GetFollows(user.Id))?
                 .Take(number)
                 .Select(u => u.UserName);
-            return CustomJson(new {follows});
+            return Json(new {follows});
         }
 
         
@@ -203,7 +198,6 @@ namespace MiniTwit.Web.App.Controllers
                 if (followee == null)
                 {
                     LogRequestInfo($"Invalid followee username '{postFollowDto.Follow}' in follow operation.");
-                    // TODO: This has to be another error, likely 500???
                     return StatusCode(404, "");
                 }
                 LogRequestInfo($"'{username}' followed '{postFollowDto.Follow}'.");
@@ -231,7 +225,7 @@ namespace MiniTwit.Web.App.Controllers
 
         private bool IsRequestFromSimulator()
         {
-            return HttpContext.Request.Headers["Authorization"].Equals($"Basic ${SimulatorAuthToken}");
+            return HttpContext.Request.Headers["Authorization"].Equals($"Basic {SimulatorAuthToken}");
         }
 
         private IActionResult NotAuthorizedError()
@@ -247,9 +241,9 @@ namespace MiniTwit.Web.App.Controllers
             }
         }
 
-        private IActionResult CustomJson(object data)
+        public new ActionResult Json(object data)
         {
-            return Json(data, new JsonSerializerSettings { ContractResolver = new CustomJsonResolver() });
+            return Content(JsonConvert.SerializeObject(data), "application/json");
         }
     }
 }
