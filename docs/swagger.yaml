@@ -278,7 +278,7 @@ components:
         latest:
           type: integer
           example: 23592
-    PostFollowDTO:
+    PostFollowUnfollowDTO:
       type: object
       required:
         - follow
@@ -286,14 +286,6 @@ components:
         follow:
           type: string
           example: SomeUser123
-        latest:
-          type: integer
-          example: 23592
-    PostUnfollowDTO:
-      type: object
-      required:
-        - follow
-      properties:
         unfollow:
           type: string
           example: SomeUser123
@@ -305,9 +297,7 @@ components:
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: '#/components/schemas/PostFollowDTO'
-              - $ref: '#/components/schemas/PostUnfollowDTO'
+            $ref: '#/components/schemas/PostFollowUnfollowDTO'
           examples:
             follow:
               value:
