@@ -1,6 +1,6 @@
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class PostFollow
+    public class PostFollowDTO
     {
         public string Follow { get; set; }
         public string UnFollow { get; set; }
