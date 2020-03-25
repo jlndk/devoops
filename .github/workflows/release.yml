@@ -1,17 +1,16 @@
-name: create tagged release
+name: Create tagged release
 on:
   push:
     branches:
       - master
 
 jobs:
-  tagged-release:
-    name: Create Release
+  release-on-push:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Create Release
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: rymndhng/release-on-push-action@master
+        name: Create Release
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          automatic_release_tag: "latest"
+          bump_version_scheme: minor
