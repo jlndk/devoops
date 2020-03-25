@@ -79,7 +79,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return NotAuthorizedError();
             }
-            var messages = (await _messageRepository.ReadCountAsync(number))
+            var messages = (await _messageRepository.ReadManyAsync(number))
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
             
             return Json(messages);
@@ -103,7 +103,7 @@ namespace MiniTwit.Web.App.Controllers
                 // TODO: This has to be another error, likely 500???
                 return NotFound();
             }    
-            var messages = (await _messageRepository.ReadCountFromUserAsync(user.Id,number))
+            var messages = (await _messageRepository.ReadManyFromUserAsync(user.Id,number))
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
             return Json(messages);
         }

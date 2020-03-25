@@ -75,7 +75,7 @@ namespace MiniTwit.Models.Tests
         public async Task ReadCount_messages_in_PubDate_order()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var result = await _messageRepository.ReadCountAsync(12);
+            var result = await _messageRepository.ReadManyAsync(12);
             DateTime prev = DateTime.MaxValue;
             foreach (var message in result)
             {
@@ -116,7 +116,7 @@ namespace MiniTwit.Models.Tests
         public async Task ReadCount_messages_contains_no_flagged()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var result = await _messageRepository.ReadCountAsync(12);
+            var result = await _messageRepository.ReadManyAsync(12);
             foreach (var message in result)
             {
                 Assert.True(message.Flagged <= 0);
@@ -203,7 +203,7 @@ namespace MiniTwit.Models.Tests
             }
 
             DateTime beforeDate = new DateTime(2020, 2, 10);
-            var messages = await messageRepo.ReadCountBeforeTimeAsync(100, beforeDate);
+            var messages = await messageRepo.ReadManyBeforeTimeAsync(100, beforeDate);
             foreach (var message in messages)
             {
                 Assert.True(message.PubDate < beforeDate);
@@ -237,7 +237,7 @@ namespace MiniTwit.Models.Tests
             }
 
             DateTime beforeDate = new DateTime(2020, 2, 10);
-            var messages = await messageRepo.ReadCountFromUserBeforeTimeAsync(100, userId, beforeDate);
+            var messages = await messageRepo.ReadManyFromUserBeforeTimeAsync(100, userId, beforeDate);
             foreach (var message in messages)
             {
                 Assert.True(message.PubDate < beforeDate);
