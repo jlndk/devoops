@@ -14,6 +14,7 @@ using MiniTwit.Models;
 using Prometheus;
 using Serilog.Events;
 using Serilog.Exceptions;
+using Serilog.Extensions.Hosting;
 
 namespace MiniTwit.Web.App
 {
@@ -65,6 +66,7 @@ namespace MiniTwit.Web.App
                 .AddDefaultTokenProviders();
             // TODO: This should perhaps be something other than scoped
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddControllersWithViews();
             services.AddScoped<IUserRepository, UserRepository>();
         }
 
@@ -89,8 +91,10 @@ namespace MiniTwit.Web.App
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
+            
             app.UseMetricServer();
             app.UseHttpMetrics();
+            
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
@@ -103,6 +107,7 @@ namespace MiniTwit.Web.App
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<MiniTwitContext>();
+            
             context.Database.Migrate();
         }
     }
