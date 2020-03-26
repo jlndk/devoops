@@ -1,0 +1,321 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: MiniTwit Simulator API
+  description: API spec. for group D.
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/tobloef/MiniTwit/1.0.0
+  - url: 'http://minitwit.tk/api'
+paths:
+  /latest:
+    get:
+      summary: Get latest accepted id
+      responses:
+        '200':
+          description: Returns the latest id accepted by the API
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLatestDTO'
+  /msgs:
+    get:
+      summary: Get a number of messages from the global timeline
+      parameters:
+        - name: latest
+          in: query
+          description: The latest id sent by the simulator API
+          required: false
+          schema:
+            type: integer
+        - name: 'no'
+          in: query
+          description: The maximum amount of messages to get
+          required: false
+          schema:
+            type: integer
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh
+      responses:
+        '200':
+          description: Returns the requested number of messages sorted by date
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessagesDTO'
+        '401':
+          description: Unauthorized
+  '/msgs/{username}':
+    get:
+      summary: Get a number of messages from a specific user's timeline
+      parameters:
+        - name: username
+          in: path
+          description: Username of user to return messages for
+          required: true
+          schema:
+            type: integer
+        - name: latest
+          in: query
+          description: The latest id sent by the simulator API
+          required: false
+          schema:
+            type: integer
+        - name: 'no'
+          in: query
+          description: The maximum amount of messages to get
+          required: false
+          schema:
+            type: integer
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh
+      responses:
+        '200':
+          description: Returns the requested number of messages sorted by date
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessagesDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+    post:
+      summary: Post a new message to the user's timeline
+      parameters:
+        - name: username
+          in: path
+          description: Username of the user whose timeline should be posted to
+          required: true
+          schema:
+            type: integer
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh
+        - name: latest
+          in: query
+          description: The latest id sent by the simulator API
+          required: false
+          schema:
+            type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/MessageBody'
+      responses:
+        '204':
+          description: The message was successfully posted
+        '400':
+          description: No valid message
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+  /register:
+    post:
+      summary: Register a new user
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh
+        - name: latest
+          in: query
+          description: The latest id sent by the simulator API
+          required: false
+          schema:
+            type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterBody'
+      responses:
+        '204':
+          description: The user was successfully registered
+        '400':
+          description: Invalid user details to register with (see response for details)
+        '401':
+          description: Unauthorized
+  '/fllws/{username}':
+    get:
+      summary: Get the users that a user follows
+      parameters:
+        - name: username
+          in: path
+          description: Username of user to get follows for
+          required: true
+          schema:
+            type: integer
+        - name: latest
+          in: query
+          description: The latest id sent by the simulator API
+          required: false
+          schema:
+            type: integer
+        - name: 'no'
+          in: query
+          description: The maximum amount of follows to get
+          required: false
+          schema:
+            type: integer
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh
+      responses:
+        '200':
+          description: Returns the users a user follows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFollowsDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+    post:
+      summary: Follow or unfollow a user
+      parameters:
+        - name: username
+          in: path
+          description: Username of the user to follow or unfollow
+          required: true
+          schema:
+            type: integer
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh
+        - name: latest
+          in: query
+          description: The latest id sent by the simulator API
+          required: false
+          schema:
+            type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/FollowBody'
+      responses:
+        '204':
+          description: The user was successfully followed or unfollowed
+        '400':
+          description: No valid message
+        '401':
+          description: Unauthorized
+        '404':
+          description: User not found
+components:
+  schemas:
+    GetLatestDTO:
+      type: object
+      properties:
+        latest:
+          type: integer
+          example: 23592
+    GetMessageDTO:
+      type: object
+      properties:
+        content:
+          type: string
+        pub_date:
+          type: string
+          format: date-time
+        user:
+          type: string
+          example: SomeUser123
+    GetMessagesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetMessageDTO'
+    GetFollowsDTO:
+      type: object
+      properties:
+        follows:
+          type: array
+          items:
+            type: string
+            example: SomeUser123
+    PostMessageDTO:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          example: 'Wow, my vacation was so nice!'
+        latest:
+          type: integer
+          example: 23592
+    PostRegisterDTO:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          example: SomeUser123
+        email:
+          type: string
+          example: user123@email.com
+        pwd:
+          type: string
+          example: P455W0RD
+        latest:
+          type: integer
+          example: 23592
+    PostFollowUnfollowDTO:
+      type: object
+      required:
+        - follow
+      properties:
+        follow:
+          type: string
+          example: SomeUser123
+        unfollow:
+          type: string
+          example: SomeUser123
+        latest:
+          type: integer
+          example: 23592
+  requestBodies:
+    FollowBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostFollowUnfollowDTO'
+          examples:
+            follow:
+              value:
+                follow: SomeUser123
+            unfollow:
+              value:
+                unfollow: SomeUser123
+    MessageBody:
+      description: Message object that needs to be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostMessageDTO'
+      required: true
+    RegisterBody:
+      description: User object that needs to be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRegisterDTO'
+      required: true
