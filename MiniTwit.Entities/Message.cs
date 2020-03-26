@@ -11,6 +11,7 @@ namespace MiniTwit.Entities
         public User Author { get; set; }
         [Required] 
         public string Text { get; set; }
+        [Required]
         public DateTime PubDate { get; set; }
         public int Flagged { get; set; }
     }

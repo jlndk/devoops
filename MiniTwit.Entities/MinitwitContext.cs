@@ -40,7 +40,8 @@ namespace MiniTwit.Entities
         {
             modelBuilder.UseIdentityColumns();
             base.OnModelCreating(modelBuilder);
-            
+
+            modelBuilder.Entity<Message>().HasIndex(m => m.PubDate);
             modelBuilder.Entity<Follow>()
                 .HasKey(f => new { f.FollowerId, f.FolloweeId});
             
