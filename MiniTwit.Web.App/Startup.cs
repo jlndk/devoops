@@ -12,6 +12,7 @@ using Serilog.Sinks.Elasticsearch;
 using MiniTwit.Entities;
 using MiniTwit.Models;
 using Prometheus;
+using Serilog.Events;
 using Serilog.Exceptions;
 
 namespace MiniTwit.Web.App
@@ -70,6 +71,7 @@ namespace MiniTwit.Web.App
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -79,15 +81,16 @@ namespace MiniTwit.Web.App
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            
             loggerFactory.AddSerilog();
-            app.UseMetricServer();
-            app.UseHttpMetrics();
 
             app.UseStatusCodePages();
             app.UseStatusCodePagesWithReExecute("/StatusCode/Status{0}");
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
+            app.UseMetricServer();
+            app.UseHttpMetrics();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
