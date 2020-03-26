@@ -38,3 +38,4 @@ jobs:
                       cd devoops
                       git pull
                       ./deploy.sh
+                
