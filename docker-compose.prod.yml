@@ -40,7 +40,7 @@ services:
             - "traefik.enable=true"
 
             # Add http entrypoint (Tell where the service should be available)
-            - "traefik.http.routers.api.rule=Host(`traefik.localhost`)||Host(`traefik.minitwit.tk`)"
+            - "traefik.http.routers.api.rule=Host(`traefik.minitwit.tk`)"
             - "traefik.http.routers.api.entrypoints=http"
 
             # Redirect http to https
@@ -49,7 +49,7 @@ services:
             - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
             
             # Add https entrypoint
-            - "traefik.http.routers.api-secure.rule=Host(`traefik.localhost`)||Host(`traefik.minitwit.tk`)"
+            - "traefik.http.routers.api-secure.rule=Host(`traefik.minitwit.tk`)"
             - "traefik.http.routers.api-secure.entrypoints=https"
             - "traefik.http.routers.api-secure.tls.certresolver=webappresolver"
 
@@ -81,7 +81,7 @@ services:
             - "traefik.http.services.webapp.loadbalancer.server.port=80"
 
             # Add http entrypoint (Tell where the service should be available)
-            - "traefik.http.routers.webapp.rule=Host(`minitwit.tk`) || Host(`localhost`)"
+            - "traefik.http.routers.webapp.rule=Host(`minitwit.tk`)"
             - "traefik.http.routers.webapp.entrypoints=http"
             # Redirect http to https
             - "traefik.http.routers.webapp.middlewares=redirect-https@docker"
@@ -89,7 +89,7 @@ services:
             - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
 
             # Add https entrypoint
-            - "traefik.http.routers.webapp-secure.rule=Host(`minitwit.tk`) || Host(`localhost`)"
+            - "traefik.http.routers.webapp-secure.rule=Host(`minitwit.tk`)"
             - "traefik.http.routers.webapp-secure.entrypoints=https"
             - "traefik.http.routers.webapp-secure.tls.certresolver=webappresolver"
         depends_on:
