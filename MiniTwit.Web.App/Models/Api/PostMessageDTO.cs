@@ -1,12 +1,14 @@
 using System;
 using MiniTwit.Entities;
+using Newtonsoft.Json;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class PostMessageDTO
+    public class PostMessageDTO : BasePostDTO
     {
+        [JsonProperty("content")]
         public string Content { get; set; }
-        public int? Latest { get; set; }
+        
         public Message ToMessage(User user) {
             return new Message
             {

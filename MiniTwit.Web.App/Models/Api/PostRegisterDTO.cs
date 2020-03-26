@@ -1,13 +1,16 @@
 ﻿using MiniTwit.Entities;
+using Newtonsoft.Json;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class PostRegisterDTO
+    public class PostRegisterDTO : BasePostDTO
     {
+        [JsonProperty("username")]
         public string Username { get; set; }
+        [JsonProperty("email")]
         public string Email { get; set; }
-        public string Pwd { get; set; }
-        public int? Latest { get; set; }
+        [JsonProperty("pwd")]
+        public string Password { get; set; }
 
         public User ToUser()
         {

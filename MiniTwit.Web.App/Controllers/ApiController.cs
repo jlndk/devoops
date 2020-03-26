@@ -40,7 +40,7 @@ namespace MiniTwit.Web.App.Controllers
         [AllowAnonymous]
         public IActionResult GetLatest()
         {
-            return Json(new {latest = _latest});
+            return Json(new GetLatestDTO(_latest));
         }
 
         [Route("[controller]/msgs/")]
@@ -131,7 +131,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a valid email address"});
             }
-            if (registerPost.Pwd == null)
+            if (registerPost.Password == null)
             {
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a password"});
             }
@@ -139,7 +139,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return StatusCode(400,new {status = 400, error_msg = "The username is already taken"});
             }
-            var result = await _userManager.CreateAsync(registerPost.ToUser(), registerPost.Pwd);
+            var result = await _userManager.CreateAsync(registerPost.ToUser(), registerPost.Password);
             if (!result.Succeeded)
             {
                 LogRequestInfo($"{registerPost.Username} failed at creation, with result: {result}.");
@@ -167,7 +167,7 @@ namespace MiniTwit.Web.App.Controllers
             var follows = (await _userRepository.GetFollows(user.Id))?
                 .Take(number)
                 .Select(u => u.UserName);
-            return Json(new {follows});
+            return Json(new GetFollowsDTO(follows));
         }
 
         
@@ -178,10 +178,10 @@ namespace MiniTwit.Web.App.Controllers
         public async Task<IActionResult> UserFollow(
             string username,
             [FromQuery(Name = "latest")] int? latestMessage,
-            [FromBody] PostFollowDTO postFollowDto
+            [FromBody] PostFollowUnfollowDTO postFollowUnfollowDto
         )
         {
-            UpdateLatest(latestMessage ?? postFollowDto.Latest);
+            UpdateLatest(latestMessage ?? postFollowUnfollowDto.Latest);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -192,26 +192,26 @@ namespace MiniTwit.Web.App.Controllers
                 LogRequestInfo($"Invalid follower username '{username}' in follow/unfollow action.");
                 return StatusCode(404, "");
             }
-            if (postFollowDto?.Follow != null)
+            if (postFollowUnfollowDto?.Follow != null)
             {
-                var followee = await _userRepository.ReadAsyncByUsername(postFollowDto.Follow);
+                var followee = await _userRepository.ReadAsyncByUsername(postFollowUnfollowDto.Follow);
                 if (followee == null)
                 {
-                    LogRequestInfo($"Invalid followee username '{postFollowDto.Follow}' in follow operation.");
+                    LogRequestInfo($"Invalid followee username '{postFollowUnfollowDto.Follow}' in follow operation.");
                     return StatusCode(404, "");
                 }
-                LogRequestInfo($"'{username}' followed '{postFollowDto.Follow}'.");
+                LogRequestInfo($"'{username}' followed '{postFollowUnfollowDto.Follow}'.");
                 await _userRepository.AddFollowerAsync(follower.Id, followee.Id);
             }
-            else if (postFollowDto?.UnFollow != null)
+            else if (postFollowUnfollowDto?.UnFollow != null)
             {
-                var followee = await _userRepository.ReadAsyncByUsername(postFollowDto.UnFollow);
+                var followee = await _userRepository.ReadAsyncByUsername(postFollowUnfollowDto.UnFollow);
                 if (followee == null)
                 {
-                    LogRequestInfo($"Invalid followee username '{postFollowDto.UnFollow}' in unfollow operation.");
+                    LogRequestInfo($"Invalid followee username '{postFollowUnfollowDto.UnFollow}' in unfollow operation.");
                     return StatusCode(404, "");
                 }
-                LogRequestInfo($"'{username}' unfollowed '{postFollowDto.UnFollow}'.");
+                LogRequestInfo($"'{username}' unfollowed '{postFollowUnfollowDto.UnFollow}'.");
                 await _userRepository.RemoveFollowerAsync(follower.Id, followee.Id);
             }
 
