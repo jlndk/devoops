@@ -18,7 +18,7 @@ namespace MiniTwit.Web.App.Controllers
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
 
-        private const int DefaultMessagesPerPage = 1;
+        private const int DefaultMessagesPerPage = 20;
 
         public HomeController(ILogger<HomeController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
