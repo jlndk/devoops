@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
@@ -9,7 +9,7 @@ namespace MiniTwit.Web.App.Models.Api
             Latest = latest;
         }
         
-        [JsonProperty("latest")]
+        [JsonPropertyName("latest")]
         public int Latest { get; set; }
     }
 }

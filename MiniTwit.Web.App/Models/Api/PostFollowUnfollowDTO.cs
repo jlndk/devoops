@@ -1,12 +1,12 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
     public class PostFollowUnfollowDTO : BasePostDTO
     {
-        [JsonProperty("follow")]   
+        [JsonPropertyName("follow")]   
         public string Follow { get; set; }
-        [JsonProperty("unfollow")]
+        [JsonPropertyName("unfollow")]
         public string UnFollow { get; set; }
     }
 }

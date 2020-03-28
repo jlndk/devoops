@@ -1,16 +1,16 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using MiniTwit.Entities;
-using Newtonsoft.Json;
 
 namespace MiniTwit.Web.App.Models.Api
 {
     public class GetMessageDTO
     {
-        [JsonProperty("user")]
+        [JsonPropertyName("user")]
         public string User { get; set; }
-        [JsonProperty("pub_date")]
+        [JsonPropertyName("pub_date")]
         public DateTime PubDate { get; set; }
-        [JsonProperty("content")]
+        [JsonPropertyName("content")]
         public string Content { get; set; }
         
         public static GetMessageDTO FromMessage(Message message)

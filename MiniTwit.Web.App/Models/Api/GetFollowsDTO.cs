@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
@@ -10,7 +10,7 @@ namespace MiniTwit.Web.App.Models.Api
             Follows = follows;
         }
 
-        [JsonProperty("follows")]
+        [JsonPropertyName("follows")]
         public IEnumerable<string> Follows { get; set; }
     }
 }

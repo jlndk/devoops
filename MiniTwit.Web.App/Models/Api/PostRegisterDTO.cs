@@ -1,15 +1,15 @@
 ﻿using MiniTwit.Entities;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
     public class PostRegisterDTO : BasePostDTO
     {
-        [JsonProperty("username")]
+        [JsonPropertyName("username")]
         public string Username { get; set; }
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
-        [JsonProperty("pwd")]
+        [JsonPropertyName("pwd")]
         public string Password { get; set; }
 
         public User ToUser()
