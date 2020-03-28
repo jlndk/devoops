@@ -1,4 +1,4 @@
-# MiniTwit DevOps project
+# MiniTwit DevOps project [![codecov](https://codecov.io/gh/jlndk/devoops/branch/master/graph/badge.svg)](https://codecov.io/gh/jlndk/devoops)
 > Check our uptime and maintenance status here: https://status.minitwit.tk
 
 A Twitter clone made a long time ago, in a galaxy far, far away. Over the course of the semester, we will bring this application up to date and deploy it using all the DevOps skills we learn.
