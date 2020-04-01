@@ -31,7 +31,7 @@ namespace MiniTwit.Models
             return (Created, user.Id);
         }
 
-        public async Task<IEnumerable<User>> ReadAsync()
+        public async Task<IEnumerable<User>> ReadManyAsync()
         {
             var query =
                 from u in _context.Users
@@ -154,7 +154,7 @@ namespace MiniTwit.Models
             return await users.ToListAsync();
         }
         
-        public async Task<IEnumerable<User>> GetFollowedBy(int userId)
+        public async Task<IEnumerable<User>> GetFollowers(int userId)
         {
             var users =
                 from f in _context.Follows

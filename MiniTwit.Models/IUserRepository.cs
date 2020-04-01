@@ -6,15 +6,15 @@ namespace MiniTwit.Models
 {
     public interface IUserRepository
     {
-        Task<(Response response, int userId)> CreateAsync(User user);
-        Task<IEnumerable<User>> ReadAsync();
         Task<User> ReadAsync(int userId);
+        Task<User> ReadAsyncByUsername(string username);
+        Task<IEnumerable<User>> ReadManyAsync();
+        Task<(Response response, int userId)> CreateAsync(User user);
         Task<Response> UpdateAsync(User user);
         Task<Response> DeleteAsync(int userId, bool force = false);
         Task<Response> AddFollowerAsync(int followerId, int followeeId);
-        Task<User> ReadAsyncByUsername(string username);
         Task<IEnumerable<User>> GetFollows(int userId);
-        Task<IEnumerable<User>> GetFollowedBy(int userId);
+        Task<IEnumerable<User>> GetFollowers(int userId);
         Task<Response> RemoveFollowerAsync(int followerId, int followeeId);
         Task<bool> IsUserFollowing(int followerId, int followeeId);
     }

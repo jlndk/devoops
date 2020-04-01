@@ -101,7 +101,7 @@ namespace MiniTwit.Models.Tests
             var repo = new UserRepository(context, _loggerUser);
             var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
-            var users = await repo.ReadAsync();
+            var users = await repo.ReadManyAsync();
             var user = users.First();
             Assert.Equal(1, user.Id);
             Assert.Equal("user1", user.UserName);
@@ -115,7 +115,7 @@ namespace MiniTwit.Models.Tests
             var repo = new UserRepository(context, _loggerUser);
             var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
-            var users = await repo.ReadAsync();
+            var users = await repo.ReadManyAsync();
             var usernames = users
                 .Where(u => u.Id < 4)
                 .Select(u => u.UserName);
@@ -129,7 +129,7 @@ namespace MiniTwit.Models.Tests
             var repo = new UserRepository(context, _loggerUser);
             var messageRepo = new MessageRepository(context);
             await Add_dummy_data(repo, messageRepo);
-            var users = await repo.ReadAsync();
+            var users = await repo.ReadManyAsync();
             Assert.Equal(9, users.Count());
         }
 

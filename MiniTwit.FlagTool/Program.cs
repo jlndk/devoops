@@ -14,11 +14,11 @@ namespace MiniTwit.FlagTool
 @"ITU-MiniTwit Tweet Flagging Tool
 Usage:
     flag_tool <tweet_id>...
-    flag_tool -i
+    flag_tool -i [count]
     flag_tool -h
 Options:
     -h            Show this screen.
-    -i            Dump all tweets and authors to STDOUT.";
+    -i            Dump tweets and authors to STDOUT (default count is 1000).";
 
         private readonly IMessageRepository _messageRepo;
         
@@ -33,7 +33,7 @@ Options:
             switch (cmd)
             {
                 case "-i":
-                    await PrintAllMessages();
+                    await PrintMessages(int.Parse(args.ElementAtOrDefault(1) ?? "1000"));
                     break;
                 case "-h":
                     PrintHelp();
@@ -70,9 +70,9 @@ Options:
             Console.WriteLine(DocString);
         }
 
-        private async Task PrintAllMessages()
+        private async Task PrintMessages(int count)
         {
-            var messages = await _messageRepo.ReadAsync(true);
+            var messages = await _messageRepo.ReadManyAsync(count, true);
             foreach (var message in messages)
             {
                 Console.WriteLine($"{message.Id},{message.AuthorId},{message.Text},{message.Flagged}");
