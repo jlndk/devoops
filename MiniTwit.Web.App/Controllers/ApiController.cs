@@ -43,7 +43,15 @@ namespace MiniTwit.Web.App.Controllers
         //The tests doesnt test for it.
         private bool RequestFromSimulator()
         {
-            return (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"));
+            if (HttpContext.Request.Headers["Authorization"].Equals("Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"))
+            {
+                return true;
+            }
+            else
+            {
+                LogInfo($"Unauthorized Request for api");
+                return false;
+            }
         }
 
         private IActionResult NotAuthorizedError()
@@ -61,6 +69,7 @@ namespace MiniTwit.Web.App.Controllers
 
         private void UpdateLatest(int? latestMessage)
         {
+            
             if (latestMessage != null)
             {
                 _latest = latestMessage.Value;
@@ -103,6 +112,7 @@ namespace MiniTwit.Web.App.Controllers
                 // TODO: This has to be another error, likely 500???
                 return NotFound();
             }    
+            LogInfo($"Got Messages for user '{username}'");
             var messages = (await _messageRepository.ReadManyFromUserAsync(user.Id,number))
                 .Select(m => new {content = m.Text, pub_date = m.PubDate, user = m.Author.UserName});
             return Json(messages);
@@ -124,6 +134,7 @@ namespace MiniTwit.Web.App.Controllers
             var user = await _userRepository.ReadAsyncByUsername(username);
             if (user == null || messagePost?.Content == null)
             {
+                LogInfo($"Tried to post message for non existing user '{username}'");
                 return NotFound();
             }
 
@@ -135,6 +146,7 @@ namespace MiniTwit.Web.App.Controllers
                 PubDate = DateTime.Now,
                 Text = messagePost.Content
             };
+            LogInfo($"'{username}' posted a tweet");
             await _messageRepository.CreateAsync(message);
             return StatusCode(204, "");
         }
@@ -161,21 +173,25 @@ namespace MiniTwit.Web.App.Controllers
             }
             if (registerPost?.Username == null)
             {
+                LogInfo($"Tried to create user without username\n " + registerPost);
                 return StatusCode(400, new {status = 400, error_msg = "You have to enter a username"});
             }
 
             if (registerPost.Email == null || !registerPost.Email.Contains("@"))
             {
+                LogInfo($"Tried to create user without valid email\n " + registerPost);
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a valid email address"});
             }
 
             if (registerPost.Pwd == null)
             {
+                LogInfo($"Tried to create user without password\n " + registerPost);
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a password"});
             }
 
             if ((await _userRepository.ReadAsyncByUsername(registerPost.Username)) != null)
             {
+                LogInfo($"Tried to create user with duplicate username\n " + registerPost);
                 return StatusCode(400,new {status = 400, error_msg = "The username is already taken"});
             }
 
@@ -206,6 +222,7 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
+            LogInfo($"Got followers for user " + username);
             var followers = (await _userRepository.GetFollows(user.Id))?
                 .Take(number)
                 .Select(u => u.UserName);
