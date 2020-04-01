@@ -3,7 +3,7 @@
 # A simple helper script based on docker-compose that deploys our application.
 # It uses the -f flag for docker-compose to tell it what docker-compose file
 # to use. In our case we use the production config.
-
+sysctl -w vm.max_map_count=262144
 echo "###################################"
 echo "        BUILDING CONTAINERS        "
 echo "###################################"

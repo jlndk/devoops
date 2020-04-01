@@ -43,6 +43,14 @@ namespace MiniTwit.Web.App.Controllers
             return Json(new GetLatestDTO(_latest));
         }
 
+        private void UpdateLatest(int? latestMessage)
+        {
+            if (latestMessage != null)
+            {
+                _latest = latestMessage.Value;
+            }
+        }
+
         [Route("[controller]/msgs/")]
         [HttpGet]
         [AllowAnonymous]
@@ -81,6 +89,7 @@ namespace MiniTwit.Web.App.Controllers
                 LogRequestInfo($"Invalid username '{username}' to get messages for.");
                 return NotFound();
             }    
+            LogInfo($"Got Messages for user '{username}'");
             var messages = (await _messageRepository.ReadManyFromUserAsync(user.Id,number))
                 .Select(GetMessageDTO.FromMessage);
             return Json(messages);
@@ -104,9 +113,12 @@ namespace MiniTwit.Web.App.Controllers
             var user = await _userRepository.ReadAsyncByUsername(username);
             if (user == null || postMessageDto?.Content == null)
             {
+                LogInfo($"Tried to post message for non existing user '{username}'");
                 return NotFound();
             }
+            LogInfo($"'{username}' posted a tweet");
             await _messageRepository.CreateAsync(postMessageDto.ToMessage(user));
+            await _messageRepository.CreateAsync(message);
             return StatusCode(204, "");
         }
 
@@ -125,18 +137,22 @@ namespace MiniTwit.Web.App.Controllers
             }
             if (registerPost?.Username == null)
             {
+                LogInfo($"Tried to create user without username\n " + registerPost);
                 return StatusCode(400, new {status = 400, error_msg = "You have to enter a username"});
             }
             if (registerPost.Email == null || !registerPost.Email.Contains("@"))
             {
+                LogInfo($"Tried to create user without valid email\n " + registerPost);
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a valid email address"});
             }
             if (registerPost.Password == null)
             {
+                LogInfo($"Tried to create user without password\n " + registerPost);
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a password"});
             }
             if (await _userRepository.ReadAsyncByUsername(registerPost.Username) != null)
             {
+                LogInfo($"Tried to create user with duplicate username\n " + registerPost);
                 return StatusCode(400,new {status = 400, error_msg = "The username is already taken"});
             }
             var result = await _userManager.CreateAsync(registerPost.ToUser(), registerPost.Password);
@@ -165,8 +181,6 @@ namespace MiniTwit.Web.App.Controllers
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
             var follows = (await _userRepository.GetFollows(user.Id))?
-                .Take(number)
-                .Select(u => u.UserName);
             return Json(new GetFollowsDTO(follows));
         }
 

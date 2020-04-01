@@ -237,7 +237,7 @@ namespace MiniTwit.Models.Tests
             }
 
             DateTime beforeDate = new DateTime(2020, 2, 10);
-            var messages = await messageRepo.ReadManyFromUserBeforeTimeAsync(100, userId, beforeDate);
+            var messages = await messageRepo.ReadManyFromUserWithinTimeAsync(100, userId, beforeDate);
             foreach (var message in messages)
             {
                 Assert.True(message.PubDate < beforeDate);

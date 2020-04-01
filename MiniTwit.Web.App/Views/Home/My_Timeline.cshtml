@@ -4,6 +4,11 @@
 @model Message
 @{
     ViewData["Title"] = "Timeline";
+    var messages = (IEnumerable<Message>) ViewData["Messages"];
+    var thereIsNextPage = (bool) ViewData["ThereIsNextPage"];
+    var thereIsPreviousPage = (bool) ViewData["ThereIsPreviousPage"];
+    var newestDate = (DateTime) ViewData["NewestDate"];
+    var oldestDate = (DateTime) ViewData["OldestDate"];
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -12,5 +17,13 @@
     {
         @await Html.PartialAsync("_Twitbox")
     }
-    @await Html.PartialAsync("_Messages", ViewData["Messages"])
+    @await Html.PartialAsync("_Messages", messages)
+        @if (thereIsPreviousPage)
+        {
+            <a asp-controller="Home" asp-action="My_Timeline" asp-route-dateOlderThan="@newestDate">Previous Page</a>
+        }
+        @if (thereIsNextPage)
+        {
+            <a asp-controller="Home" asp-action="My_Timeline" asp-route-dateNewerThan="@oldestDate">Next Page</a>
+        }
 </div>
