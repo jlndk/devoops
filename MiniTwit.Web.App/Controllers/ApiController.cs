@@ -40,15 +40,8 @@ namespace MiniTwit.Web.App.Controllers
         [AllowAnonymous]
         public IActionResult GetLatest()
         {
+            LogRequestInfo($"Got latest ({_latest}).");
             return Json(new GetLatestDTO(_latest));
-        }
-
-        private void UpdateLatest(int? latestMessage)
-        {
-            if (latestMessage != null)
-            {
-                _latest = latestMessage.Value;
-            }
         }
 
         [Route("[controller]/msgs/")]
@@ -66,6 +59,7 @@ namespace MiniTwit.Web.App.Controllers
             }
             var messages = (await _messageRepository.ReadManyAsync(number))
                 .Select(GetMessageDTO.FromMessage);
+            LogRequestInfo($"Got {messages.Count()} messages.");
             return Json(messages);
         }
 
@@ -86,12 +80,13 @@ namespace MiniTwit.Web.App.Controllers
             var user = await _userRepository.ReadAsyncByUsername(username);
             if (user == null)
             {
-                LogRequestInfo($"Invalid username '{username}' to get messages for.");
+                LogRequestInfo($"Invalid username \"{username}\" to get messages for.");
                 return NotFound();
-            }    
-            LogInfo($"Got Messages for user '{username}'");
+            }
+
             var messages = (await _messageRepository.ReadManyFromUserAsync(user.Id,number))
                 .Select(GetMessageDTO.FromMessage);
+            LogRequestInfo($"Got {messages.Count()} messages from \"{username}\".");
             return Json(messages);
         }
         
@@ -111,14 +106,19 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
-            if (user == null || postMessageDto?.Content == null)
+            if (user == null)
             {
-                LogInfo($"Tried to post message for non existing user '{username}'");
+                LogRequestInfo($"Tried to post message for non existing user \"{username}\".");
                 return NotFound();
             }
-            LogInfo($"'{username}' posted a tweet");
+
+            if (postMessageDto?.Content == null)
+            {
+                LogRequestInfo("Tried to post null message.");
+                return BadRequest();
+            }
+            LogRequestInfo($"\"{username}\" posted tweet \"{postMessageDto.Content}\".");
             await _messageRepository.CreateAsync(postMessageDto.ToMessage(user));
-            await _messageRepository.CreateAsync(message);
             return StatusCode(204, "");
         }
 
@@ -137,31 +137,31 @@ namespace MiniTwit.Web.App.Controllers
             }
             if (registerPost?.Username == null)
             {
-                LogInfo($"Tried to create user without username\n " + registerPost);
+                LogRequestInfo("Tried to create user without username.");
                 return StatusCode(400, new {status = 400, error_msg = "You have to enter a username"});
             }
             if (registerPost.Email == null || !registerPost.Email.Contains("@"))
             {
-                LogInfo($"Tried to create user without valid email\n " + registerPost);
+                LogRequestInfo("Tried to create user without valid email.");
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a valid email address"});
             }
             if (registerPost.Password == null)
             {
-                LogInfo($"Tried to create user without password\n " + registerPost);
+                LogRequestInfo("Tried to create user without password.");
                 return StatusCode(400,new {status = 400, error_msg = "You have to enter a password"});
             }
             if (await _userRepository.ReadAsyncByUsername(registerPost.Username) != null)
             {
-                LogInfo($"Tried to create user with duplicate username\n " + registerPost);
+                LogRequestInfo("Tried to create user with duplicate username.");
                 return StatusCode(400,new {status = 400, error_msg = "The username is already taken"});
             }
             var result = await _userManager.CreateAsync(registerPost.ToUser(), registerPost.Password);
             if (!result.Succeeded)
             {
-                LogRequestInfo($"{registerPost.Username} failed at creation, with result: {result}.");
+                LogRequestInfo($"Registration of user \"{registerPost.Username}\" failed at creation, with result: {result}.");
                 return BadRequest(result.Errors);
             }
-            LogRequestInfo($"{registerPost.Username} created a new account.");
+            LogRequestInfo($"Created the user \"{registerPost.Username}\".");
             return StatusCode(204, "");
         }
 
@@ -180,8 +180,9 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
-            var follows = (await _userRepository.GetFollows(user.Id))?
-            return Json(new GetFollowsDTO(follows));
+            var follows = await _userRepository.GetFollows(user.Id);
+            LogRequestInfo($"Got {follows.Count()} users that is \"{user.UserName}\" following.");
+            return Json(new GetFollowsDTO(follows.Select(u => u.UserName)));
         }
 
         
@@ -203,33 +204,41 @@ namespace MiniTwit.Web.App.Controllers
             var follower = await _userRepository.ReadAsyncByUsername(username);
             if (follower == null)
             {
-                LogRequestInfo($"Invalid follower username '{username}' in follow/unfollow action.");
+                LogRequestInfo($"Invalid follower username \"{username}\" in follow/unfollow action.");
                 return StatusCode(404, "");
             }
+
             if (postFollowUnfollowDto?.Follow != null)
             {
                 var followee = await _userRepository.ReadAsyncByUsername(postFollowUnfollowDto.Follow);
                 if (followee == null)
                 {
-                    LogRequestInfo($"Invalid followee username '{postFollowUnfollowDto.Follow}' in follow operation.");
+                    LogRequestInfo(
+                        $"Invalid followee username \"{postFollowUnfollowDto.Follow}\" in follow operation.");
                     return StatusCode(404, "");
                 }
-                LogRequestInfo($"'{username}' followed '{postFollowUnfollowDto.Follow}'.");
+
+                LogRequestInfo($"\"{username}\" followed \"{postFollowUnfollowDto.Follow}\".");
                 await _userRepository.AddFollowerAsync(follower.Id, followee.Id);
+                return StatusCode(204, "");
             }
-            else if (postFollowUnfollowDto?.UnFollow != null)
+            if (postFollowUnfollowDto?.UnFollow != null)
             {
                 var followee = await _userRepository.ReadAsyncByUsername(postFollowUnfollowDto.UnFollow);
                 if (followee == null)
                 {
-                    LogRequestInfo($"Invalid followee username '{postFollowUnfollowDto.UnFollow}' in unfollow operation.");
+                    LogRequestInfo(
+                        $"Invalid followee username \"{postFollowUnfollowDto.UnFollow}\" in unfollow operation.");
                     return StatusCode(404, "");
                 }
-                LogRequestInfo($"'{username}' unfollowed '{postFollowUnfollowDto.UnFollow}'.");
+
+                LogRequestInfo($"\"{username}\" unfollowed \"{postFollowUnfollowDto.UnFollow}\".");
                 await _userRepository.RemoveFollowerAsync(follower.Id, followee.Id);
+                return StatusCode(204, "");
             }
 
-            return StatusCode(204, "");
+            LogRequestInfo("No user to follow or unfollow was specified.");
+            return BadRequest();
         }
         
         private void LogRequestInfo(string message)
@@ -244,6 +253,7 @@ namespace MiniTwit.Web.App.Controllers
 
         private IActionResult NotAuthorizedError()
         {
+            LogRequestInfo("Unauthorized api call.");
             return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
