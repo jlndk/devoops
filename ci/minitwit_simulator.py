@@ -40,15 +40,17 @@ WAIT_SERVER_BOOT_TIMEOUT_SEC=5
 warningCounter = 0
 
 def main(host):
-
     wait_for_server_bootup(host)
+    perform_simulation(host)
 
+def perform_simulation(host):
     global warningCounter, WARNING_THRESHOLD
 
     print("::group::Simulator Errors/Warnings")
     for action, delay in get_actions():
         if warningCounter > WARNING_THRESHOLD:
-            report_error_ci("Amount of warnings exceeded threshold of {}.".format(WARNING_THRESHOLD))
+            report_error_ci(
+                "Amount of warnings exceeded threshold of {}.".format(WARNING_THRESHOLD))
             sys.exit(1)
 
         try:
@@ -81,7 +83,8 @@ def main(host):
                 # error handling (204 success, 400 user exists)
                 # 400 user exists already but not an error to log
                 if not (response.status_code == 204) or (response.status_code == 400):
-                    report_action_warning_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(
+                        host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -102,7 +105,8 @@ def main(host):
 
                 # 403 bad request
                 if response.status_code != 200:
-                    report_action_warning_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(
+                        host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -129,7 +133,8 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    report_action_warning_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(
+                        host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -156,7 +161,8 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    report_action_warning_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(
+                        host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -181,7 +187,8 @@ def main(host):
                 # error handling (204 success, 403 failure)
                 # 403 unauthorized
                 if response.status_code != 204:
-                    report_action_warning_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(
+                        host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -189,21 +196,23 @@ def main(host):
                 report_error_ci("FATAL: Unknown message type")
 
         except requests.exceptions.ConnectionError as e:
-            report_error_ci("Connection error at action '{}' of type '{}'".format(action["latest"], command))
-            
+            report_error_ci("Connection error at action '{}' of type '{}'".format(
+                action["latest"], command))
+
         except requests.exceptions.ReadTimeout as e:
-            report_error_ci("Timeout at action '{}' of type '{}'".format(action["latest"], command))
+            report_warning_ci("Timeout at action '{}' of type '{}'".format(
+                action["latest"], command))
 
         except Exception as e:
-            errorMsg = "Exception of type '{}' thrown.\n".format(type(e).__name__)
-            errorMsg += "Action number '{}' of type '{}'.\n".format(action["latest"], command)
+            errorMsg = "Exception of type '{}' thrown.\n".format(
+                type(e).__name__)
+            errorMsg += "Action number '{}' of type '{}'.\n".format(
+                action["latest"], command)
             errorMsg += "Stack trace:\n" + traceback.format_exc()
-            
+
             report_error_ci(errorMsg)
 
-        sleep(delay / (1000 * 100000))
     print("::endgroup::")
-
 
 def get_actions():
 
@@ -280,6 +289,8 @@ def wait_for_server_bootup(host):
                 headers=HEADERS,
                 timeout=0.1,
             )
+
+            response.close()
 
             if response.status_code == 200:
                 return True
