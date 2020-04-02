@@ -60,7 +60,7 @@ namespace MiniTwit.Models.Tests
         public async Task Read_messages_in_PubDate_order()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var result = await _messageRepository.ReadAsync();
+            var result = await _messageRepository.ReadManyAsync(100);
             DateTime prev = DateTime.MaxValue;
             foreach (var message in result)
             {
@@ -82,7 +82,6 @@ namespace MiniTwit.Models.Tests
                 Assert.True(DateTime.Compare(prev, message.PubDate)  >= 0);
                 _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
                 prev = message.PubDate;
-            
             }
         }
         
@@ -97,7 +96,6 @@ namespace MiniTwit.Models.Tests
                 Assert.True(DateTime.Compare(prev, message.PubDate) < 0);
                 _testOutputHelper.WriteLine(message.PubDate.ToString(CultureInfo.InvariantCulture));
                 prev = message.PubDate;
-            
             }
         }
        
@@ -105,7 +103,7 @@ namespace MiniTwit.Models.Tests
         public async Task Read_messages_contains_no_flagged()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var result = await _messageRepository.ReadAsync();
+            var result = await _messageRepository.ReadManyAsync(100);
             foreach (var message in result)
             {
                 Assert.True(message.Flagged <= 0);
@@ -167,18 +165,16 @@ namespace MiniTwit.Models.Tests
       
             var (_, followerReturnedId) = await userRepo.CreateAsync(follower);
             
-            await foreach (var user in context.Users)
+            foreach (var user in context.Users.Where(user => user.Id != followerReturnedId))
             {
-                if (user.Id == followerReturnedId) 
-                    continue;
-                await userRepo.AddFollowerAsync(followerId: followerReturnedId, followeeId: user.Id);
+                await userRepo.AddFollowerAsync(followerReturnedId, user.Id);
             }
-            Assert.Equal(9, follower.Follows.Count());
+            Assert.Equal(9, follower.Follows.Count);
             Assert.Equal(11, (await messageRepo.ReadAllMessagesFromFollowedAsync(followerReturnedId)).Count());
         }
         
         [Fact]
-        public async Task ReadCountBeforeDate_Gives_Only_Dates_Before()
+        public async Task ReadManyWithinDate_Gives_Dates_Before()
         {
             var context = CreateMiniTwitContext();
             var userRepo = new UserRepository(context, _loggerUser);
@@ -188,8 +184,8 @@ namespace MiniTwit.Models.Tests
                 UserName = "TimeTraveler",
                 Email = "hej@hej"
             };
-            var (_, userId) = await userRepo.CreateAsync(user);
-            for (int i = 1; i < 25; i++)
+            await userRepo.CreateAsync(user);
+            for (var i = 1; i < 25; i++)
             {
                 DateTime dt = new DateTime(2020, 2, i);
                 var message = new Message
@@ -201,9 +197,8 @@ namespace MiniTwit.Models.Tests
                 };
                 await messageRepo.CreateAsync(message);
             }
-
-            DateTime beforeDate = new DateTime(2020, 2, 10);
-            var messages = await messageRepo.ReadManyBeforeTimeAsync(100, beforeDate);
+            var beforeDate = new DateTime(2020, 2, 10);
+            var messages = await messageRepo.ReadManyWithinTimeAsync(100, beforeDate);
             foreach (var message in messages)
             {
                 Assert.True(message.PubDate < beforeDate);
@@ -211,7 +206,39 @@ namespace MiniTwit.Models.Tests
         }
         
         [Fact]
-        public async Task ReadCountFromUserBeforeDate_Gives_Only_Dates_Before()
+        public async Task ReadManyWithinDate_Gives_Dates_After()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var messageRepo = new MessageRepository(context);
+            var user = new User
+            {
+                UserName = "TimeTraveler",
+                Email = "hej@hej"
+            };
+            await userRepo.CreateAsync(user);
+            for (var i = 1; i < 25; i++)
+            {
+                DateTime dt = new DateTime(2020, 2, i);
+                var message = new Message
+                {
+                    Author = user,
+                    Flagged = 0,
+                    PubDate = dt,
+                    Text = $"Im great at this {i}th day in a row"
+                };
+                await messageRepo.CreateAsync(message);
+            }
+            var afterDate = new DateTime(2020, 2, 10);
+            var messages = await messageRepo.ReadManyWithinTimeAsync(100, null, afterDate);
+            foreach (var message in messages)
+            {
+                Assert.True(message.PubDate > afterDate);
+            }
+        }
+        
+        [Fact]
+        public async Task ReadManyFromUserWithinDate_Gives_Dates_Before()
         {
             var context = CreateMiniTwitContext();
             var userRepo = new UserRepository(context, _loggerUser);
@@ -237,10 +264,44 @@ namespace MiniTwit.Models.Tests
             }
 
             DateTime beforeDate = new DateTime(2020, 2, 10);
-            var messages = await messageRepo.ReadManyFromUserBeforeTimeAsync(100, userId, beforeDate);
+            var messages = await messageRepo.ReadManyFromUserWithinTimeAsync(userId, 100, beforeDate);
             foreach (var message in messages)
             {
                 Assert.True(message.PubDate < beforeDate);
+            }
+        }
+        
+        [Fact]
+        public async Task ReadManyFromUserWithinDate_Gives_Dates_After()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var messageRepo = new MessageRepository(context);
+            await Add_dummy_data(userRepo, messageRepo);
+            var user = new User
+            {
+                UserName = "TimeTraveler",
+                Email = "hej@hej"
+            };
+            var (_, userId) = await userRepo.CreateAsync(user);
+            for (int i = 1; i < 25; i++)
+            {
+                DateTime dt = new DateTime(2020, 2, i);
+                var message = new Message
+                {
+                    Author = user,
+                    Flagged = 0,
+                    PubDate = dt,
+                    Text = $"Im great at this {i}th day in a row"
+                };
+                await messageRepo.CreateAsync(message);
+            }
+
+            DateTime afterDate = new DateTime(2020, 2, 10);
+            var messages = await messageRepo.ReadManyFromUserWithinTimeAsync(userId, 100, null, afterDate);
+            foreach (var message in messages)
+            {
+                Assert.True(message.PubDate > afterDate);
             }
         }
     }
