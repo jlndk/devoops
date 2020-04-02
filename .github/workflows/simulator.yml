@@ -1,6 +1,7 @@
 name: Run API simulator
 
-pull_request:
+on:
+  pull_request:
     branches:
       - master
 
