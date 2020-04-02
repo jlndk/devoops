@@ -19,7 +19,7 @@ from contextlib import closing
 import sqlite3
 
 CSV_FILENAME = os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), "minitwit_scenario.csv")
+    os.path.realpath(__file__)), "minitwit_scenario.small.csv")
 USERNAME = "simulator"
 PWD = "super_safe!"
 CREDENTIALS = ":".join([USERNAME, PWD]).encode("ascii")
@@ -30,79 +30,8 @@ HEADERS = {
     f"Authorization": f"Basic {ENCODED_CREDENTIALS}",
 }
 
-
-def get_actions():
-
-    # read scenario .csv and parse to a list of lists
-    with open(CSV_FILENAME, "r", encoding="utf-8") as f:
-        reader = csv.reader(f, delimiter="\t", quotechar=None)
-
-        # for each line in .csv
-        for line in reader:
-            try:
-                # we know that the command string is always the fourth element
-                command = line[3]
-
-                command_id = int(line[0])
-                delay = int(line[1])
-                user = line[4]
-                if command == "register":
-                    email = line[5]
-                    user_pwd = line[-1]
-
-                    item = {
-                        "latest": command_id,
-                        "post_type": command,
-                        "username": user,
-                        "email": email,
-                        "pwd": user_pwd,
-                    }
-
-                    yield item, delay
-
-                elif command == "tweet":
-                    tweet_content = line[5]
-                    item = {
-                        "latest": command_id,
-                        "post_type": command,
-                        "username": user,
-                        "content": tweet_content,
-                    }
-
-                    yield item, delay
-
-                elif command == "follow":
-                    user_to_follow = line[5]
-                    item = {
-                        "latest": command_id,
-                        "post_type": command,
-                        "username": user,
-                        "follow": user_to_follow,
-                    }
-                    yield item, delay
-
-                elif command == "unfollow":
-                    user_to_unfollow = line[5]
-
-                    item = {
-                        "latest": command_id,
-                        "post_type": command,
-                        "username": user,
-                        "unfollow": user_to_unfollow,
-                    }
-                    yield item, delay
-
-                else:
-                    # This should never happen and can likely be removed to
-                    # make parsing for plot generation later easier
-                    print("Unknown type found: (" + command + ")")
-
-            except Exception as e:
-                print("========================================")
-                print(traceback.format_exc())
-
-
 def main(host):
+    print("::group::Simulator Errors/Warnings")
     for action, delay in get_actions():
         try:
             # SWITCH ON TYPE
@@ -133,24 +62,8 @@ def main(host):
 
                 # error handling (204 success, 400 user exists)
                 # 400 user exists already but not an error to log
-                if not (
-                    (response.status_code == 204)
-                    or (response.status_code == 400)
-                ):
-                    ts_str = datetime.strftime(
-                        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-                    )
-                    print(
-                        ",".join(
-                            [
-                                ts_str,
-                                host,
-                                str(action["latest"]),
-                                str(response.status_code),
-                                command,
-                            ]
-                        )
-                    )
+                if not (response.status_code == 204) or (response.status_code == 400):
+                    report_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -171,20 +84,7 @@ def main(host):
 
                 # 403 bad request
                 if response.status_code != 200:
-                    ts_str = datetime.strftime(
-                        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-                    )
-                    print(
-                        ",".join(
-                            [
-                                ts_str,
-                                host,
-                                str(action["latest"]),
-                                str(response.status_code),
-                                command,
-                            ]
-                        )
-                    )
+                    report_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -211,20 +111,7 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    ts_str = datetime.strftime(
-                        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-                    )
-                    print(
-                        ",".join(
-                            [
-                                ts_str,
-                                host,
-                                str(action["latest"]),
-                                str(response.status_code),
-                                command,
-                            ]
-                        )
-                    )
+                    report_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -251,20 +138,7 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    ts_str = datetime.strftime(
-                        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-                    )
-                    print(
-                        ",".join(
-                            [
-                                ts_str,
-                                host,
-                                str(action["latest"]),
-                                str(response.status_code),
-                                command,
-                            ]
-                        )
-                    )
+                    report_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -289,38 +163,12 @@ def main(host):
                 # error handling (204 success, 403 failure)
                 # 403 unauthorized
                 if response.status_code != 204:
-                    ts_str = datetime.strftime(
-                        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-                    )
-                    print(
-                        ",".join(
-                            [
-                                ts_str,
-                                host,
-                                str(action["latest"]),
-                                str(response.status_code),
-                                command,
-                            ]
-                        )
-                    )
+                    report_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
             else:
-                # throw exception. Should not be hit
-                ts_str = datetime.strftime(
-                    datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-                )
-                print(
-                    ",".join(
-                        [
-                            "FATAL: Unknown message type",
-                            ts_str,
-                            host,
-                            str(action["latest"]),
-                        ]
-                    )
-                )
+                raise Exception("FATAL: Unknown message type")
 
         except requests.exceptions.ConnectionError as e:
             ts_str = datetime.strftime(datetime.utcnow(), "%Y-%m-%d %H:%M:%S")
@@ -345,7 +193,92 @@ def main(host):
             )
 
         sleep(delay / (1000 * 100000))
+    print("::endgroup::")
 
+
+def get_actions():
+
+    # read scenario .csv and parse to a list of lists
+    with open(CSV_FILENAME, "r", encoding="utf-8") as f:
+        reader = csv.reader(f, delimiter="\t", quotechar=None)
+
+        # for each line in .csv
+        for line in reader:
+            # we know that the command string is always the fourth element
+            command = line[3]
+
+            command_id = int(line[0])
+            delay = int(line[1])
+            user = line[4]
+            if command == "register":
+                email = line[5]
+                user_pwd = line[-1]
+
+                item = {
+                    "latest": command_id,
+                    "post_type": command,
+                    "username": user,
+                    "email": email,
+                    "pwd": user_pwd,
+                }
+
+                yield item, delay
+
+            elif command == "tweet":
+                tweet_content = line[5]
+                item = {
+                    "latest": command_id,
+                    "post_type": command,
+                    "username": user,
+                    "content": tweet_content,
+                }
+
+                yield item, delay
+
+            elif command == "follow":
+                user_to_follow = line[5]
+                item = {
+                    "latest": command_id,
+                    "post_type": command,
+                    "username": user,
+                    "follow": user_to_follow,
+                }
+                yield item, delay
+
+            elif command == "unfollow":
+                user_to_unfollow = line[5]
+
+                item = {
+                    "latest": command_id,
+                    "post_type": command,
+                    "username": user,
+                    "unfollow": user_to_unfollow,
+                }
+                yield item, delay
+
+            else:
+                # This should never happen and can likely be removed to
+                # make parsing for plot generation later easier
+                raise ValueError("Unknown type found: (" + command + ")")
+
+def report_error_ci(host, command, latestAction, statusCode):
+    ts_str = datetime.strftime(
+        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
+    )
+
+    print("::error ::Error: Test")
+
+    # print(
+    #     ",".join(
+    #         [
+    #             ts_str,
+    #             host,
+    #             str(latestAction),
+    #             str(statusCode),
+    #             command,
+    #         ]
+    #     )
+    # )
 
 if __name__ == "__main__":
     host = sys.argv[1]
