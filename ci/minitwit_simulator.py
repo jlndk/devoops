@@ -63,7 +63,7 @@ def main(host):
                 # error handling (204 success, 400 user exists)
                 # 400 user exists already but not an error to log
                 if not (response.status_code == 204) or (response.status_code == 400):
-                    report_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -84,7 +84,7 @@ def main(host):
 
                 # 403 bad request
                 if response.status_code != 200:
-                    report_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -111,7 +111,7 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    report_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -138,7 +138,7 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    report_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -163,7 +163,7 @@ def main(host):
                 # error handling (204 success, 403 failure)
                 # 403 unauthorized
                 if response.status_code != 204:
-                    report_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_error_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -261,24 +261,11 @@ def get_actions():
                 # make parsing for plot generation later easier
                 raise ValueError("Unknown type found: (" + command + ")")
 
-def report_error_ci(host, command, latestAction, statusCode):
-    ts_str = datetime.strftime(
-        datetime.utcnow(), "%Y-%m-%d %H:%M:%S"
-    )
+def report_action_error_ci(host, command, latestAction, statusCode):
+    report_error_ci("Action '{}' failed with status code {}. Command was '{}'.".format(latestAction, statusCode, command))
 
-    print("::error ::Error: Test")
-
-    # print(
-    #     ",".join(
-    #         [
-    #             ts_str,
-    #             host,
-    #             str(latestAction),
-    #             str(statusCode),
-    #             command,
-    #         ]
-    #     )
-    # )
+def report_error_ci(msg):
+    print("::error ::Warning: {}".format(msg))
 
 if __name__ == "__main__":
     host = sys.argv[1]
