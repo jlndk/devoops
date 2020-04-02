@@ -144,7 +144,7 @@ namespace MiniTwit.Models
             return await users.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<User>> GetFollows(int userId)
+        public async Task<IEnumerable<User>> GetFollowsAsync(int userId)
         {
             var users =
                 from f in _context.Follows
@@ -154,12 +154,12 @@ namespace MiniTwit.Models
             return await users.ToListAsync();
         }
         
-        public async Task<IEnumerable<User>> GetFollowedBy(int userId)
+        public async Task<IEnumerable<User>> GetFollowedByAsync(int userId)
         {
             var users =
                 from f in _context.Follows
                 where f.FolloweeId == userId
-                join u in _context.Users on f.FolloweeId equals u.Id
+                join u in _context.Users on f.FollowerId equals u.Id
                 select u;
             return await users.ToListAsync();
         }

@@ -13,8 +13,8 @@ namespace MiniTwit.Models
         Task<Response> DeleteAsync(int userId, bool force = false);
         Task<Response> AddFollowerAsync(int followerId, int followeeId);
         Task<User> ReadAsyncByUsername(string username);
-        Task<IEnumerable<User>> GetFollows(int userId);
-        Task<IEnumerable<User>> GetFollowedBy(int userId);
+        Task<IEnumerable<User>> GetFollowsAsync(int userId);
+        Task<IEnumerable<User>> GetFollowedByAsync(int userId);
         Task<Response> RemoveFollowerAsync(int followerId, int followeeId);
         Task<bool> IsUserFollowing(int followerId, int followeeId);
     }

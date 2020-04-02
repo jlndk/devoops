@@ -249,7 +249,7 @@ namespace MiniTwit.Models.Tests
         }
         
         [Fact]
-        public async Task Can_Get_Followers()
+        public async Task Can_follow_multiple()
         {
             var context = CreateMiniTwitContext();
             var userRepo = new UserRepository(context, _loggerUser);
@@ -276,7 +276,7 @@ namespace MiniTwit.Models.Tests
         }
         
         [Fact]
-        public async Task CanCheckFollow()
+        public async Task Can_check_follow()
         {
             var context = CreateMiniTwitContext();
             var userRepo = new UserRepository(context, _loggerUser);
@@ -297,6 +297,227 @@ namespace MiniTwit.Models.Tests
 
             var actual = await userRepo.IsUserFollowing(followerReturnedId, followeeReturnedId);
             Assert.True(actual);
+        }
+        
+        [Fact]
+        public async Task Can_delete()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwdq@gqqw.com"
+            };
+            var (_, followerReturnedId) = await userRepo.CreateAsync(follower);
+
+            var response = await userRepo.DeleteAsync(followerReturnedId);
+            
+            var actual = await context.Users.FindAsync(followerReturnedId);
+            Assert.Equal(Response.Deleted, response);
+            Assert.Null(actual);
+        }
+        
+        [Fact]
+        public async Task Delete_given_nonexistant_returns_NotFound()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwdq@gqqw.com"
+            };
+            var (_, followerReturnedId) = await userRepo.CreateAsync(follower);
+            
+            await userRepo.DeleteAsync(followerReturnedId);
+            var response = await userRepo.DeleteAsync(followerReturnedId);
+            
+            Assert.Equal(Response.NotFound, response);
+        }
+        
+        [Fact]
+        public async Task Can_delete_follow()
+        {
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var user = new User
+            {
+                UserName = "Follower",
+                Email = "qwdq@gqqw.com"
+            };
+            var (_, userId) = await userRepo.CreateAsync(user);
+            Assert.Contains(user, context.Users);
+            await userRepo.DeleteAsync(userId);
+            Assert.DoesNotContain(user, context.Users);
+        }
+        
+        [Fact]
+        public async Task GetFollows_returns_follows()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeId) = await repo.CreateAsync(followee);
+            
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwd@gqqqwdw.com"
+            };
+            var (_, followerId) = await repo.CreateAsync(follower);
+            await repo.AddFollowerAsync(followerId, followeeId);
+            var actual = await repo.GetFollowsAsync(followerId);
+            Assert.Contains(followee, actual);
+        }
+        
+        [Fact]
+        public async Task GetFollowedby_returns_followedby()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var messageRepo = new MessageRepository(context);
+            await Add_dummy_data(repo, messageRepo);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+      
+            var (_, followeeReturnedId) = await repo.CreateAsync(followee);
+            
+            await foreach (var user in context.Users)
+            {
+                if (user.Id == followeeReturnedId) 
+                    continue;
+                await repo.AddFollowerAsync(followeeId: followeeReturnedId, followerId: user.Id);
+            }
+            var actual = await repo.GetFollowedByAsync(followeeReturnedId);
+            Assert.NotEmpty(actual);
+        }
+        
+        [Fact]
+        public async Task ReadAsyncByUsername_returns_user()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var user = new User
+            {
+                UserName = "User",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            
+            await repo.CreateAsync(user);
+            
+            var actual = await repo.ReadAsyncByUsername(user.UserName);
+            Assert.Equal(user, actual);
+        }
+        
+        [Fact]
+        public async Task RemoveFollower_removes_followers()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeId) = await repo.CreateAsync(followee);
+            
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwd@gqqqwdw.com"
+            };
+            var (_, followerId) = await repo.CreateAsync(follower);
+            await repo.AddFollowerAsync(followerId, followeeId);
+            await repo.RemoveFollowerAsync(followerId, followeeId);
+            var actual = await repo.GetFollowsAsync(followerId);
+            Assert.DoesNotContain(followee, actual);
+        }
+        
+        [Fact]
+        public async Task AddFollower_following_same_twice_returns_conflict()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeId) = await repo.CreateAsync(followee);
+            
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwd@gqqqwdw.com"
+            };
+            var (_, followerId) = await repo.CreateAsync(follower);
+            
+            await repo.AddFollowerAsync(followeeId, followerId);
+            var actual = await repo.AddFollowerAsync(followeeId, followerId);
+            Assert.Equal(Response.Conflict, actual);
+        }
+        
+        [Fact]
+        public async Task AddFollower_given_1_follower_returns_conflict()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeId) = await repo.CreateAsync(followee);
+            
+            var actual = await repo.AddFollowerAsync(followeeId, followeeId);
+            Assert.Equal(Response.Conflict, actual);
+        }
+        
+        [Fact]
+        public async Task RemoveFollower_following_same_twice_returns_conflict()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeId) = await repo.CreateAsync(followee);
+            
+            var follower = new User
+            {
+                UserName = "Follower",
+                Email = "qwd@gqqqwdw.com"
+            };
+            var (_, followerId) = await repo.CreateAsync(follower);
+            
+            var actual = await repo.RemoveFollowerAsync(followeeId, followerId);
+            Assert.Equal(Response.Conflict, actual);
+        }
+        
+        [Fact]
+        public async Task RemoveFollower_given_1_follower_returns_conflict()
+        {
+            var context = CreateMiniTwitContext();
+            var repo = new UserRepository(context, _loggerUser);
+            var followee = new User
+            {
+                UserName = "Followee",
+                Email = "qwdq@gqqqwdw.com"
+            };
+            var (_, followeeId) = await repo.CreateAsync(followee);
+            
+            var actual = await repo.RemoveFollowerAsync(followeeId, followeeId);
+            Assert.Equal(Response.Conflict, actual);
         }
     }
 }

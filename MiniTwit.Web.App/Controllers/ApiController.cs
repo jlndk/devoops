@@ -206,7 +206,7 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var user = await _userRepository.ReadAsyncByUsername(username);
-            var followers = (await _userRepository.GetFollows(user.Id))?
+            var followers = (await _userRepository.GetFollowsAsync(user.Id))?
                 .Take(number)
                 .Select(u => u.UserName);
             return Json(new {follows = followers});
