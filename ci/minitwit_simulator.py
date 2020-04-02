@@ -29,10 +29,19 @@ HEADERS = {
     "Content-Type": "application/json",
     f"Authorization": f"Basic {ENCODED_CREDENTIALS}",
 }
+WARNING_THRESHOLD=10
+
+warningCounter = 0
 
 def main(host):
+    global warningCounter, WARNING_THRESHOLD
+
     print("::group::Simulator Errors/Warnings")
     for action, delay in get_actions():
+        if warningCounter > WARNING_THRESHOLD:
+            report_error_ci("Amount of warnings exceeded threshold of {}.".format(WARNING_THRESHOLD))
+            sys.exit(1)
+
         try:
             # SWITCH ON TYPE
             command = action["post_type"]
@@ -256,6 +265,8 @@ def report_action_warning_ci(host, command, latestAction, statusCode):
     report_warning_ci("Action '{}' failed with status code {}. Command was '{}'.".format(latestAction, statusCode, command))
 
 def report_warning_ci(msg):
+    global warningCounter
+    warningCounter+=1
     print("::warning ::Warning: {}".format(msg))
 
 def report_error_ci(msg):
