@@ -63,7 +63,7 @@ def main(host):
                 # error handling (204 success, 400 user exists)
                 # 400 user exists already but not an error to log
                 if not (response.status_code == 204) or (response.status_code == 400):
-                    report_action_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -84,7 +84,7 @@ def main(host):
 
                 # 403 bad request
                 if response.status_code != 200:
-                    report_action_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -111,7 +111,7 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    report_action_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -138,7 +138,7 @@ def main(host):
 
                 # 403 unauthorized or 404 Not Found
                 if response.status_code != 204:
-                    report_action_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
@@ -163,34 +163,25 @@ def main(host):
                 # error handling (204 success, 403 failure)
                 # 403 unauthorized
                 if response.status_code != 204:
-                    report_action_error_ci(host, command, action["latest"], response.status_code)
+                    report_action_warning_ci(host, command, action["latest"], response.status_code)
 
                 response.close()
 
             else:
-                raise Exception("FATAL: Unknown message type")
+                report_error_ci("FATAL: Unknown message type")
 
         except requests.exceptions.ConnectionError as e:
-            ts_str = datetime.strftime(datetime.utcnow(), "%Y-%m-%d %H:%M:%S")
-            print(
-                ",".join(
-                    [ts_str, host, str(action["latest"]), "ConnectionError"]
-                )
-            )
+            report_error_ci("Connection error at action '{}' of type '{}'".format(action["latest"], command))
+            
         except requests.exceptions.ReadTimeout as e:
-            ts_str = datetime.strftime(datetime.utcnow(), "%Y-%m-%d %H:%M:%S")
-            print(
-                ",".join([ts_str, host, str(action["latest"]), "ReadTimeout"])
-            )
+            report_error_ci("Timeout at action '{}' of type '{}'".format(action["latest"], command))
+
         except Exception as e:
-            print("========================================")
-            print(traceback.format_exc())
-            ts_str = datetime.strftime(datetime.utcnow(), "%Y-%m-%d %H:%M:%S")
-            print(
-                ",".join(
-                    [ts_str, host, str(action["latest"]), type(e).__name__]
-                )
-            )
+            errorMsg = "Exception of type '{}' thrown.\n".format(type(e).__name__)
+            errorMsg += "Action number '{}' of type '{}'.\n".format(action["latest"], command)
+            errorMsg += "Stack trace:\n" + traceback.format_exc()
+            
+            report_error_ci(errorMsg)
 
         sleep(delay / (1000 * 100000))
     print("::endgroup::")
@@ -259,13 +250,16 @@ def get_actions():
             else:
                 # This should never happen and can likely be removed to
                 # make parsing for plot generation later easier
-                raise ValueError("Unknown type found: (" + command + ")")
+                report_error_ci("Unknown type found: (" + command + ")")
 
-def report_action_error_ci(host, command, latestAction, statusCode):
-    report_error_ci("Action '{}' failed with status code {}. Command was '{}'.".format(latestAction, statusCode, command))
+def report_action_warning_ci(host, command, latestAction, statusCode):
+    report_warning_ci("Action '{}' failed with status code {}. Command was '{}'.".format(latestAction, statusCode, command))
+
+def report_warning_ci(msg):
+    print("::warning ::Warning: {}".format(msg))
 
 def report_error_ci(msg):
-    print("::warning ::Warning: {}".format(msg))
+    print("::error ::Error: {}".format(msg))
 
 if __name__ == "__main__":
     host = sys.argv[1]
