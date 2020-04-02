@@ -46,7 +46,6 @@ namespace MiniTwit.Models
 
         public async Task<IEnumerable<Message>> ReadManyWithinTimeAsync(int count, DateTime? dateOlderThan = null, DateTime? dateNewerThan = null)
         {
-            Console.WriteLine($"dateOlderThan: {dateOlderThan}");
             return await _context.Messages
                 .Where(m => m.Flagged <= 0)
                 .Where(m => dateOlderThan == null || m.PubDate < dateOlderThan)
