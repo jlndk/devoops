@@ -19,7 +19,7 @@ from contextlib import closing
 import sqlite3
 
 CSV_FILENAME = os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), "minitwit_scenario.small.csv")
+    os.path.realpath(__file__)), "minitwit_scenario.csv")
 USERNAME = "simulator"
 PWD = "super_safe!"
 CREDENTIALS = ":".join([USERNAME, PWD]).encode("ascii")
