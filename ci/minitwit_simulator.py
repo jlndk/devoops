@@ -29,11 +29,20 @@ HEADERS = {
     "Content-Type": "application/json",
     f"Authorization": f"Basic {ENCODED_CREDENTIALS}",
 }
+
+# How many warnings do we tolerate before we consider the simulation as an error?
 WARNING_THRESHOLD=10
+# How many times should we check if the server is up before failing?
+WAIT_SERVER_BOOT_ATTEMPTS=10
+# How long should we wait between each up check?
+WAIT_SERVER_BOOT_TIMEOUT_SEC=5
 
 warningCounter = 0
 
 def main(host):
+
+    wait_for_server_bootup(host)
+
     global warningCounter, WARNING_THRESHOLD
 
     print("::group::Simulator Errors/Warnings")
@@ -260,6 +269,33 @@ def get_actions():
                 # This should never happen and can likely be removed to
                 # make parsing for plot generation later easier
                 report_error_ci("Unknown type found: (" + command + ")")
+
+def wait_for_server_bootup(host):
+    for i in range(WAIT_SERVER_BOOT_ATTEMPTS):
+        print("Checking if server is alive (attempt {})".format(i+1))
+
+        try:
+            response = requests.get(
+                host + "/latest",
+                headers=HEADERS,
+                timeout=0.1,
+            )
+
+            if response.status_code == 200:
+                return True
+
+            print("Server did not return status code 200. Retrying...")
+
+        except requests.exceptions.ReadTimeout as e:
+            print("Request to server timed out. Retrying...")
+        except requests.exceptions.ConnectionError as e:
+            print("Connection refused. Retrying...")
+
+        sleep(WAIT_SERVER_BOOT_TIMEOUT_SEC)
+    
+    report_error_ci("Could not contact server on host '{}' after {} attempts (total timeout: {} seconds)".format(
+        host, WAIT_SERVER_BOOT_ATTEMPTS, WAIT_SERVER_BOOT_TIMEOUT_SEC*WAIT_SERVER_BOOT_ATTEMPTS))
+    sys.exit(1)
 
 def report_action_warning_ci(host, command, latestAction, statusCode):
     report_warning_ci("Action '{}' failed with status code {}. Command was '{}'.".format(latestAction, statusCode, command))
