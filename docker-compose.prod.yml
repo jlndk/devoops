@@ -1,34 +1,13 @@
 version: "3.4"
 
-volumes:
-    prometheus_data: {}
-    grafana_data: {}
-    elasticsearch-data: {}
-
 services:
-    elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-        container_name: elasticsearch
-        ports:
-            - "9200:9200"
-        volumes:
-            - elasticsearch-data:/usr/share/elasticsearch/data
-     
-    kibana:
-        image: docker.elastic.co/kibana/kibana:6.2.4
-        container_name: kibana
-        ports:
-            - "5601:5601"
-        depends_on:
-            - elasticsearch
-
     traefik:
-        image: traefik:v2.1
-        # Enables the web UI and tells Traefik to listen to docker
-        # @TODO: Secure traefik api/dashboard
+        restart: unless-stopped
         command:
-            #- "--log.level=DEBUG"
-            - "--api.insecure=true"
+            - "--api=true"
+            - "--api.dashboard=true"
+            - "--api.insecure=false"
+
             - "--providers.docker=true"
             - "--providers.docker.exposedbydefault=false"
             - "--entrypoints.http.address=:80"
@@ -39,18 +18,12 @@ services:
             - "--certificatesresolvers.webappresolver.acme.email=joln@itu.dk"
             - "--certificatesresolvers.webappresolver.acme.storage=/letsencrypt/acme.json"
             # Use Let's encrypt staging server
-            # - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
         ports:
-            # The HTTP port
-            - "80:80"
-
             # The HTTPS port
             - "443:443"
         volumes:
-            # So that Traefik can listen to the Docker events
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-
-            # So that Traefik can persist the HTTP certificate
+            # So that Traefik can persist the TLS certificate
             - ./letsencrypt:/letsencrypt
         labels:
             # Tell traefik that this container should be exposed to the public
@@ -77,26 +50,14 @@ services:
             - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$vVJRD/Hd$$pzWF/71kOPnIfPqS6/t0D."
 
     webapp:
+        restart: unless-stopped
         build:
-            context: "."
-            dockerfile: "Dockerfile"
             target: production
             cache_from:
                 - jlndk/devoops:latest
-        image: jlndk/devoops:latest
-        restart: unless-stopped
         environment:
             - "ASPNETCORE_ENVIRONMENT=Production"
-            - "MINITWIT_ENVIRONMENT=docker"
-            - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
-        volumes:
-            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
         labels:
-            # Tell traefik that this container should be exposed to the public
-            - "traefik.enable=true"
-            # Tell traefik which port our container listens on
-            - "traefik.http.services.webapp.loadbalancer.server.port=80"
-
             # Add http entrypoint (Tell where the service should be available)
             - "traefik.http.routers.webapp.rule=Host(`minitwit.tk`)"
             - "traefik.http.routers.webapp.entrypoints=http"
@@ -109,29 +70,15 @@ services:
             - "traefik.http.routers.webapp-secure.rule=Host(`minitwit.tk`)"
             - "traefik.http.routers.webapp-secure.entrypoints=https"
             - "traefik.http.routers.webapp-secure.tls.certresolver=webappresolver"
-        depends_on:
-            - database
-            - prometheus
-            - grafana
 
     database:
-        image: postgres:12
         restart: unless-stopped
-        environment:
-            - "POSTGRES_PASSWORD=test"
-        volumes:
-            - ./postgresdata:/var/lib/postgresql/data
 
     prometheus:
-        image: prom/prometheus
-        volumes:
-            - ./prometheus.yml:/etc/prometheus/prometheus.yml
-            - prometheus_data:/prometheus
+        restart: unless-stopped
         
     grafana:
-        image: grafana/grafana
-        volumes:
-            - grafana_data:/var/lib/grafana
+        restart: unless-stopped
         labels:
             # Tell traefik that this container should be exposed to the public
             - "traefik.enable=true"
@@ -150,5 +97,9 @@ services:
             - "traefik.http.routers.grafana-secure.rule=Host(`grafana.minitwit.tk`)"
             - "traefik.http.routers.grafana-secure.entrypoints=https"
             - "traefik.http.routers.grafana-secure.tls.certresolver=webappresolver"
-        depends_on: 
-            - prometheus
+
+    elasticsearch:
+        restart: unless-stopped
+
+    kibana:
+        restart: unless-stopped
