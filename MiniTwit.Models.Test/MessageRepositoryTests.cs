@@ -51,7 +51,7 @@ namespace MiniTwit.Models.Tests
         }
 
        [Fact]
-        public async Task Message_without_author_fails()
+        public async Task Creating_message_without_author_fails()
         {
             await Assert.ThrowsAsync<DbUpdateException>(() => _messageRepository.CreateAsync(new Message {Text = "qwdqg"}));
         }
@@ -242,6 +242,76 @@ namespace MiniTwit.Models.Tests
             {
                 Assert.True(message.PubDate < beforeDate);
             }
+        }
+        
+        [Fact]
+        public async Task UpdateAsync_updates()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var originals = await _messageRepository.ReadAsync();
+            var original = originals.First();
+            const string text = "Wololo";
+            var updated = new Message
+            {
+                Id = original.Id,
+                Author = original.Author,
+                AuthorId = original.AuthorId,
+                Text = text
+            };
+            await _messageRepository.UpdateAsync(updated);
+            var actual = await _messageRepository.ReadAsync(original.Id);
+            Assert.Equal(text, actual.Text);
+        }
+        [Fact]
+        public async Task UpdateAsync_given_nonexistant_returns_notfound()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var originals = await _messageRepository.ReadAsync();
+            var original = originals.First();
+            const string text = "Wololo";
+            var updated = new Message
+            {
+                Id = 1000000,
+                Author = original.Author,
+                AuthorId = original.AuthorId,
+                Text = text
+            };
+            var response = await _messageRepository.UpdateAsync(updated);
+            
+            Assert.Equal(Response.NotFound, response);
+        }
+        
+        [Fact]
+        public async Task DeleteAsync_deletes()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var originals = await _messageRepository.ReadAsync();
+            var original = originals.First();
+            await _messageRepository.DeleteAsync(original.Id);
+            var actual = await _messageRepository.ReadAsync();
+            Assert.DoesNotContain(original, actual);
+        }
+        
+        [Fact]
+        public async Task DeleteAsync_given_nonexistant_returns_notfound()
+        {
+            var response = await _messageRepository.DeleteAsync(10000000);
+            
+            Assert.Equal(Response.NotFound, response);
+        }
+        
+        [Fact]
+        public async Task ReadCountFromUserAsync_returns_correctly()
+        {
+            await Add_dummy_data(_userRepository, _messageRepository);
+            var originals = await _messageRepository.ReadAsync();
+            var user = originals.First().Author;
+            var allMessages = await _messageRepository.ReadAllMessagesFromUserAsync(user.Id);
+            var expected = allMessages.Take(2).ToArray();
+            var notactual = await _messageRepository.ReadCountFromUserAsync(user.Id, 2);
+            var actual = notactual.ToArray();
+            Assert.Equal(expected[0].Text, actual[0].Text);
+            Assert.Equal(expected[1].Text, actual[1].Text);
         }
     }
 }
