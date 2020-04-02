@@ -17,6 +17,6 @@ jobs:
     - name: Start docker containers
       run: ./doc.sh up -d webapp traefik
     - name: Run tests
-      run: python3 ci/minitwit_simulator.py "http://localhost:80"
+      run: python3 ci/minitwit_simulator.py "http://localhost:80/api"
     - name: Stop docker containers
       run: ./doc.sh down
