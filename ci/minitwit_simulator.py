@@ -77,7 +77,7 @@ def perform_simulation(host):
                     data=json.dumps(data),
                     params=params,
                     headers=HEADERS,
-                    timeout=0.3,
+                    timeout=1,
                 )
 
                 # error handling (204 success, 400 user exists)
@@ -280,6 +280,7 @@ def get_actions():
                 report_error_ci("Unknown type found: (" + command + ")")
 
 def wait_for_server_bootup(host):
+    response = None
     for i in range(WAIT_SERVER_BOOT_ATTEMPTS):
         print("Checking if server is alive (attempt {})".format(i+1))
 
