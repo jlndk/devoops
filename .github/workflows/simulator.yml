@@ -1,0 +1,21 @@
+name: Run API simulator
+
+pull_request:
+    branches:
+      - master
+
+jobs: 
+  simulator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set environment
+      run: echo "::set-env name=MINITWIT_ENV::CI"
+    - name: Build docker images
+      run: ./doc.sh build
+    - name: Start docker containers
+      run: ./doc.sh up -d webapp traefik
+    - name: Run tests
+      run: echo "Not implemented yet"
+    - name: Stop docker containers
+      run: ./doc.sh down

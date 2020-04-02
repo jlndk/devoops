@@ -1,0 +1,20 @@
+version: "3.4"
+      
+services:    
+    traefik:
+        command:
+            # General Config
+            - "--api=false"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.http.address=:80"
+
+    webapp:
+        build:
+            target: production
+            cache_from:
+                - jlndk/devoops:latest
+        environment:
+            - "ASPNETCORE_ENVIRONMENT=Production"
+
+    database:
