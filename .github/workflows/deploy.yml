@@ -10,6 +10,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+            - name: Set environment
+              run: echo "::set-env name=MINITWIT_ENV::production"
             - name: Log into dockerhub
               run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             - name: Download docker build cache
