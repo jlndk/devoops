@@ -65,7 +65,6 @@ services:
         depends_on:
             - database
             - prometheus
-            - grafana
 
     database:
         image: postgres:12
