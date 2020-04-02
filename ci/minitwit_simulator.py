@@ -265,7 +265,7 @@ def report_action_error_ci(host, command, latestAction, statusCode):
     report_error_ci("Action '{}' failed with status code {}. Command was '{}'.".format(latestAction, statusCode, command))
 
 def report_error_ci(msg):
-    print("::error ::Warning: {}".format(msg))
+    print("::warning ::Warning: {}".format(msg))
 
 if __name__ == "__main__":
     host = sys.argv[1]
