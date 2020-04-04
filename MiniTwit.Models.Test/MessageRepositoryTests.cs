@@ -309,7 +309,7 @@ namespace MiniTwit.Models.Tests
         public async Task UpdateAsync_updates()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var originals = await _messageRepository.ReadAsync();
+            var originals = await _messageRepository.ReadManyAsync(10);
             var original = originals.First();
             const string text = "Wololo";
             var updated = new Message
@@ -327,7 +327,7 @@ namespace MiniTwit.Models.Tests
         public async Task UpdateAsync_given_nonexistant_returns_notfound()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var originals = await _messageRepository.ReadAsync();
+            var originals = await _messageRepository.ReadManyAsync(10);
             var original = originals.First();
             const string text = "Wololo";
             var updated = new Message
@@ -346,10 +346,10 @@ namespace MiniTwit.Models.Tests
         public async Task DeleteAsync_deletes()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var originals = await _messageRepository.ReadAsync();
+            var originals = await _messageRepository.ReadManyAsync(1);
             var original = originals.First();
             await _messageRepository.DeleteAsync(original.Id);
-            var actual = await _messageRepository.ReadAsync();
+            var actual = await _messageRepository.ReadManyAsync(10);
             Assert.DoesNotContain(original, actual);
         }
         
@@ -365,14 +365,16 @@ namespace MiniTwit.Models.Tests
         public async Task ReadCountFromUserAsync_returns_correctly()
         {
             await Add_dummy_data(_userRepository, _messageRepository);
-            var originals = await _messageRepository.ReadAsync();
+            var originals = await _messageRepository.ReadManyAsync(1);
             var user = originals.First().Author;
             var allMessages = await _messageRepository.ReadAllMessagesFromUserAsync(user.Id);
             var expected = allMessages.Take(2).ToArray();
-            var notactual = await _messageRepository.ReadCountFromUserAsync(user.Id, 2);
+            var notactual = await _messageRepository.ReadManyFromUserAsync(user.Id, 2);
             var actual = notactual.ToArray();
-            Assert.Equal(expected[0].Text, actual[0].Text);
-            Assert.Equal(expected[1].Text, actual[1].Text);
+            for (int i = 0; i < actual.Length; i++)
+            {
+                Assert.Equal(expected[i].Text, actual[i].Text);   
+            }
         }
     }
 }

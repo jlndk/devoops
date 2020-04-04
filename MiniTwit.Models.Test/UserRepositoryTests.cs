@@ -8,6 +8,7 @@ using Xunit;
 using Xunit.Abstractions;
 using static MiniTwit.Models.Tests.Utility;
 using static MiniTwit.Models.Tests.MiniTwitTestContext;
+// ReSharper disable IdentifierTypo
 
 namespace MiniTwit.Models.Tests
 {
@@ -396,7 +397,7 @@ namespace MiniTwit.Models.Tests
                     continue;
                 await repo.AddFollowerAsync(followeeId: followeeReturnedId, followerId: user.Id);
             }
-            var actual = await repo.GetFollowedByAsync(followeeReturnedId);
+            var actual = await repo.GetFollowersAsync(followeeReturnedId);
             Assert.NotEmpty(actual);
         }
         
