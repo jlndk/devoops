@@ -3,20 +3,11 @@ version: "3.4"
 volumes:
     prometheus_data: {}
     grafana_data: {}
+    elasticsearch-data: {}
 
-services:
+services:    
     traefik:
         image: traefik:v2.1
-        # Enables the web UI and tells Traefik to listen to docker
-        # @TODO: Secure traefik api/dashboard
-        command:
-            # General Config
-            #- "--log.level=DEBUG"
-            - "--api=true"
-            - "--api.dashboard=true"
-            - "--providers.docker=true"
-            - "--providers.docker.exposedbydefault=false"
-            - "--entrypoints.http.address=:80"
         ports:
             # The HTTP port
             - "80:80"
@@ -28,14 +19,11 @@ services:
         build:
             context: "."
             dockerfile: "Dockerfile"
-            target: development
+            target: production
+        image: jlndk/devoops:latest
         environment:
-            - "ASPNETCORE_ENVIRONMENT=Development"
             - "MINITWIT_ENVIRONMENT=docker"
             - "POSTGRES_CONNECTIONSTRING=Host=database;Database=MiniTwit;Username=postgres;Password=test"
-        volumes:
-            - ./:/app
-            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
         labels:
             # Tell traefik that this container should be exposed to the public
             - "traefik.enable=true"
@@ -44,34 +32,38 @@ services:
             # Tell where the service should be available
             - "traefik.http.routers.webapp.rule=Path(`/{path:.*}`)"
             - "traefik.http.routers.webapp.entrypoints=http"
+        volumes:
+            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
         depends_on:
             - database
             - prometheus
-            - grafana
 
     database:
         image: postgres:12
         environment:
             - "POSTGRES_PASSWORD=test"
-        ports:
-            - "5432:5432"
         volumes:
             - ./postgresdata:/var/lib/postgresql/data
 
     prometheus:
         image: prom/prometheus
-        container_name: prometheus
-        ports:
-            - "9090:9090"  
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
             - prometheus_data:/prometheus
 
     grafana:
         image: grafana/grafana
-        ports:
-            - "3000:3000"  
         volumes:
             - grafana_data:/var/lib/grafana
         depends_on: 
             - prometheus
+    
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+        volumes:
+            - elasticsearch-data:/usr/share/elasticsearch/data
+     
+    kibana:
+        image: docker.elastic.co/kibana/kibana:6.2.4
+        depends_on:
+            - elasticsearch

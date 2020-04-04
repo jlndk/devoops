@@ -25,7 +25,7 @@ namespace MiniTwit.Models
             return (Created, message.Id);
         }
 
-        public async Task<IEnumerable<Message>> ReadAsync(bool includeFlagged = false)
+        public async Task<IEnumerable<Message>> ReadManyAsync(int count, bool includeFlagged = false)
         {
             var query = 
                 from m in _context.Messages
@@ -41,63 +41,27 @@ namespace MiniTwit.Models
                     PubDate = m.PubDate,
                     Text = m.Text
                 };
-            return await query.ToListAsync();
+            return await query.Take(count).ToListAsync();
         }
 
-        public async Task<IEnumerable<Message>> ReadCountAsync(int count = 100)
+        public async Task<IEnumerable<Message>> ReadManyWithinTimeAsync(int count, DateTime? dateOlderThan = null, DateTime? dateNewerThan = null)
         {
-            var query = 
-                from m in _context.Messages
-                where m.Flagged <= 0
-                orderby m.PubDate descending
-                join user in _context.Users on m.AuthorId equals user.Id
-                select new Message
-                {
-                    Author = user,
-                    AuthorId = user.Id,
+            return await _context.Messages
+                .Where(m => m.Flagged <= 0)
+                .Where(m => dateOlderThan == null || m.PubDate < dateOlderThan)
+                .Where(m => dateNewerThan == null || m.PubDate > dateNewerThan)
+                .OrderByDescending(m => m.PubDate)
+                .Take(count)
+                .Join(_context.Users, m => m.AuthorId, u => u.Id, (m, u) =>
+                new Message {
+                    Author = u,
+                    AuthorId = u.Id,
                     Flagged = m.Flagged,
                     Id = m.Id,
                     PubDate = m.PubDate,
                     Text = m.Text
-                };
-            return await query.Take(count).ToListAsync();
-        }
-        
-        public async Task<IEnumerable<Message>> ReadCountBeforeTimeAsync(int count, DateTime beforeDateTime)
-        {
-            var query = 
-                from m in _context.Messages
-                where m.Flagged <= 0 && m.PubDate < beforeDateTime
-                orderby m.PubDate descending
-                join user in _context.Users on m.AuthorId equals user.Id
-                select new Message
-                {
-                    Author = user,
-                    AuthorId = user.Id,
-                    Flagged = m.Flagged,
-                    Id = m.Id,
-                    PubDate = m.PubDate,
-                    Text = m.Text
-                };
-            return await query.Take(count).ToListAsync();
-        }
-        public async Task<IEnumerable<Message>> ReadCountFromUserBeforeTimeAsync(int count, int userId, DateTime beforeDateTime)
-        {
-            var query = 
-                from m in _context.Messages
-                where m.Flagged <= 0 && m.PubDate < beforeDateTime & m.AuthorId == userId
-                orderby m.PubDate descending
-                join user in _context.Users on m.AuthorId equals user.Id
-                select new Message
-                {
-                    Author = user,
-                    AuthorId = user.Id,
-                    Flagged = m.Flagged,
-                    Id = m.Id,
-                    PubDate = m.PubDate,
-                    Text = m.Text
-                };
-            return await query.Take(count).ToListAsync();
+                })
+                .ToListAsync();
         }
 
         public async Task<Message> ReadAsync(int messageId)
@@ -117,8 +81,28 @@ namespace MiniTwit.Models
                 };
             return await messages.FirstOrDefaultAsync();
         }
-        
-        public async Task<List<Message>> ReadCountFromUserAsync(int userId, int count = 100)
+
+        public async Task<IEnumerable<Message>> ReadManyFromUserWithinTimeAsync(
+            int userId,
+            int count,
+            DateTime? dateOlderThan = null,
+            DateTime? dateNewerThan = null
+        )
+        {
+            return (
+                    await _context.Messages
+                        .Where(m => m.AuthorId == userId)
+                        .Where(m => m.Flagged <= 0)
+                        .Where(m => dateOlderThan == null || m.PubDate < dateOlderThan)
+                        .Where(m => dateNewerThan == null || m.PubDate > dateNewerThan)
+                        .OrderByDescending(m => m.PubDate)
+                        .Take(count)
+                        .ToListAsync()
+                )
+                .Join(_context.Users, m => m.AuthorId, u => u.Id, JoinMessageUser);
+        }
+
+        public async Task<IEnumerable<Message>> ReadManyFromUserAsync(int userId, int count)
         {
             var messages = 
                 from m in _context.Messages
@@ -137,7 +121,7 @@ namespace MiniTwit.Models
             return await messages.Take(count).ToListAsync();
         }
 
-        public async Task<List<Message>> ReadAllMessagesFromUserAsync(int userId)
+        public async Task<IEnumerable<Message>> ReadAllMessagesFromUserAsync(int userId)
         {
             var messages = 
                 from m in _context.Messages
@@ -208,6 +192,19 @@ namespace MiniTwit.Models
                     Text = m.Text
                 };
             return await messages.ToListAsync();
+        }
+
+        private static Message JoinMessageUser(Message m, User u)
+        {
+            return new Message
+            {
+                Author = u,
+                AuthorId = u.Id,
+                Flagged = m.Flagged,
+                Id = m.Id,
+                PubDate = m.PubDate,
+                Text = m.Text
+            };
         }
     }
 }

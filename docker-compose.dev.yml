@@ -1,0 +1,43 @@
+version: "3.4"
+      
+services:
+    elasticsearch:
+        ports:
+            - "9200:9200"
+     
+    kibana:
+        ports:
+            - "5601:5601"
+        
+    traefik:
+        command:
+            # General Config
+            - "--api=true"
+            - "--api.dashboard=true"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.http.address=:80"
+        ports:
+            # The traefik dashboard port
+            - "8080:8080"
+
+    webapp:
+        build:
+            target: development
+        environment:
+            - "ASPNETCORE_ENVIRONMENT=Development"
+        volumes:
+            - ./:/app
+
+    database:
+        ports:
+            - "5432:5432"
+
+    prometheus:
+        ports:
+            - "9090:9090"
+
+    grafana:
+        ports:
+            - "3000:3000" 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,8 @@ namespace MiniTwit.Web.App.Controllers
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
 
+        private const int DefaultMessagesPerPage = 20;
+
         public HomeController(ILogger<HomeController> logger, IMessageRepository messageRepository,
             IUserRepository userRepository)
         {
@@ -25,26 +29,44 @@ namespace MiniTwit.Web.App.Controllers
         }
 
 		[Route("/my")]
-        public async Task<IActionResult> My_Timeline()
+        public async Task<IActionResult> My_Timeline(DateTime? dateOlderThan = null, DateTime? dateNewerThan = null)
         {
-		    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-            ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromFollowedAsync(int.Parse(userId));
+
+            Func<DateTime?, DateTime?, int, Task<IEnumerable<Message>>> getMessages =
+                (innerDateOlderThan, innerDateNewerThan, count) => _messageRepository.ReadManyFromUserWithinTimeAsync(
+                    int.Parse(userId),
+                    count,
+                    dateNewerThan: innerDateNewerThan,
+                    dateOlderThan: innerDateOlderThan
+                );
+            await SetMessageViewData(dateOlderThan, dateNewerThan, getMessages);
             return View();
         }
 
 		[Route("/")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? dateOlderThan = null, DateTime? dateNewerThan = null)
         {
-            ViewData["Messages"] = await _messageRepository.ReadCountAsync();
+            Func<DateTime?, DateTime?, int, Task<IEnumerable<Message>>> getMessages =
+                (innerDateOlderThan, innerDateNewerThan, count) => _messageRepository.ReadManyWithinTimeAsync(
+                    count,
+                    dateNewerThan: innerDateNewerThan,
+                    dateOlderThan: innerDateOlderThan
+                );
+            await SetMessageViewData(dateOlderThan, dateNewerThan, getMessages);
             return View();
         }
 
 		[Route("/user/{username}")]
-        public async Task<IActionResult> User_Timeline(string username)
+        public async Task<IActionResult> User_Timeline(
+            string username,
+            DateTime? dateOlderThan = null,
+            DateTime? dateNewerThan = null
+        )
         {
             if (username == null)
             {
@@ -57,10 +79,15 @@ namespace MiniTwit.Web.App.Controllers
                 return NotFound();
             }
             ViewData["ViewedUserName"] = username;
-
-            ViewData["Messages"] = await _messageRepository.ReadAllMessagesFromUserAsync(user.Id);
+            Func<DateTime?, DateTime?, int, Task<IEnumerable<Message>>> getMessages =
+                (innerDateOlderThan, innerDateNewerThan, count) => _messageRepository.ReadManyFromUserWithinTimeAsync(
+                    user.Id,
+                    count,
+                    dateNewerThan: innerDateNewerThan,
+                    dateOlderThan: innerDateOlderThan
+                );
+            await SetMessageViewData(dateOlderThan, dateNewerThan, getMessages);
             ViewData["ViewedUserId"] = user.Id;
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (int.TryParse(userId, out var followerId))
             {
@@ -123,6 +150,28 @@ namespace MiniTwit.Web.App.Controllers
                 return View("Index");
             }
             return RedirectToAction("User_Timeline", new {username = viewedUserName});
+        }
+
+        private async Task SetMessageViewData(DateTime? dateOlderThan, DateTime? dateNewerThan, Func<DateTime?, DateTime?, int, Task<IEnumerable<Message>>> getMessages)
+        {
+            var messages = await getMessages(dateOlderThan, dateNewerThan, DefaultMessagesPerPage);
+            var anyMessages = messages != null && messages.Any();
+            DateTime? newestDate = null;
+            DateTime? oldestDate = null;
+            var anyNewer = false;
+            var anyOlder = false;
+            if (anyMessages)
+            {
+                newestDate = messages.Max(t => t.PubDate);
+                oldestDate = messages.Min(t => t.PubDate);
+                anyNewer = (await getMessages(null, newestDate, 1)).Any();
+                anyOlder = (await getMessages(oldestDate, null, 1)).Any();
+            }
+            ViewData["Messages"] = messages;
+            ViewData["NewestDate"] = newestDate;
+            ViewData["OldestDate"] = oldestDate;
+            ViewData["ThereIsNextPage"] = anyOlder;
+            ViewData["ThereIsPreviousPage"] = anyNewer;
         }
     }
 }

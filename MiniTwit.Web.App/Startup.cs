@@ -6,17 +6,40 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using MiniTwit.Entities;
 using MiniTwit.Models;
 using Prometheus;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Extensions.Hosting;
 
 namespace MiniTwit.Web.App
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostingEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+
+            var elasticUri = Configuration["ElasticConfiguration:Uri"];
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+                {
+                    AutoRegisterTemplate = true,
+                })
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -43,12 +66,14 @@ namespace MiniTwit.Web.App
                 .AddDefaultTokenProviders();
             // TODO: This should perhaps be something other than scoped
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddControllersWithViews();
             services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -59,14 +84,17 @@ namespace MiniTwit.Web.App
                 app.UseHsts();
             }
             
-            app.UseMetricServer();
-            app.UseHttpMetrics();
+            loggerFactory.AddSerilog();
 
             app.UseStatusCodePages();
             app.UseStatusCodePagesWithReExecute("/StatusCode/Status{0}");
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
+            
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+            
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
@@ -79,6 +107,7 @@ namespace MiniTwit.Web.App
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<MiniTwitContext>();
+            
             context.Database.Migrate();
         }
     }
