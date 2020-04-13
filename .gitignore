@@ -2,6 +2,7 @@
 ## CUSTOM
 ##
 .vscode
+.ionide
 postgresdata
 aspnetkeys
 letsencrypt
