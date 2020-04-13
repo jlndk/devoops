@@ -9,7 +9,7 @@
             @foreach (var msg in messages)
             {
                 <li>
-                    <img gravatar-email="@msg.Author.Email" gravatar-size="48"/>
+                    <img alt="Profile picture for @msg.Author.UserName" gravatar-email="@msg.Author.Email" gravatar-size="48"/>
                     <strong>
                         <a asp-area="" asp-controller="Home" asp-action="User_Timeline" asp-route-username="@msg.Author.UserName">@msg.Author.UserName</a>
                     </strong>

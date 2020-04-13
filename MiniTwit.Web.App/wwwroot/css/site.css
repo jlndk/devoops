@@ -3,7 +3,7 @@
 }
 
 body {
-    background: #caece9;
+    background: #b0e8e3;
     font-family: "Trebuchet MS", sans-serif;
     font-size: 14px;
 }
@@ -61,7 +61,7 @@ div.page {
 }
 
 div.page h1 {
-    background: #6eccc4;
+    background: #43a39b;
     margin: 0;
     padding: 10px 14px;
     color: white;
@@ -124,7 +124,7 @@ div.page div.body {
 div.page div.footer {
     display: flex;
     background: #eee;
-    color: #888;
+    color: #666;
     padding: 5px 10px;
     font-size: 12px;
     justify-content: space-between;
@@ -168,7 +168,7 @@ div.page ul.messages li img {
 
 div.page ul.messages li small {
     font-size: 0.9em;
-    color: #888;
+    color: #666;
 }
 
 div.page div.twitbox {
