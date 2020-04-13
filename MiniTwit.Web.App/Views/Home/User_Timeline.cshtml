@@ -4,11 +4,11 @@
 @model Message
 @{
     ViewData["Title"] = ViewData["ViewedUserName"] + "'s Timeline";
-    var messages = (IEnumerable<Message>) ViewData["Messages"];
+    var messages = ViewData["Messages"] as IEnumerable<Message>;
     var thereIsNextPage = (bool) ViewData["ThereIsNextPage"];
     var thereIsPreviousPage = (bool) ViewData["ThereIsPreviousPage"];
-    var newestDate = (DateTime) ViewData["NewestDate"];
-    var oldestDate = (DateTime) ViewData["OldestDate"];
+    var newestDate = ViewData["NewestDate"] as DateTime?;
+    var oldestDate = ViewData["OldestDate"] as DateTime?;
 }
 
 <h2>@ViewData["Title"]</h2>
