@@ -4,17 +4,17 @@
 @model Message
 @{
     ViewData["Title"] = ViewData["ViewedUserName"] + "'s Timeline";
-    var messages = (IEnumerable<Message>) ViewData["Messages"];
+    var messages = ViewData["Messages"] as IEnumerable<Message>;
     var thereIsNextPage = (bool) ViewData["ThereIsNextPage"];
     var thereIsPreviousPage = (bool) ViewData["ThereIsPreviousPage"];
-    var newestDate = (DateTime) ViewData["NewestDate"];
-    var oldestDate = (DateTime) ViewData["OldestDate"];
+    var newestDate = ViewData["NewestDate"] as DateTime?;
+    var oldestDate = ViewData["OldestDate"] as DateTime?;
 }
 
 <h2>@ViewData["Title"]</h2>
-<div class="followstatus">
-    @if (User?.Identity?.Name != null && User.Identity.Name != (string) ViewData["ViewedUserName"])
-    {
+@if (User?.Identity?.Name != null && User.Identity.Name != (string) ViewData["ViewedUserName"])
+{
+    <div class="followstatus">
         @if (ViewData["IsFollowingUser"] != null && (bool) ViewData["IsFollowingUser"])
         {
             <span>You are already following this user. <a asp-controller="Home" asp-action="Unfollow" asp-route-followeeId="@ViewData["ViewedUserId"]" asp-route-viewedUserName="@ViewData["ViewedUserName"]" >Unfollow this user.</a></span>
@@ -23,8 +23,8 @@
         {
             <span>You are not yet following this user. <a asp-controller="Home" asp-action="Follow" asp-route-followeeId="@ViewData["ViewedUserId"]" asp-route-viewedUserName="@ViewData["ViewedUserName"]" >Follow this user.</a></span>
         }
-    }
-</div>
+    </div>
+}
 @await Html.PartialAsync("_Messages", messages)
 @if (thereIsPreviousPage)
 {
