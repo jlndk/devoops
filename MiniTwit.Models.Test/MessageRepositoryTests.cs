@@ -147,7 +147,7 @@ namespace MiniTwit.Models.Tests
       
             var (_, followeeReturnedId) = await userRepo.CreateAsync(followee);
             Assert.Null(followee.Follows);
-            Assert.Empty((await messageRepo.ReadAllMessagesFromFollowedAsync(followeeReturnedId)));
+            Assert.Empty((await messageRepo.ReadMessagesFromFollowedWithinTimeAsync(followeeReturnedId)));
         }
         
         [Fact]
@@ -170,7 +170,7 @@ namespace MiniTwit.Models.Tests
                 await userRepo.AddFollowerAsync(followerReturnedId, user.Id);
             }
             Assert.Equal(9, follower.Follows.Count);
-            Assert.Equal(11, (await messageRepo.ReadAllMessagesFromFollowedAsync(followerReturnedId)).Count());
+            Assert.Equal(11, (await messageRepo.ReadMessagesFromFollowedWithinTimeAsync(followerReturnedId)).Count());
         }
         
         [Fact]
@@ -412,7 +412,7 @@ namespace MiniTwit.Models.Tests
             // Act
             var beforeDate = new DateTime(2020, 2, 2);
             var afterDate = new DateTime(2020, 2, 3);
-            var messages = await messageRepo.ReadMessagesFromFollowedWithinTimeAsync(follower.Id, 100, beforeDate, afterDate);
+            var messages = await messageRepo.ReadMessagesFromFollowedWithinTimeAsync(follower.Id, beforeDate, afterDate);
 
             //Assert
             var expected = new[] {

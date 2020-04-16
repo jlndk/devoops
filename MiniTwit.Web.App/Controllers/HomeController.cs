@@ -40,7 +40,6 @@ namespace MiniTwit.Web.App.Controllers
             Func<DateTime?, DateTime?, int, Task<IEnumerable<Message>>> getMessages =
                 (innerDateOlderThan, innerDateNewerThan, count) => _messageRepository.ReadMessagesFromFollowedWithinTimeAsync(
                     int.Parse(userId),
-                    count,
                     dateNewerThan: innerDateNewerThan,
                     dateOlderThan: innerDateOlderThan
                 );
