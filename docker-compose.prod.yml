@@ -103,3 +103,22 @@ services:
 
     kibana:
         restart: unless-stopped
+        labels:
+            # Tell traefik that this container should be exposed to the public
+            - "traefik.enable=true"
+            # Tell traefik which port our container listens on
+            - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+
+            # Add http entrypoint (Tell where the service should be available)
+            - "traefik.http.routers.kibana.rule=Host(`kibana.minitwit.tk`)"
+            - "traefik.http.routers.kibana.entrypoints=http"
+            # Redirect http to https
+            - "traefik.http.routers.kibana.middlewares=redirect-https@docker"
+            - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+
+            # Add https entrypoint
+            - "traefik.http.routers.kibana-secure.rule=Host(`kibana.minitwit.tk`)"
+            - "traefik.http.routers.kibana-secure.entrypoints=https"
+            - "traefik.http.routers.kibana-secure.tls.certresolver=webappresolver"
+        
