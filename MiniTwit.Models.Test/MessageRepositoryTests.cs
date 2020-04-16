@@ -376,5 +376,53 @@ namespace MiniTwit.Models.Tests
                 Assert.Equal(expected[i].Text, actual[i].Text);   
             }
         }
+
+        [Fact]
+        public async Task ReadMessagesFromFollowedWithinTimeAsync_Returns_correctly()
+        {
+            // Create context and repos
+            var context = CreateMiniTwitContext();
+            var userRepo = new UserRepository(context, _loggerUser);
+            var messageRepo = new MessageRepository(context);
+
+            // Create users
+            var folowee = new User { UserName = "Folowee", Email = "folowee@minitwit.tk"};
+            var follower = new User { UserName = "Follower", Email = "follower@minitwit.tk" };
+
+            await userRepo.CreateAsync(folowee);
+            await userRepo.CreateAsync(follower);
+            await userRepo.AddFollowerAsync(follower.Id, folowee.Id);
+
+            // Create Twits
+            for (var i = 1; i <= 4; i++)
+            {
+                var dt = new DateTime(2020, 2, i);
+                await messageRepo.CreateAsync(new Message
+                {
+                    Author = follower, Flagged = 0, PubDate = dt,
+                    Text = $"Follower is great at this {i}th day in a row"
+                });
+                await messageRepo.CreateAsync(new Message
+                {
+                    Author = folowee, Flagged = 0, PubDate = dt,
+                    Text = $"Folowee is great at this {i}th day in a row"
+                });
+            }
+
+            // Act
+            var beforeDate = new DateTime(2020, 2, 2);
+            var afterDate = new DateTime(2020, 2, 3);
+            var messages = await messageRepo.ReadMessagesFromFollowedWithinTimeAsync(follower.Id, 100, beforeDate, afterDate);
+
+            //Assert
+            var expected = new[] {
+                "Folowee is great at this 3th day in a row",
+                "Follower is great at this 3th day in a row",
+                "Folowee is great at this 2th day in a row",
+                "Follower is great at this 2th day in a row",
+            };
+
+            Assert.Equal(expected, messages.Select(m => m.Text).ToArray());
+        }
     }
 }
