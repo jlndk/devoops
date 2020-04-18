@@ -174,13 +174,19 @@ namespace MiniTwit.Models
                 select f;
             return await query.ToListAsync();
         }
-        public async Task<IEnumerable<Message>> ReadAllMessagesFromFollowedAsync(int followerId)
+
+        public async Task<IEnumerable<Message>> ReadMessagesFromFollowedWithinTimeAsync(
+            int followerId,
+            DateTime? oldestDate = null,
+            DateTime? newestDate = null)
         {
             var followedList = (await GetFollowedAsync(followerId)).Select(f => f.FolloweeId);
-            var messages = 
+            var messages =
                 from m in _context.Messages
-                join user in _context.Users on m.AuthorId equals user.Id 
+                join user in _context.Users on m.AuthorId equals user.Id
                 where followedList.Contains(user.Id) || user.Id == followerId
+                where oldestDate == null || m.PubDate >= oldestDate
+                where newestDate == null || m.PubDate <= newestDate
                 orderby m.PubDate descending
                 select new Message
                 {
