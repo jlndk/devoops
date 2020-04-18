@@ -66,6 +66,7 @@ namespace MiniTwit.Web.App
                 .AddDefaultTokenProviders();
             // TODO: This should perhaps be something other than scoped
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<ILatestRepository, LatestRepository>();
             services.AddControllersWithViews();
             services.AddScoped<IUserRepository, UserRepository>();
         }

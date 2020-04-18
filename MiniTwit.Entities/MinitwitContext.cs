@@ -17,6 +17,7 @@ namespace MiniTwit.Entities
         }
 
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Latest> Latest { get; set; }
         
         public DbSet<Follow> Follows { get; set; }
 
@@ -42,6 +43,7 @@ namespace MiniTwit.Entities
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Message>().HasIndex(m => m.PubDate);
+            modelBuilder.Entity<Latest>().HasIndex(m => m.Date);
             modelBuilder.Entity<Follow>()
                 .HasKey(f => new { f.FollowerId, f.FolloweeId});
             
