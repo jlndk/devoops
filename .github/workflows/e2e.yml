@@ -1,0 +1,40 @@
+name: Run E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  startup:
+    runs-on: ubuntu-latest
+    name: Start docker environment
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set environment
+      run: echo "::set-env name=MINITWIT_ENV::CI"
+    - name: Build docker images
+      run: ./doc.sh build
+    - name: Start docker containers
+      run: ./doc.sh up -d webapp traefik
+  lighthouse:
+    name: Run Lighthouse CI
+    steps:
+    - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v2
+        with:
+          urls: |
+            http://localhost/
+          budgetPath: ./budget.json # test performance budgets
+          uploadArtifacts: true # save results as an action artifacts
+          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+  simulator:
+    name: Run API Simulator
+    steps:
+    - name: Run tests
+      run: python3 ci/minitwit_simulator.py "http://localhost:80/api"
+  cleanup:
+    name: Cleanup environment
+    steps:
+    - name: Stop docker containers
+      run: ./doc.sh down
