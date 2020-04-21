@@ -18,7 +18,7 @@ services:
             - "--certificatesresolvers.webappresolver.acme.email=joln@itu.dk"
             - "--certificatesresolvers.webappresolver.acme.storage=/letsencrypt/acme.json"
             # Use Let's encrypt staging server
-            - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            # - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
         ports:
             # The HTTPS port
             - "443:443"
