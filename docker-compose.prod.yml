@@ -1,5 +1,9 @@
 version: "3.4"
 
+volumes:
+    traefik-certdata: {}
+    webapp-aspnetkeys: {}
+
 services:
     traefik:
         restart: unless-stopped
@@ -9,7 +13,9 @@ services:
             - "--api.insecure=false"
 
             - "--providers.docker=true"
+            - "--providers.docker.swarmMode=${MINITWIT_ENABLE_SWARM:-true}"
             - "--providers.docker.exposedbydefault=false"
+            - "--providers.docker.endpoint=unix:///var/run/docker.sock"
             - "--entrypoints.http.address=:80"
 
             # HTTPS Config
@@ -18,58 +24,75 @@ services:
             - "--certificatesresolvers.webappresolver.acme.email=joln@itu.dk"
             - "--certificatesresolvers.webappresolver.acme.storage=/letsencrypt/acme.json"
             # Use Let's encrypt staging server
-            # - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+            - "--certificatesresolvers.webappresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
         ports:
             # The HTTPS port
             - "443:443"
         volumes:
             # So that Traefik can persist the TLS certificate
-            - ./letsencrypt:/letsencrypt
-        labels:
-            # Tell traefik that this container should be exposed to the public
-            - "traefik.enable=true"
+            - traefik-certdata:/letsencrypt
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - node.role == manager
+            labels:
+                # Tell traefik that this container should be exposed to the public
+                - "traefik.enable=true"
 
-            # Add http entrypoint (Tell where the service should be available)
-            - "traefik.http.routers.api.rule=Host(`traefik.minitwit.tk`)"
-            - "traefik.http.routers.api.entrypoints=http"
+                # Add http entrypoint (Tell where the service should be available)
+                - "traefik.http.routers.api.rule=Host(`traefik.minitwit.tk`)"
+                - "traefik.http.routers.api.entrypoints=http"
 
-            # Redirect http to https
-            - "traefik.http.routers.api.middlewares=redirect-https@docker"
-            - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
-            
-            # Add https entrypoint
-            - "traefik.http.routers.api-secure.rule=Host(`traefik.minitwit.tk`)"
-            - "traefik.http.routers.api-secure.entrypoints=https"
-            - "traefik.http.routers.api-secure.tls.certresolver=webappresolver"
+                # Redirect http to https
+                - "traefik.http.routers.api.middlewares=redirect-https@docker"
+                - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+                - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+                
+                # Add https entrypoint
+                - "traefik.http.routers.api-secure.rule=Host(`traefik.minitwit.tk`)"
+                - "traefik.http.routers.api-secure.entrypoints=https"
+                - "traefik.http.routers.api-secure.tls.certresolver=webappresolver"
 
-            # Add authentication
-            - "traefik.http.routers.api-secure.service=api@internal"
-            - "traefik.http.routers.api-secure.middlewares=auth"
-            # Generate new user and password with `echo $(htpasswd -nb admin admin) | sed -e s/\\$/\\$\\$/g`
-            - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$vVJRD/Hd$$pzWF/71kOPnIfPqS6/t0D."
+                # Add authentication
+                - "traefik.http.routers.api-secure.service=api@internal"
+                # Traefik apparently is stupid, and REQUIRES a port definition for loadbalancing works
+                - "traefik.http.services.justAdummyService.loadbalancer.server.port=1337"
+                - "traefik.http.routers.api-secure.middlewares=auth"
+                # Generate new user and password with `echo $(htpasswd -nb admin admin) | sed -e s/\\$/\\$\\$/g`
+                - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$vVJRD/Hd$$pzWF/71kOPnIfPqS6/t0D."
 
     webapp:
         restart: unless-stopped
+        ports:
+            - "5000:80"
         build:
             target: production
             cache_from:
                 - jlndk/devoops:latest
         environment:
             - "ASPNETCORE_ENVIRONMENT=Production"
-        labels:
-            # Add http entrypoint (Tell where the service should be available)
-            - "traefik.http.routers.webapp.rule=Host(`minitwit.tk`)"
-            - "traefik.http.routers.webapp.entrypoints=http"
-            # Redirect http to https
-            - "traefik.http.routers.webapp.middlewares=redirect-https@docker"
-            - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+        volumes:
+            - webapp-aspnetkeys:/root/.aspnet/DataProtection-Keys
+        deploy:
+            replicas: 1
+            labels:
+                # Tell traefik that this container should be exposed to the public
+                - "traefik.enable=true"
+                # Tell traefik which port our container listens on
+                - "traefik.http.services.webapp.loadbalancer.server.port=80"
+                # Add http entrypoint (Tell where the service should be available)
+                - "traefik.http.routers.webapp.rule=Host(`minitwit.tk`)"
+                - "traefik.http.routers.webapp.entrypoints=http"
+                # Redirect http to https
+                - "traefik.http.routers.webapp.middlewares=redirect-https@docker"
+                - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+                - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
 
-            # Add https entrypoint
-            - "traefik.http.routers.webapp-secure.rule=Host(`minitwit.tk`)"
-            - "traefik.http.routers.webapp-secure.entrypoints=https"
-            - "traefik.http.routers.webapp-secure.tls.certresolver=webappresolver"
+                # Add https entrypoint
+                - "traefik.http.routers.webapp-secure.rule=Host(`minitwit.tk`)"
+                - "traefik.http.routers.webapp-secure.entrypoints=https"
+                - "traefik.http.routers.webapp-secure.tls.certresolver=webappresolver"
 
     database:
         restart: unless-stopped
@@ -79,24 +102,25 @@ services:
         
     grafana:
         restart: unless-stopped
-        labels:
-            # Tell traefik that this container should be exposed to the public
-            - "traefik.enable=true"
-            # Tell traefik which port our container listens on
-            - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+        deploy:
+            labels:
+                # Tell traefik that this container should be exposed to the public
+                - "traefik.enable=true"
+                # Tell traefik which port our container listens on
+                - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
-            # Add http entrypoint (Tell where the service should be available)
-            - "traefik.http.routers.grafana.rule=Host(`grafana.minitwit.tk`)"
-            - "traefik.http.routers.grafana.entrypoints=http"
-            # Redirect http to https
-            - "traefik.http.routers.grafana.middlewares=redirect-https@docker"
-            - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
+                # Add http entrypoint (Tell where the service should be available)
+                - "traefik.http.routers.grafana.rule=Host(`grafana.minitwit.tk`)"
+                - "traefik.http.routers.grafana.entrypoints=http"
+                # Redirect http to https
+                - "traefik.http.routers.grafana.middlewares=redirect-https@docker"
+                - "traefik.http.middlewares.redirect-https.redirectscheme.scheme=https"
+                - "traefik.http.middlewares.redirect-https.redirectscheme.permanent=true"
 
-            # Add https entrypoint
-            - "traefik.http.routers.grafana-secure.rule=Host(`grafana.minitwit.tk`)"
-            - "traefik.http.routers.grafana-secure.entrypoints=https"
-            - "traefik.http.routers.grafana-secure.tls.certresolver=webappresolver"
+                # Add https entrypoint
+                - "traefik.http.routers.grafana-secure.rule=Host(`grafana.minitwit.tk`)"
+                - "traefik.http.routers.grafana-secure.entrypoints=https"
+                - "traefik.http.routers.grafana-secure.tls.certresolver=webappresolver"
 
     elasticsearch:
         restart: unless-stopped

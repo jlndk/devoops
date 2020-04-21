@@ -32,8 +32,6 @@ services:
             # Tell where the service should be available
             - "traefik.http.routers.webapp.rule=Path(`/{path:.*}`)"
             - "traefik.http.routers.webapp.entrypoints=http"
-        volumes:
-            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
         depends_on:
             - database
             - prometheus
@@ -42,8 +40,6 @@ services:
         image: postgres:12
         environment:
             - "POSTGRES_PASSWORD=test"
-        volumes:
-            - ./postgresdata:/var/lib/postgresql/data
 
     prometheus:
         image: prom/prometheus

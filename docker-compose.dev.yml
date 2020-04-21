@@ -29,10 +29,13 @@ services:
             - "ASPNETCORE_ENVIRONMENT=Development"
         volumes:
             - ./:/app
+            - ./aspnetkeys:/root/.aspnet/DataProtection-Keys
 
     database:
         ports:
             - "5432:5432"
+        volumes:
+            - ./postgresdata:/var/lib/postgresql/data
 
     prometheus:
         ports:
