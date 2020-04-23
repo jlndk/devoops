@@ -28,4 +28,6 @@ jobs:
     - name: dotnet test
       run: dotnet test
     - name: Upload sonarcloud report
+      env: 
+       GITHUB_TOKEN: {{ secrets.GITHUB_TOKEN }}
       run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_KEY }}
