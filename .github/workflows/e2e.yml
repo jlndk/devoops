@@ -19,13 +19,16 @@ jobs:
       run: ./doc.sh up -d webapp traefik
     - name: Run API Simulator
       run: python3 ci/minitwit_simulator.py "http://localhost:80/api"
-    - name: Audit URLs using Lighthouse
-      uses: treosh/lighthouse-ci-action@v2
+    - name: Make Artifacts folder
+      run: mkdir /tmp/artifacts
+    - name: Run Lighthouse
+      uses: foo-software/lighthouse-check-action@master
       with:
-        urls: |
-          http://localhost:80/
-        budgetPath: ./budget.json # test performance budgets
-        # uploadArtifacts: true # save results as an action artifacts
-        # temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+        accessToken: ${{ secrets.GITHUB_TOKEN }}
+        author: ${{ github.actor }}
+        branch: ${{ github.ref }}
+        outputDirectory: /tmp/artifacts
+        urls: 'http://localhost/public,http://localhost/login,http://localhost/register,http://localhost/user/Roger%20Histand'
+        sha: ${{ github.sha }}
     - name: Stop docker containers
       run: ./doc.sh down
