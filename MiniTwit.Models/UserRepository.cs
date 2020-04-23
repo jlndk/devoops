@@ -7,7 +7,7 @@ using MiniTwit.Entities;
 using static MiniTwit.Models.Response;
 
 namespace MiniTwit.Models
-{
+{ 
     public class UserRepository : IUserRepository
     {
         private readonly IMiniTwitContext _context;
@@ -25,7 +25,6 @@ namespace MiniTwit.Models
             {
                 return (Conflict, 0);
             }
-
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return (Created, user.Id);
