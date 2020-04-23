@@ -21,6 +21,8 @@ jobs:
       run: dotnet restore
     - name: Install sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
+    - name: Set github token
+      run: echo ::set-env name=REF_ID::$(echo ${{ secrets.GITHUB_TOKEN }})
     - name: Start Scanner
       run: dotnet sonarscanner begin /k:jlndk_devoops /d:sonar.host.url=https://sonarcloud.io /o:jlndk /d:sonar.login=${{ secrets.SONAR_KEY }}
     - name: Dotnet build
@@ -28,6 +30,4 @@ jobs:
     - name: dotnet test
       run: dotnet test
     - name: Upload sonarcloud report
-      env: 
-       GITHUB_TOKEN: {{ secrets.GITHUB_TOKEN }}
       run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_KEY }}
