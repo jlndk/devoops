@@ -19,18 +19,21 @@ namespace MiniTwit.Web.App.Controllers
         private readonly ILogger<ApiController> _logger;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ILatestRepository _latestRepository;
         private readonly UserManager<User> _userManager;
-        private static int _latest;
+        private int _latest; //Only used for printing out info
 
         public ApiController(
             UserManager<User> userManager, 
             ILogger<ApiController> logger,
             IMessageRepository messageRepository,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            ILatestRepository latestRepository
         )
         {
             _userManager = userManager;
             _logger = logger;
+            _latestRepository = latestRepository;
             _messageRepository = messageRepository;
             _userRepository = userRepository;
         }
@@ -38,10 +41,11 @@ namespace MiniTwit.Web.App.Controllers
         [Route("[controller]/latest/")]
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult GetLatest()
+        public async Task<IActionResult> GetLatest()
         {
-            LogRequestInfo($"Got latest ({_latest}).");
-            return Json(new GetLatestDTO(_latest));
+            var latest = await _latestRepository.ReadLatestAsync();
+            LogRequestInfo($"Got latest ({latest}).");
+            return Json(new GetLatestDTO((int)latest));
         }
 
         [Route("[controller]/msgs/")]
@@ -52,7 +56,7 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "no")] int number = 100
         )
         {
-            UpdateLatest(latestMessage);
+            await UpdateLatest(latestMessage);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -72,7 +76,7 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "no")] int number = 100
         )
         {
-            UpdateLatest(latestMessage);
+            await UpdateLatest(latestMessage);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -100,7 +104,7 @@ namespace MiniTwit.Web.App.Controllers
             [FromBody] PostMessageDTO postMessageDto
         )
         {
-            UpdateLatest(latestMessage ?? postMessageDto.Latest);
+            await UpdateLatest(latestMessage ?? postMessageDto.Latest);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -130,7 +134,7 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "latest")] int? latestMessage
         )
         {
-            UpdateLatest(latestMessage ?? registerPost.Latest);
+            await UpdateLatest(latestMessage ?? registerPost.Latest);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -174,7 +178,7 @@ namespace MiniTwit.Web.App.Controllers
             [FromQuery(Name = "no")] int number = 100
         )
         {
-            UpdateLatest(latestMessage);
+            await UpdateLatest(latestMessage);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -196,7 +200,7 @@ namespace MiniTwit.Web.App.Controllers
             [FromBody] PostFollowUnfollowDTO postFollowUnfollowDto
         )
         {
-            UpdateLatest(latestMessage ?? postFollowUnfollowDto.Latest);
+            await UpdateLatest(latestMessage ?? postFollowUnfollowDto.Latest);
             if (!IsRequestFromSimulator())
             {
                 return NotAuthorizedError();
@@ -257,11 +261,12 @@ namespace MiniTwit.Web.App.Controllers
             return StatusCode(403, new {status = 403, error_msg = "You are not authorized to use this resource!"});
         }
 
-        private void UpdateLatest(int? latestMessage)
+        private async Task UpdateLatest(int? latestMessage)
         {
             if (latestMessage != null)
             {
                 _latest = latestMessage.Value;
+                await _latestRepository.UpdateLatestAsync(latestMessage.Value);
             }
         }
 
