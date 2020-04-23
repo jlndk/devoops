@@ -28,7 +28,11 @@ jobs:
         author: ${{ github.actor }}
         branch: ${{ github.ref }}
         outputDirectory: /tmp/artifacts
-        urls: 'http://localhost/public,http://localhost/login,http://localhost/register,http://localhost/user/Roger%20Histand'
+        urls: 'http://localhost,http://localhost/login,http://localhost/register,http://localhost/user/Roger%20Histand'
         sha: ${{ github.sha }}
+        minAccessibilityScore: "97"
+        minBestPracticesScore: "97"
+        minPerformanceScore: "97"
+        minSeoScore: "86"
     - name: Stop docker containers
       run: ./doc.sh down
