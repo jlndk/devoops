@@ -21,8 +21,10 @@ jobs:
       run: dotnet restore
     - name: Install sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
+    - name: Set ref id
+      run: echo ::set-env name=REF_ID::$(echo ${{ github.ref }} | grep -oP '([0-9]*)')
     - name: Start Scanner
-      run: dotnet sonarscanner begin /k:jlndk_devoops /d:sonar.host.url=https://sonarcloud.io /o:jlndk /d:sonar.login=${{ secrets.SONAR_KEY }} /d:sonar.pullrequest.key=${{ github.ref }}
+      run: dotnet sonarscanner begin /k:jlndk_devoops /d:sonar.host.url=https://sonarcloud.io /o:jlndk /d:sonar.login=${{ secrets.SONAR_KEY }} /d:sonar.pullrequest.key=${{ env.REF_ID }}
     - name: Dotnet build
       run: dotnet build --configuration Release
     - name: dotnet test
