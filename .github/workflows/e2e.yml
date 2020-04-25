@@ -1,0 +1,43 @@
+name: Run E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  endtoend:
+    runs-on: ubuntu-latest
+    name: Run end-to-end tests
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set environment
+      run: echo "::set-env name=MINITWIT_ENV::CI"
+    - name: Build docker images
+      run: ./doc.sh build
+    - name: Start docker containers
+      run: ./doc.sh up -d webapp traefik
+    - name: Run API Simulator
+      run: python3 ci/minitwit_simulator.py "http://localhost:80/api"
+    - name: Make Artifacts folder
+      run: mkdir /tmp/artifacts
+    - name: Run Lighthouse
+      uses: foo-software/lighthouse-check-action@master
+      with:
+        accessToken: ${{ secrets.GITHUB_TOKEN }}
+        author: ${{ github.actor }}
+        branch: ${{ github.ref }}
+        outputDirectory: /tmp/artifacts
+        urls: 'http://localhost,http://localhost/login,http://localhost/register,http://localhost/user/Roger%20Histand'
+        sha: ${{ github.sha }}
+        minAccessibilityScore: "97"
+        minBestPracticesScore: "97"
+        minPerformanceScore: "97"
+        minSeoScore: "86"
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: Lighthouse reports
+        path: /tmp/artifacts
+    - name: Stop docker containers
+      run: ./doc.sh down
