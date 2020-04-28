@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MiniTwit.Entities;
@@ -205,19 +204,6 @@ namespace MiniTwit.Models
                     Text = m.Text
                 };
             return await messages.ToListAsync();
-        }
-
-        private static Message JoinMessageUser(Message m, User u)
-        {
-            return new Message
-            {
-                Author = u,
-                AuthorId = u.Id,
-                Flagged = m.Flagged,
-                Id = m.Id,
-                PubDate = m.PubDate,
-                Text = m.Text
-            };
         }
     }
 }
