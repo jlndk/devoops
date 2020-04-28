@@ -43,7 +43,10 @@ namespace MiniTwit.Entities
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Message>().HasIndex(m => m.PubDate);
+            modelBuilder.Entity<Message>().HasIndex(m => m.AuthorId);
+            modelBuilder.Entity<User>().HasIndex(u => u.UserName);
             modelBuilder.Entity<Latest>().HasIndex(m => m.Date);
+            modelBuilder.Entity<Follow>().HasIndex(f => f.FolloweeId);
             modelBuilder.Entity<Follow>()
                 .HasKey(f => new { f.FollowerId, f.FolloweeId});
             
