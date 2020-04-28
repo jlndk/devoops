@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MiniTwit.Entities;
@@ -89,17 +90,23 @@ namespace MiniTwit.Models
             DateTime? dateNewerThan = null
         )
         {
-            return (
-                    await _context.Messages
-                        .Where(m => m.AuthorId == userId)
-                        .Where(m => m.Flagged <= 0)
-                        .Where(m => dateOlderThan == null || m.PubDate < dateOlderThan)
-                        .Where(m => dateNewerThan == null || m.PubDate > dateNewerThan)
-                        .OrderByDescending(m => m.PubDate)
-                        .Take(count)
-                        .ToListAsync()
-                )
-                .Join(_context.Users, m => m.AuthorId, u => u.Id, JoinMessageUser);
+            var messages = 
+                from m in _context.Messages
+                where m.AuthorId == userId && m.Flagged <= 0
+                && (dateOlderThan == null || m.PubDate < dateOlderThan)
+                && (dateNewerThan == null || m.PubDate > dateNewerThan)
+                join user in _context.Users on m.AuthorId equals user.Id
+                orderby m.PubDate descending 
+                select new Message
+                {
+                    Author = user,
+                    AuthorId = user.Id,
+                    Flagged = m.Flagged,
+                    Id = m.Id,
+                    PubDate = m.PubDate,
+                    Text = m.Text
+                };
+            return await messages.Take(count).ToListAsync();
         }
 
         public async Task<IEnumerable<Message>> ReadManyFromUserAsync(int userId, int count)
