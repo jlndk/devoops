@@ -51,7 +51,10 @@ namespace MiniTwit.Web.App.Controllers
             await _signInManager.SignInAsync(user, false);
             return RedirectToLocal();
         }
-        
+                
+        [Route("/register")]
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
