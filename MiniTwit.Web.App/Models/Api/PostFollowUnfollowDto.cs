@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class PostFollowUnfollowDTO : BasePostDTO
+    public class PostFollowUnfollowDto : BasePostDto
     {
         [JsonPropertyName("follow")]   
         public string Follow { get; set; }

@@ -4,7 +4,7 @@ using MiniTwit.Entities;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class GetMessageDTO
+    public class GetMessageDto
     {
         [JsonPropertyName("user")]
         public string User { get; set; }
@@ -13,9 +13,9 @@ namespace MiniTwit.Web.App.Models.Api
         [JsonPropertyName("content")]
         public string Content { get; set; }
         
-        public static GetMessageDTO FromMessage(Message message)
+        public static GetMessageDto FromMessage(Message message)
         {
-            return new GetMessageDTO
+            return new GetMessageDto
             {
                 Content = message.Text,
                 PubDate = message.PubDate,

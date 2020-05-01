@@ -11,7 +11,7 @@ namespace MiniTwit.Models
         Task<IEnumerable<Message>> ReadManyAsync(int count, bool includeFlagged = false);
         Task<IEnumerable<Message>> ReadManyWithinTimeAsync(int count, DateTime? dateOlderThan = null, DateTime? dateNewerThan = null);
         Task<IEnumerable<Message>> ReadAllMessagesFromUserAsync(int userId);
-        Task<IEnumerable<Message>> ReadMessagesFromFollowedWithinTimeAsync(int followeeId, DateTime? dateOlderThan = null, DateTime? dateNewerThan = null);
+        Task<IEnumerable<Message>> ReadMessagesFromFollowedWithinTimeAsync(int followerId, DateTime? dateOlderThan = null, DateTime? dateNewerThan = null);
         Task<IEnumerable<Message>> ReadManyFromUserWithinTimeAsync(int userId, int count, DateTime? dateOlderThan = null, DateTime? dateNewerThan = null);
         Task<IEnumerable<Message>> ReadManyFromUserAsync(int userId, int count);
         Task<(Response response, int messageId)> CreateAsync(Message message);
