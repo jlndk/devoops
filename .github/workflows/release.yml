@@ -1,16 +1,40 @@
-name: Create tagged release
+
 on:
   push:
     branches:
       - master
 
+
+name: Create Release With Report
+
 jobs:
-  release-on-push:
+  build:
+    name: Create Release With Report
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: rymndhng/release-on-push-action@v0.10.0
-        name: Create Release
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build Report 
+        run: |
+          cd report
+          ./buildreport.sh
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          bump_version_scheme: minor
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./report/finished-report.md
+          asset_name: finished-report.md
+          asset_content_type: text/markdown
