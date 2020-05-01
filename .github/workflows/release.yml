@@ -17,6 +17,7 @@ jobs:
       - name: Build Report 
         run: |
           cd report
+          chmod +x buildreport.sh
           ./buildreport.sh
       - name: Create Release
         id: create_release
