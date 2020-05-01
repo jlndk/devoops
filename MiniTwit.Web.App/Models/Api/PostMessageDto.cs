@@ -4,7 +4,7 @@ using MiniTwit.Entities;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class PostMessageDTO : BasePostDTO
+    public class PostMessageDto : BasePostDto
     {
         [JsonPropertyName("content")]
         public string Content { get; set; }

@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class GetFollowsDTO
+    public class GetFollowsDto
     {
-        public GetFollowsDTO(IEnumerable<string> follows)
+        public GetFollowsDto(IEnumerable<string> follows)
         {
             Follows = follows;
         }

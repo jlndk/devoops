@@ -133,6 +133,7 @@ namespace MiniTwit.Web.App.Controllers
             {
                 return View("Index");
             }
+            _logger.LogInformation($"{userId} Followed {followeeId}");
             return RedirectToAction("User_Timeline", new {username = viewedUserName});
         }
 

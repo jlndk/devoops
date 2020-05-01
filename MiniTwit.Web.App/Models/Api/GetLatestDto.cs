@@ -2,9 +2,9 @@ using Newtonsoft.Json;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class GetLatestDTO
+    public class GetLatestDto
     {
-        public GetLatestDTO(int latest)
+        public GetLatestDto(int latest)
         {
             Latest = latest;
         }
