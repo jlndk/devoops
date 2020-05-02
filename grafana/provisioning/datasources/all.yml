@@ -1,5 +1,5 @@
 datasources:
-    - name: 'prom1'
+    - name: 'Prometheus'
       type: 'prometheus'
       access: 'proxy'
       org_id: 1
