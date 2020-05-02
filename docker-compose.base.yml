@@ -57,6 +57,9 @@ services:
         image: grafana/grafana
         volumes:
             - grafana_data:/var/lib/grafana
+            - ./grafana/provisioning:/etc/grafana/provisioning
+            - ./grafana/config.ini:/etc/grafana/config.ini
+            - ./grafana/dashboards:/var/lib/grafana/dashboards
         depends_on: 
             - prometheus
     
