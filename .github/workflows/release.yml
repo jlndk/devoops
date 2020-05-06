@@ -49,8 +49,8 @@ jobs:
           release_name: ${{ steps.semvers.outputs.patch }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset 
+      - name: Upload Markdown Report
+        id: upload-release-asset-md
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,8 +59,8 @@ jobs:
           asset_path: ./report/report.md
           asset_name: report.md
           asset_content_type: text/markdown
-      - name: Upload Release Asset
-        id: upload-release-asset 
+      - name: Upload PDF Report
+        id: upload-release-asset-pdf
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
