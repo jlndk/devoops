@@ -1,29 +1,15 @@
 # MiniTwit DevOps project [![codecov](https://codecov.io/gh/jlndk/devoops/branch/master/graph/badge.svg)](https://codecov.io/gh/jlndk/devoops) ![Run SonarCloud on code](https://github.com/jlndk/devoops/workflows/Run%20SonarCloud%20on%20code/badge.svg?branch=master)
-> ~~Check our uptime and maintenance status here: https://status.minitwit.tk~~
 
-A Twitter clone made a long time ago, in a galaxy far, far away.
-Over the course of the semester, we brought this application up to date and deployed it using all the DevOps skills we have learned. 
-
-The project was developed with Continuous Integration, Delivery and Deployment
+A Twitter clone made for the DevOps course at the IT University of Copenhagen. Over the course of the project, we took a barebones Python web application and both refactored it in a different language (C# with ASP.NET Core) and added many useful DevOps related features and practices. 
 
 This project is:
- - Containerized/Clusterized
- - Monitored
- - Cloud-Powered
- - Data Visualization
- - DevOps Focused
-
-Technologies used:
- - Kibana
- - Grafana
- - Logstash
- - ElasticSearch
- - Docker Swarm
- - ASP.NET
- - .NET Core 3.1
-
-Static analysis tools, CI pipeline, E2E tests, it's all here.
-
+ - Containerized using the Docker ecosystem, for easy deployment and scalability.
+ - Continuously integrated using GitHub Actions, with automatic unit testing, system testing, code linting, static analysis and coverage reporting.
+ - Continuously delivered with automatic GitHub releases.
+ - Continuously deployed on DigitalOcean.
+ - Fully logged using SeriLog, ElasticSearch and Kibana, ensuring scalable and easily accessible logging.
+ - Performance monitored with Prometheus and Grafana, with a nice developer dashboard.
+ 
 ## Quick-start
 
 To deploy on a production node, simply clone this repository to the node and run the following two commands:
