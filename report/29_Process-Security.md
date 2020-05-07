@@ -32,7 +32,7 @@ As part of our CI pipeline, SonarCube will analyze pushed code for potential sec
 ### Penetration Testing
 Through a combination of security testing done by an internal team and an external team, the following have been discovered about the system:
 
-* The simulator API is hardcoded into the codebase. IT should instead be securely stored in an API key store or in the environment variables, even if it is currently required to be a specific known value based on the spec.
+* The simulator API is hardcoded into the codebase. It should instead be securely stored in an API key store or in the environment variables, even if it is currently required to be a specific known value based on the spec.
 * No vulnerabilities was found on the website, likely due to how much the chosen web framework ASP.NET handles out of the box.
   * No SQL injection, due to the use of the Entity Framework ORM.
   * No Cross-site Request Forgery, thanks to ASP.NET’s automatic form security.
