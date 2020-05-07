@@ -36,7 +36,7 @@ Through a combination of security testing done by an internal team and an extern
 * No vulnerabilities was found on the website, likely due to how much the chosen web framework ASP.NET handles out of the box.
   * No SQL injection, due to the use of the Entity Framework ORM.
   * No Cross-site Request Forgery, thanks to ASP.NET’s automatic form security.
-  * No cookie stealing thanks to how ASP.NET Identity.
+  * No cookie stealing thanks to how ASP.NET Identity works.
   * No local data (such as cookies) in Iframes and no access so form pages such as login through Iframes. This prevents clickjacking.
   * No Cross-site Scripting due to how Razor handles dynamic data in HTML.
 * Thanks to the reverse proxy Træfik, the site uses HTTPS, which means that MITM attacks are virtually impossible in modern browsers.
