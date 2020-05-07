@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace MiniTwit.Web.App.Models.Api
 {
-    public class PostRegisterDTO : BasePostDTO
+    public class PostRegisterDto : BasePostDto
     {
         [JsonPropertyName("username")]
         public string Username { get; set; }

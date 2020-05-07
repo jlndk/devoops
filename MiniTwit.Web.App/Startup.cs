@@ -12,9 +12,7 @@ using Serilog.Sinks.Elasticsearch;
 using MiniTwit.Entities;
 using MiniTwit.Models;
 using Prometheus;
-using Serilog.Events;
 using Serilog.Exceptions;
-using Serilog.Extensions.Hosting;
 
 namespace MiniTwit.Web.App
 {
@@ -64,7 +62,6 @@ namespace MiniTwit.Web.App
                 })
                 .AddEntityFrameworkStores<MiniTwitContext>()
                 .AddDefaultTokenProviders();
-            // TODO: This should perhaps be something other than scoped
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<ILatestRepository, LatestRepository>();
             services.AddControllersWithViews();

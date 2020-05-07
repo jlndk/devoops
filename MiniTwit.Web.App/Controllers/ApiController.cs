@@ -13,7 +13,7 @@ namespace MiniTwit.Web.App.Controllers
 {
     public class ApiController : Controller
     {
-        // TODO: We should put this in a config file
+
         private const string SimulatorAuthToken = "c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
         
         private readonly ILogger<ApiController> _logger;
@@ -45,7 +45,7 @@ namespace MiniTwit.Web.App.Controllers
         {
             var latest = await _latestRepository.ReadLatestAsync();
             LogRequestInfo($"Got latest ({latest}).");
-            return Json(new GetLatestDTO((int)latest));
+            return Json(new GetLatestDto((int)latest));
         }
 
         [Route("[controller]/msgs/")]
@@ -62,7 +62,7 @@ namespace MiniTwit.Web.App.Controllers
                 return NotAuthorizedError();
             }
             var messages = (await _messageRepository.ReadManyAsync(number))
-                .Select(GetMessageDTO.FromMessage);
+                .Select(GetMessageDto.FromMessage);
             LogRequestInfo($"Got {messages.Count()} messages.");
             return Json(messages);
         }
@@ -89,7 +89,7 @@ namespace MiniTwit.Web.App.Controllers
             }
 
             var messages = (await _messageRepository.ReadManyFromUserAsync(user.Id,number))
-                .Select(GetMessageDTO.FromMessage);
+                .Select(GetMessageDto.FromMessage);
             LogRequestInfo($"Got {messages.Count()} messages from \"{username}\".");
             return Json(messages);
         }
@@ -101,7 +101,7 @@ namespace MiniTwit.Web.App.Controllers
         public async Task<IActionResult> UserPostMessages(
             string username,
             [FromQuery(Name = "latest")] int? latestMessage,
-            [FromBody] PostMessageDTO postMessageDto
+            [FromBody] PostMessageDto postMessageDto
         )
         {
             await UpdateLatest(latestMessage ?? postMessageDto.Latest);
@@ -130,7 +130,7 @@ namespace MiniTwit.Web.App.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterUser(
-            [FromBody] PostRegisterDTO registerPost,
+            [FromBody] PostRegisterDto registerPost,
             [FromQuery(Name = "latest")] int? latestMessage
         )
         {
@@ -186,7 +186,7 @@ namespace MiniTwit.Web.App.Controllers
             var user = await _userRepository.ReadAsyncByUsername(username);
             var follows = await _userRepository.GetFollowsAsync(user.Id);
             LogRequestInfo($"Got {follows.Count()} users that is \"{user.UserName}\" following.");
-            return Json(new GetFollowsDTO(follows.Select(u => u.UserName)));
+            return Json(new GetFollowsDto(follows.Select(u => u.UserName)));
         }
 
         
@@ -197,7 +197,7 @@ namespace MiniTwit.Web.App.Controllers
         public async Task<IActionResult> UserFollow(
             string username,
             [FromQuery(Name = "latest")] int? latestMessage,
-            [FromBody] PostFollowUnfollowDTO postFollowUnfollowDto
+            [FromBody] PostFollowUnfollowDto postFollowUnfollowDto
         )
         {
             await UpdateLatest(latestMessage ?? postFollowUnfollowDto.Latest);

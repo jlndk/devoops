@@ -37,25 +37,25 @@ namespace MiniTwit.Entities
             optionsBuilder.UseNpgsql(connectionString);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.UseIdentityColumns();
-            base.OnModelCreating(modelBuilder);
+            builder.UseIdentityColumns();
+            base.OnModelCreating(builder);
 
-            modelBuilder.Entity<Message>().HasIndex(m => m.PubDate);
-            modelBuilder.Entity<Message>().HasIndex(m => new {m.AuthorId, m.PubDate}); 
-            modelBuilder.Entity<User>().HasIndex(u => u.UserName);
-            modelBuilder.Entity<Latest>().HasIndex(m => m.Date);
-            modelBuilder.Entity<Follow>().HasIndex(f => f.FolloweeId);
-            modelBuilder.Entity<Follow>()
+            builder.Entity<Message>().HasIndex(m => m.PubDate);
+            builder.Entity<Message>().HasIndex(m => new {m.AuthorId, m.PubDate}); 
+            builder.Entity<User>().HasIndex(u => u.UserName);
+            builder.Entity<Latest>().HasIndex(m => m.Date);
+            builder.Entity<Follow>().HasIndex(f => f.FolloweeId);
+            builder.Entity<Follow>()
                 .HasKey(f => new { f.FollowerId, f.FolloweeId});
             
-            modelBuilder.Entity<Follow>()
+            builder.Entity<Follow>()
                 .HasOne(f => f.Follower)
                 .WithMany(u => u.Follows)
                 .HasForeignKey(f => f.FollowerId);
 
-            modelBuilder.Entity<Follow>()
+            builder.Entity<Follow>()
                 .HasOne(f => f.Followee)
                 .WithMany(u => u.FollowedBy)
                 .HasForeignKey(f => f.FolloweeId);

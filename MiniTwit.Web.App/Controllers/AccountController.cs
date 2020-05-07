@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MiniTwit.Entities;
-using MiniTwit.Models;
 using MiniTwit.Web.App.Models;
 
 namespace MiniTwit.Web.App.Controllers
@@ -14,39 +12,26 @@ namespace MiniTwit.Web.App.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger _logger;
-        private readonly IMessageRepository _repository;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            ILogger<AccountController> logger,
-            IMessageRepository repository)
+            ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _repository = repository;
-        }
-
-        [Route("/register")]
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
         }
 
         [Route("/register")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(Register model, string returnUrl = null)
+        public async Task<IActionResult> Register(Register model)
         {
             ViewData["Error"] = "Success";
-            ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -64,7 +49,15 @@ namespace MiniTwit.Web.App.Controllers
             }
             _logger.LogInformation("User created a new account with password.");
             await _signInManager.SignInAsync(user, false);
-            return RedirectToLocal(returnUrl);
+            return RedirectToLocal();
+        }
+                
+        [Route("/register")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return View();
         }
 
         [Route("/login")]
@@ -82,9 +75,8 @@ namespace MiniTwit.Web.App.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(Login model, string returnUrl = null)
+        public async Task<IActionResult> Login(Login model)
         {
-            ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -101,7 +93,7 @@ namespace MiniTwit.Web.App.Controllers
                 return View(model);
             }
             _logger.LogInformation("User logged in.");
-            return RedirectToLocal(returnUrl);
+            return RedirectToLocal();
         }
 
         public IActionResult LogIn()
@@ -109,11 +101,6 @@ namespace MiniTwit.Web.App.Controllers
             return View();
         }
 
-        public IActionResult Register()
-        {
-            return View();
-        }
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -133,13 +120,10 @@ namespace MiniTwit.Web.App.Controllers
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
+        
 
-        private IActionResult RedirectToLocal(string returnUrl)
+        private IActionResult RedirectToLocal()
         {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 

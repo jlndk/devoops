@@ -1,16 +1,71 @@
-name: Create tagged release
 on:
   push:
     branches:
       - master
 
+
+name: Create Release With Report
+
 jobs:
-  release-on-push:
+  build:
+    name: Create Release With Report
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: rymndhng/release-on-push-action@v0.10.0
-        name: Create Release
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0
+      - name: Build Report 
+        run: |
+          cd report
+          chmod +x buildreport.sh
+          sudo apt-get install pandoc
+          sudo apt-get install texlive
+          ./buildreport.sh
+      - name: 'Get Previous tag'
+        id: previoustag
+        run: | 
+          git fetch -t 
+          TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          if [ -z "$TAG" ] 
+          then 
+            exit 1
+          else 
+            echo "Tag Found: $TAG"
+            echo ::set-output name=tag::$TAG
+          fi
+      - name: 'Get next minor version'
+        id: semvers
+        uses: WyriHaximus/github-action-next-semvers@0.1.0
         with:
-          bump_version_scheme: minor
+          version: ${{ steps.previoustag.outputs.tag }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.semvers.outputs.patch }}
+          release_name: ${{ steps.semvers.outputs.patch }}
+          draft: false
+          prerelease: false
+      - name: Upload Markdown Report
+        id: upload-release-asset-md
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./report/report.md
+          asset_name: report.md
+          asset_content_type: text/markdown
+      - name: Upload PDF Report
+        id: upload-release-asset-pdf
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./report/report.pdf
+          asset_name: report.pdf
+          asset_content_type: application/pdf
