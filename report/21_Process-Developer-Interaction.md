@@ -1,1 +1,5 @@
-How do you interact as developers?
+The developers interact mainly through a weekly meeting right after the lecture, the use of a Discord Server, and through the use of the GitHub Repository on which the project is hosted. After the lockdown caused be Covid-19, the weekly meeting started being held over Discord as well. 
+Discord has been used for direct communication, both in text-channels for quick questions and requests, and through voice channels for meetings or collaborative work.
+GitHub has been used to track work throughout the project, mainly via Issues assigned to developers. Some communication is also done via GitHub in the form of comments on pull requests. 
+
+Both of these tools worked well for their intended purposes. A feature that worked less well was the GitHub Milestones, which we for a short while tried using to keep track of what issues were being worked on in a given week, but it was decided after a few weeks to stop using this, as it was found that it wasn't used, and that we forgot to update it too often. 
