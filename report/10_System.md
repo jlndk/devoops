@@ -11,7 +11,7 @@ Another reason for choosing this tech stack was that no one in the group has wor
 Since the framework is also backed by Microsoft, which makes the platform viable for businesses, it is a very lucrative skill to have when looking for jobs.
 
 Besides the main programming language and framework, we also needed to decide how to run the application in production.
-For this we have containerized all the services with docker and orchestrated them with docker-compose.
+For this, we have containerized all the services with docker and orchestrated them with docker-compose.
 The system has been running on a single server provided by the cloud provider [DigitalOcean](https://www.digitalocean.com/) throughout the entire project.
 
 In the following chapters, we will discuss the architecture, dependencies, and different subsystems in the system. Lastly, we will describe the current state of the application.
