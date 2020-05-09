@@ -1,4 +1,4 @@
-# Repository structure
+## Repository structure
 The repository used for this project follows a mono-repository structure, with multiple projects inside it. The root level of the repository looks like this:
 
 ![Repository root level](./assets/repo.png)
