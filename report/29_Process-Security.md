@@ -42,4 +42,4 @@ Through a combination of security testing done by an internal team and an extern
 * Thanks to the reverse proxy Træfik, the site uses HTTPS, which means that MITM attacks are virtually impossible in modern browsers.
 * Virtual Servers are secured with SSH keys. 
 
-The list above is partially based on OWASP’s Top 10 Web Security Vulnerabilities (TODO: ref).
+The list above is partially based on OWASP’s Top 10 Web Security Vulnerabilities (OWASP, https://owasp.org/www-project-top-ten/, visited: 2020-05-09).
