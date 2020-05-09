@@ -1,8 +1,6 @@
 # Devoops Project Report
 
-This report details our project done February to May in 2020 during the course "DevOps, Software Evolution and Software Maintenance" at IT University of Copenhagen.
-
-Project team members:
+This document is the final report of Group D(evOops) for course "DevOps, Software Evolution and Software Maintenance" at IT University of Copenhagen. This report covers a project done February to May in 2020 by the following members:
 - Hjalte Sorgenfrei Mac Dalland, hjda@itu.dk
 - Jakob Isrealsen, jais@itu.dk
 - Jonas Lindenskov Nielsen, joln@itu.dk
