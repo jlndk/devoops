@@ -1,4 +1,4 @@
-# Branching Strategy
+## Branching Strategy
 
 Due to the smaller scope and team size, it was decided to use a lightweight, but surprisingly useful, branching strategy called GitHub flow (TODO: ref) (not to be confused with Git flow). GitHub flow works like this:
 
