@@ -1,4 +1,4 @@
-The developers interact mainly through a weekly meeting right after the lecture, the use of a Discord Server, and through the use of the GitHub Repository on which the project is hosted. After the lockdown caused be Covid-19, the weekly meeting started being held over Discord as well. 
+The developers interact mainly through a weekly meeting right after the lecture, through the use of a Discord Server, and through the use of the GitHub Repository on which the project is hosted. After the lockdown caused be Covid-19, the weekly meeting started being held over Discord as well. 
 Discord has been used for direct communication, both in text-channels for quick questions and requests, and through voice channels for meetings or collaborative work.
 GitHub has been used to track work throughout the project, mainly via Issues assigned to developers. Some communication is also done via GitHub in the form of comments on pull requests. 
 
