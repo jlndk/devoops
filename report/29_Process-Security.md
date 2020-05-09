@@ -1,10 +1,10 @@
-# Security
-## Risk Assessment
+## Security
+### Risk Assessment
 
 ![Risk assessment matrix](./images/risk_matrix.png)
 
 * Leaking user data
-  * **Description**: Most user data is public, but a few critical things such as emails and passwords are not. Leaking passwords are unlikely, but still technically possible for example due to logging misconfiguration, as they are stored only as hashes. The database is the most likely attack vector for accessing sensitive data.
+  * **Description**: Most user data is public, but a few critical things such as emails and passwords are not. Leaking passwords is unlikely as they are stored only as hashes, but it is still technically possible, for example due to logging misconfiguration. The database is the most likely attack vector for accessing sensitive data.
   * **Severity**: High
   * **Likelihood**: Low
   * **Risk**: Medium
