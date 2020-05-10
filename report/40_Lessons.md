@@ -1,10 +1,8 @@
-## Lessons Learned Perspective
+## Lessons Learned
 
-Describe the biggest issues, how you solved them, and which are major lessons learned with regards to:
-- evolution and refactoring
-- operation, and
-- maintenance
+The project would have been for nothing if the team didn't learn anything trying to refactor and maintain the project.
+Trying to implement changes and follow standards is bound to cause problems, and from solving these problems, learning is obtained.
 
-of your ITU-MiniTwit systems. Link back to respective commit messages, issues, tickets, etc. to illustrate these.
+This section is dedicated to explaining what learning the team has made.
+It sets out to document the learning itself, as well as the concrete situations where it was obtained, along with reflections on the process.
 
-Also reflect and describe what was the "DevOps" style of your work. For example, what did you do differently to previous development projects and how did it work?
