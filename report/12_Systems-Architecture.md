@@ -1,1 +1,10 @@
-Architecture of your ITU-MiniTwit systems
+### Architecture 
+
+![Deployment](images/Deployment.png "Deployment Diagram")
+
+
+The MiniTwit system is deployed on a Droplet by using Docker-Compose which starts the systems in the appropriate dependency order. In the current iteration of the system this is all done on a single server as can be seen from the above diagram. But each component could be moved to separate servers without major problems, a process which was in progress on the branch [swarm](https://github.com/jlndk/devoops/tree/swarm), but due to being short on time this was not completed in time. More on this in the Scaling section. 
+
+Traefik is used as a reverse proxy and Edge Router. As can be seen from the diagram it interacts with MiniTwit.Web.App, Kibana and Grafana. These three are the public facing applications and Traefik is used to manage SSL certificates and HTTPS. When using Docker Swarm load balancing can be done through Traefik. 
+
+Monitoring can be seen on the left with Grafana and Prometheus
