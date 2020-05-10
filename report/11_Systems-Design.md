@@ -1,7 +1,7 @@
 ### System Design 
 The MiniTwit application follows the Repository design pattern, with a database abstraction layer, a backend with repositories and a frontend that receives data from these repositories. 
 
-The application is written completely in C#, partially because the team wanted to learn the different aspects of C#, and partially because it made it easier to connect all the parts of the application. Thus, the frontend of the application is written as an ASP.NET Core application using cshtml, the security layer is made using ASP.NET Identity, and EntityFrameworkCore is used for the database abstraction layer.
+The application is written completely in C#, because the team wanted to learn the different aspects of C#, because it made it easier to connect all the parts of the application, and because the team had experience with it allowing work to be done faster. Thus, the frontend of the application is written as an ASP.NET Core application using cshtml, the security layer is made using ASP.NET Identity, and EntityFrameworkCore is used for the database abstraction layer.
 
 The application has three main C# Projects, MiniTwit.Web.App, containing the web app, MiniTwit.Models containing the repositories for the different types of data handled by the application and MiniTwit.Entities, containing the entities of the application, and the DBContext from EntityFramework called MiniTwitContext. The application also has other projects containing utility functions, and projects for testing.
 
