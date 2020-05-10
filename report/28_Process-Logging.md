@@ -1,4 +1,4 @@
-## Logging
+### Logging
 
 Logging output from processes is important in order to know what is going on in the system.
 If a program in no way outputs any information, then it is hard to diagnose faults or detect attacks, which can make fixing those things harder.
