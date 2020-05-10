@@ -1,4 +1,4 @@
-## Process Logging
+## Logging
 
 Logging output from processes is important in order to know what is going on in the system. If your program in no way outputs any information, then it is hard to diagnose faults or detect attacks, which can make fixing those things harder. 
 Since the entire website is written in .NET, it makes sense to rely on already existing logging modules to assemble and aggregate system information. One such module, called [Serilog](https://github.com/serilog/serilog), is what this project uses for this cause. 
