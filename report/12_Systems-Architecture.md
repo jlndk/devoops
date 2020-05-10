@@ -7,4 +7,4 @@ The MiniTwit system is deployed on a Droplet by using Docker-Compose which start
 
 Traefik is used as a reverse proxy and Edge Router. As can be seen from the diagram it interacts with MiniTwit.Web.App, Kibana and Grafana. These three are the public facing applications and Traefik is used to manage SSL certificates and HTTPS. When using Docker Swarm load balancing can be done through Traefik. 
 
-Monitoring can be seen on the left with Grafana and Prometheus
+Monitoring can be seen on the left with Grafana and Prometheus. Here Prometheus interacts with main application and pulls data out to display in 
