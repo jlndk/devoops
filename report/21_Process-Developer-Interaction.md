@@ -1,6 +1,13 @@
-The developers interacted mainly through a weekly meeting right after the lecture where tasks were decided and issues on Github made for each of them. Other communication was through the use of a Discord Server, and issues on the GitHub Repository where the project is hosted. After the lockdown caused be Covid-19, the weekly meeting started being held over Discord as well, but no other major changes were made.
+### Developer interaction
+Interaction throughout the project occurred through three main avenues:
+- A weekly meeting right after the lecture
+- The Teams' Discord server
+- Issues and pull requests on the GitHub repository of the project
 
-Discord has been used for direct communication, both in text-channels for quick questions and requests, and through voice channels for meetings or collaborative work.
+The meeting was mainly used to organize the team, and will be described closer in the next section about team organization. It is worth noting however, that after  the lockdown caused be Covid-19, the weekly meeting started being held over Discord as well, but no other major changes were made.
+
+Discord has been used for direct communication, both in text-channels for quick questions and requests, and through voice channels for meetings or collaborative work. 
+
 GitHub has been used to track work throughout the project, mainly via Issues assigned to developers. Issues were also the team's main way of tracking what work needed to be done, and by who. Some communication was also done via GitHub in the form of comments on pull requests, to keep the communication about a given pull request contained. 
 
 Both of these tools worked well for their intended purposes. Discord is an easy to use and powerful application that is highly customizable, allowing the team to easily set up channels for different kinds of communication, like reviews, important links, and so on. Discord also allowed for channels not meant for communication, but for bots that provided monitoring functionality like [Oh Dear](https://ohdear.app/).
