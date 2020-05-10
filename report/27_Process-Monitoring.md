@@ -3,7 +3,7 @@
 It is important to have knowledge of quantities, frequencies and speed in a system, both so it is possible to improve response times and the like, but also to tell the investors facts about the system a la amount of users, rate of adoption etc.
 Monitoring is the process of obtaining and saving this information, along with having easy access to the data, possibly through visualizations and dashboards.
 
-The simplest logging in the application happens at [Digital Ocean](https://www.digitalocean.com/), the cloud provider for the system.
+The simplest monitoring in the application happens at [Digital Ocean](https://www.digitalocean.com/), the cloud provider for the system.
 Built into their dashboards are graphs over uptime, CPU usage and the like.
 It is very basic for being uptime monitoring, but incredibly simple to initialize and use.
 This was, in the early stages, all the monitoring the system had.
