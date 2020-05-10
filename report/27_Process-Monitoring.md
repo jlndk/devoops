@@ -26,7 +26,7 @@ The things that the team chose to visualize are:
 - Amount of registered users (via SQL query)
 - Amount of posted twits (via SQL Query)
 
-![Minitwit - Grafana](./images/Minitwit - Grafana.png)
+![Minitwit - Grafana](./images/Minitwit-Grafana.png)
 
 These metrics are pretty basic, not even including system health metrics like memory or CPU usage.
 This is in large part due to the Digital Ocean dashboard visualizing most of the general low level information, as mentioned.
