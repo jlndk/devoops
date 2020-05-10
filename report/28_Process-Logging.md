@@ -1,7 +1,7 @@
 ## Logging
 
 Logging output from processes is important in order to know what is going on in the system.
-If your program in no way outputs any information, then it is hard to diagnose faults or detect attacks, which can make fixing those things harder.
+If a program in no way outputs any information, then it is hard to diagnose faults or detect attacks, which can make fixing those things harder.
 Since the entire website is written in .NET, it makes sense to rely on already existing logging modules to assemble and aggregate system information.
 One such module, called [Serilog](https://github.com/serilog/serilog), is what this project uses for this cause. 
 
@@ -26,7 +26,7 @@ Logs alone can be daunting to search through and store.
 Search engines for looking through logs are viable for being able to extract information like quantity, similarity and frequency of events, and for this, we use [Elasticsearch](https://aws.amazon.com/elasticsearch-service/the-elk-stack/what-is-elasticsearch/) with [Kibana](https://www.elastic.co/kibana).
 Elasticsearch is one of the leading open-source text search engines, common for use in data analytics.
 It has a RESTful JSON API (and a Java interface) and is capable of being deployed distributed, making it ideal for most logging situations.
-Kibana is a data visualizer developed alongside Elasticsearch, making it ideal for illustration purposes.
+Kibana is a data visualizer developed alongside Elasticsearch, making it ideal for visualization of the system logs.
 
 We did not actually set up any visualizations or use the logs for anything, however.
 We made it work for illustration purposes, but in part due to unfamiliarity with the Kibana interface, there were never any visualizations set up of the data that had been logged.
