@@ -11,8 +11,8 @@ The framework also has a large community behind it, which also means that many t
 Another reason for choosing this tech stack was that no one in the group has worked on a full-scale ASP.NET app previously and therefore wanted to learn it. 
 Since the framework is also backed by Microsoft, which makes the platform viable for businesses, it is a very lucrative skill to have when looking for jobs.
 
-Besides the main programming language and framework, we also needed to decide how to run the application in production.
-For this, we have containerized all the services with docker and orchestrated them with docker-compose.
+Besides the main programming language and framework, the application also needed to run in production.
+For this, all the services were containerized with docker and orchestrated them with docker-compose.
 The system has been running on a single server provided by the cloud provider [DigitalOcean](https://www.digitalocean.com/) throughout the entire project.
 
 
