@@ -16,4 +16,4 @@ For this, all the services were containerized with docker and orchestrated them 
 The system has been running on a single server provided by the cloud provider [DigitalOcean](https://www.digitalocean.com/) throughout the entire project.
 
 
-In the following chapters will discuss the architecture, dependencies and different subsystems in the system, ending in description of the system in its current state.
+In the following chapters will discuss the design, architecture, dependencies and different subsystems in the system, ending in description of the system in its current state.
