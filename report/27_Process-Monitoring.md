@@ -1,4 +1,4 @@
-## Monitoring
+### Monitoring
 
 It is important to have knowledge of quantities, frequencies and speed in a system, both so it is possible to improve response times and the like, but also to tell the investors facts about the system a la amount of users, rate of adoption etc.
 Monitoring is the process of obtaining and saving this information, along with having easy access to the data, possibly through visualizations and dashboards.
