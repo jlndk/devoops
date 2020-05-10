@@ -5,7 +5,7 @@ The application is written completely in C#, partially because the team wanted t
 
 The application has three main C# Projects, MiniTwit.Web.App, containing the web app, MiniTwit.Models containing the repositories for the different types of data handled by the application and MiniTwit.Entities, containing the entities of the application, and the DBContext from EntityFramework called MiniTwitContext. The application also has other projects containing utility functions, and projects for testing.
 
-A component diagram describing the flow of data through the MiniTwit system itself can be seen in the figure below.  
+A component diagram describing the main components of the MiniTwit system itself can be seen in the figure below.  
 
 ![Component diagram](./images/component_diagram.png)
 
