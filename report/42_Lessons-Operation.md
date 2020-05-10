@@ -1,8 +1,8 @@
 ### Operation 
 
-While running the MiniTwit system some issues came which had to be resolved. 
+While running the MiniTwit system some issues came up which had to be resolved. 
 
-The largest issue was that the original Droplet on which the system was hosted was located in New York. This had the problem of increasing the ping when answering the Api Simulator which was hosted in Frankfurt. To fix this problem it was decided to migrate servers to Frankfurt. But DigitalOcean does not come with any inbuilt with anyway of migrating Droplets so the process had to be done manually. The plan for the migration can be read here: https://github.com/jlndk/devoops/issues/123
+The largest issue was that the original Droplet on which the system was hosted was located in New York. This had the problem of increasing the ping when answering the Api Simulator which was hosted in Frankfurt. To fix this problem it was decided to migrate servers to Frankfurt. But DigitalOcean does not have any simple path for migrating Droplets so the process had to be done manually. The plan for the migration can be read here: https://github.com/jlndk/devoops/issues/123
 
 Two methods of migrating with minimal downtime was explored:
 1. Replicating the database to a Droplet in Europe. Then spin up a Api endpoint a European Droplet and wait for the domain name record to be updated. Postgres comes with built in streaming replication, so this would be possible without major refactoring. 
