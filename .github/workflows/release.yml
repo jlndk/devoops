@@ -18,12 +18,11 @@ jobs:
       - name: Build Report 
         run: |
           cd report
-          chmod +x buildreport.sh
-          sudo apt-get install curl -y
-          curl -L https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb > ./pandoc.deb
-          sudo dpkg -i pandoc.deb
-          sudo apt-get install texlive
-          ./buildreport.sh
+          mkdir output
+          echo "::set-env name=FILELIST::$(printf '"%s" ' *.md)"
+      - uses: docker://pandoc/latex:2.9
+        with:
+          args: --output=output/result.pdf ${{ env.FILELIST }}
       - name: 'Get Previous tag'
         id: previoustag
         run: | 
@@ -58,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./report/report.md
+          asset_path: ./report/output/report.md
           asset_name: report.md
           asset_content_type: text/markdown
       - name: Upload PDF Report
