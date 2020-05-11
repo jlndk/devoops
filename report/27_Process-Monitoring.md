@@ -28,8 +28,7 @@ The things that the team chose to visualize are:
 
 ![Minitwit - Grafana](images/Minitwit-Grafana.png)
 
-These metrics are pretty basic, not even including system health metrics like memory or CPU usage.
-This is in large part due to the Digital Ocean dashboard visualizing most of the general low level information, as mentioned.
-If this project were to be used in a real production environment, then system health *should* be visualized.
-With the power of Prometheus, it would be easy to have metrics divided up for the different parts of the application.
+These business metrics are pretty basic and many more could be included. But there simply weren't the necessary time to implement more metrics in grafana.
+By using node_exporter and a open source dashboard it was possible to get a lot of metrics without a lot of effort, they can be viewed [here https://grafana.minitwit.tk/d/rYdddlPWk/node-exporter-full?orgId=1](https://grafana.minitwit.tk/d/rYdddlPWk/node-exporter-full?orgId=1).
 
+![Minitwit - Grafana - node_exporter](images/node_exporter.png)
