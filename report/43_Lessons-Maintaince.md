@@ -5,4 +5,4 @@ The reports from the last of these, Lighthouse, showed that there was an issue w
 
 If one were to look at the [pull request (Fix SonarCloud issues #186)](https://github.com/jlndk/devoops/pull/186) it is quite clear that an issue came up when Lighthouse tried to reach the register page, as all the check came back red with a score of 0. 
 
-This issue, as well as similar ones, could probably have been caught in the pull request, if a more rigorous and well-defined review process was defined. A tighter review process could also have alleviated the problem of not knowing what to look for when going through a pull request, which was a frequent problem over the course of this project.
+This issue, as well as similar ones, could probably have been caught in the pull request, if a more rigorous review process was defined. A more well defined review process could also have alleviated the problem of not knowing what to look for when going through a pull request, which was a frequent problem over the course of this project.
