@@ -1,5 +1,3 @@
 ## System's Perspective
 
-Short Introduction to System goes here.
-
-Double check that for all the weekly tasks (those in the end of the lecture notes) you include the corresponding information.
+This section will outline the design, architecture, dependencies and different subsystems in the system, ending in description of the system in its current state.

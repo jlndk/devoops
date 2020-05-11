@@ -1,4 +1,5 @@
-## Maintenance
+### Maintenance
+
 To facilitate maintenance of the MiniTwit system multiple CI tools were utilized. These tools verify that the system was still in working order after changes to the code base. They include running unit tests, verifying API simulator still works, getting analysis from SonarCloud and metrics from Google's Lighthouse. 
 The last of which, Lighthouse, showed there was an issue when merging a specific pull request to master. 
 But due to this issue not getting spotted, combined with misconfiguration of which CI checks had to pass before code could be merged with master, the register page on the website ended up breaking. This was first realized when a user reported the error. 
