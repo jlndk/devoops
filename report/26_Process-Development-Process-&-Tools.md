@@ -18,7 +18,7 @@ Afterward, they make a branch and make the changes to the code, as described in 
 For a pull request to be merged it must comply with our policies.
 First of all, all automatic tests and checks must complete successfully. This includes unit tests, end-to-end tests, static analysis, and more.
 Secondly, the PR must be approved by at least one other developer. Github supports code reviews as a part of the pull requests, so that other team members can, approve, reject, and suggest changes to a PR.
-The automatic tests help catch bugs and regressions the human reviewer would otherwise miss, and visa versa.
+The automatic tests help catch bugs and regressions the human reviewer would otherwise miss, and the human usually catches things the automatic tests are not configured or able to detect.
 Even though it is essentially impossible to eliminate bugs completely, the combination of automatic tools, combined with human common sense, is the best way of attempting to prevent them.
 If a pull request is rejected, the author can make changes and re-request reviews.
 When a pull request is merged, it will automatically be deployed to our production environment (TODO: Refer to CI/CD chapter), and mark all linked issues as solved.
