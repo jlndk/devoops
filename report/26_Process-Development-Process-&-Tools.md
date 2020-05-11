@@ -21,7 +21,7 @@ Even though it is essentially impossible to eliminate bugs completely, the combi
 If a pull request is rejected, the author can make changes and re-request reviews.
 When a pull request is merged, it will automatically be deployed to our production environment (TODO: Refer to CI/CD chapter), and mark all linked issues as solved.
 
-Discord has been used where GitHub falls short, namely for instant synchronous communication.
+Discord has been used where GitHub falls short, namely for instant communication.
 Despite the "gamer-branding", Discord was used instead of other popular team communication tools, such as messenger or slack, for various reasons.
 Besides already using it extensively in our daily lives, Discord has many powerful features that makes it incredibly well suited for distributed teamwork.
 One of the biggest advantages is that a discord server supports multiple text and voice channels.
