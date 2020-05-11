@@ -24,6 +24,9 @@ Discord has been used where GitHub falls short, namely for instant communication
 
 Discord is an easy to use and powerful application that is highly customizable, allowing for separate channels dedicated to different kinds of communication. Such channels are reviews, important links, and so on. Discord also allowed for channels not meant for communication, but for bots that provided monitoring functionality like [Oh Dear](https://ohdear.app/). This acted as a alert channel and made it possible to act fast on any possible problems.
 
+For the report Pandoc was used, and each chapters split into a separate file. This was awful way of doing it and created a massive overhead, but it did make for pretty and satisfying changelog.
+
+
 #### Workflow 
 
 The Github workflow starts by creating the issues. The actual content of the issues is agreed upon verbally or dictated by the assignments from the course. The issues are then augmented with relevant metadata, such as description, tags, milestones, assignees, and comments. Most importantly, a tag is used for all mandatory work, so that all tasks that need to be completed can be found instantly.
