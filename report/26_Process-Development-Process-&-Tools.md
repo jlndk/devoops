@@ -29,4 +29,6 @@ Discord has been used for the
 * Voice chats
 * Bots
 
+**TODO: Descripe how we where devops when writing report**
+
 <!-- For example, how did you use issues, Kanban boards, etc. to organize open tasks -->
