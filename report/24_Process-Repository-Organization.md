@@ -1,7 +1,7 @@
 ## Repository structure
 The repository used for this project follows a mono-repository structure, with multiple projects inside it. The root level of the repository looks like this:
 
-![Repository root level](./assets/repo.png)
+![Repository root level](./iamges/repo.png)
  
 A single Visual Studio solution contains all the files of the project, organized into folders based on the different parts of the application. Some of these folders contain .NET projects, while others contain the configuration for the various DevOps-related services.
 
