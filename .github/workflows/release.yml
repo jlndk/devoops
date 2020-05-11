@@ -21,7 +21,10 @@ jobs:
           chmod +x buildreport.sh
           sudo apt-get install pandoc
           sudo apt-get install texlive
+          sudo apt-get install zip
           ./buildreport.sh
+          cd ..
+          zip -r report.zip report
       - name: 'Get Previous tag'
         id: previoustag
         run: | 
@@ -69,3 +72,13 @@ jobs:
           asset_path: ./report/report.pdf
           asset_name: report.pdf
           asset_content_type: application/pdf
+      - name: Upload Zip Report
+        id: upload-release-asset-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./report.zip
+          asset_name: report.zip
+          asset_content_type: application/zip
