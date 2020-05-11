@@ -1,5 +1,5 @@
 ### System Design 
-The new version of the MiniTwit application is a web app written in C# using ASP.NET. Data is stored using Entity Framework Core (EF Core) as a database abstraction layer working with a PostgreSQL database. This stack was chosen because it has both excellent support, maintenance and documentation. Furthermore, this means that many third-party packages are available, like SeriLog which makes interaction with ElasticSearch painless and Prometheus-net for plug and play communication with Prometheus.
+Our version of the MiniTwit application is a web app written in C# using ASP.NET. Data is stored using Entity Framework Core (EF Core) as a database abstraction layer working with a PostgreSQL database. This stack was chosen because it has both excellent support, maintenance and documentation. Furthermore, this means that many third-party packages are available, like SeriLog which makes interaction with ElasticSearch painless and Prometheus-net for plug and play communication with Prometheus.
 
 The application has three main C# Projects. 
 - MiniTwit.Web.App, which contains the web app that users interact with. 
