@@ -26,12 +26,14 @@ The things that the team chose to visualize are:
 - Amount of registered users (via SQL query)
 - Amount of posted twits (via SQL Query)
 
-![Minitwit - Grafana](images/Minitwit-Grafana.png)
+![Minitwit - Grafana](images/Minitwit-Grafana.png)<br/>
+*Figure 6: MAin Grafana daashboard.*
 
 These business metrics are pretty basic and many more could be included. But there simply weren't the necessary time to implement more metrics in Grafana.
 By using node_exporter and an open-source dashboard it was possible to get a lot of metrics without a lot of effort, they can be viewed [here https://grafana.minitwit.tk/d/rYdddlPWk/node-exporter-full?orgId=1](https://grafana.minitwit.tk/d/rYdddlPWk/node-exporter-full?orgId=1).
 
-![Minitwit - Grafana - node_exporter](images/node_exporter.png)
+![Minitwit - Grafana - node_exporter](images/node_exporter.png)<br/>
+*Figure 7: Grafana node_exporter dashboard.*
  
 One of the things that cannot be monitored reliably with these two solutions is whether the system is accessible through the internet.
 For this, a service called [Oh Dear](https://ohdear.app) was used. This service attempts to visit the configured application from multiple places every 2 minutes, and will send notifications through email and on discord if the site cannot be accessed. Furthermore, Oh Dear also keeps track of total downtime along with various other metrics, such as TLS certificate health and broken links.
