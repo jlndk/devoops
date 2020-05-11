@@ -33,6 +33,7 @@ By using node_exporter and an open-source dashboard it was possible to get a lot
 
 ![Minitwit - Grafana - node_exporter](images/node_exporter.png)
  
- One of the things that cannot be monitored reliably with these two solutions is if our system is actually accessible through the internet.
- For this, we use a service called [https://ohdear.app](OhDear). This service tries to visit our application from multiple places every 2 minutes, and will notify us, through email and on discord, if they can not access it. Furthermore, they also keep track of total downtime along with various other metrics, such as TLS certificate health and broken links.
- This tool has been immensely useful for ensuring our system was available at all times, and let us be more confident that our system was working in production.
+One of the things that cannot be monitored reliably with these two solutions is if our system is actually accessible through the internet.
+For this, we use a service called [https://ohdear.app](OhDear). This service tries to visit our application from multiple places every 2 minutes, and will notify us, through email and on discord, if they can not access it. Furthermore, they also keep track of total downtime along with various other metrics, such as TLS certificate health and broken links.
+This tool has been immensely useful for ensuring our system was available at all times, and let us be more confident that our system was working in production.
+See appendix 1 for an attached uptime report.
