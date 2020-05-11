@@ -3,7 +3,7 @@
 ![Deployment](images/Deployment.png "Deployment Diagram")
 
 
-The MiniTwit system is deployed on a Droplet, a server the cloud provider [DigitalOcean](https://www.digitalocean.com/). 
+The MiniTwit system is deployed on a Droplet, a server hosted by the cloud provider [DigitalOcean](https://www.digitalocean.com/). 
 The different services are containerized with docker and orchestrated with docker-compose, which also handles startup order. In the current iteration of the system this is all done on a single server as can be seen from the above diagram. Each component could be moved to separate servers without major problems, a process which was in progress on the branch [swarm](https://github.com/jlndk/devoops/tree/swarm), but due to being short on time this was not completed in time. More on this in the Scaling section. 
 
 #### Sub systems
