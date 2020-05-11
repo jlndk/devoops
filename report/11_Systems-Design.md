@@ -8,9 +8,10 @@ The application has three main C# Projects.
 
 The application also has other projects containing utility functions, as well as projects for testing.
 
-![Component diagram](./images/component_diagram.png)*Figure x: A component diagram describing the main components of the MiniTwit system.*
+![Component diagram](./images/component_diagram.png)
+*Figure 1: A component diagram describing the main components of the MiniTwit system.*
 
-As illustrated in figure x (TODO: Update), the `MiniTwitContext` allows the repositories to access the data relevant to them. The repositories then contain the appropriate methods for passing the data on in specific formats to the frontend controllers, contained in `MiniTwit.Web.App`. The `HomeController` passes this data on to the views in the Views directory, where they are used when accessed in a browser, while the `ApiController` instead exposes the API that the simulator uses.
+As illustrated in figure 1, the `MiniTwitContext` allows the repositories to access the data relevant to them. The repositories then contain the appropriate methods for passing the data on in specific formats to the frontend controllers, contained in `MiniTwit.Web.App`. The `HomeController` passes this data on to the views in the Views directory, where they are used when accessed in a browser, while the `ApiController` instead exposes the API that the simulator uses.
 
 The application is written completely in C# because the team wanted to learn more about the different aspects of using .NET. 
 After all, it made it easier to connect all the parts of the application, and the team had experience with it, allowing work to be done faster. 
