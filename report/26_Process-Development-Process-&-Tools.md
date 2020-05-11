@@ -27,6 +27,6 @@ Despite the "gamer-branding", Discord was used instead of other popular team com
 Besides already using it extensively in our daily lives, Discord has many powerful features that make it incredibly well suited for distributed teamwork.
 One of the biggest advantages is that a discord server supports multiple text and voice channels.
 This makes it easy to categorize and organize the chat. The voice chats also allow us to enter and leave at will, making it ideal for long-term group work, where people can join and leave as they please.
-Another big advantage is that discord has an easy-to-use API, with support for webhooks. This has been utilized by hooking up GitHub and our uptime-monitoring tool, OhDear, to separate channels, so that notifications are automatically posted when new updates occur. This has allowed us to act very fast on code changes and downtime.
+Another big advantage is that discord has an easy-to-use API, with support for webhooks. This has been utilized by hooking up GitHub and our uptime-monitoring tool, OhDear, to separate channels so that notifications are automatically posted when new updates occur. This has allowed us to act very fast on downtime and changes to the project.
 
 **TODO: Describe how we used devops practices when writing this report**
