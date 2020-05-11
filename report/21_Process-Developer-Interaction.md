@@ -30,7 +30,7 @@ The Github workflow starts by creating the issues. The actual content of the iss
 Occasionally, when many tasks need to be solved in a certain time frame, such as when writing this report, a "milestone" is created in GitHub, where it is possible to attach all relevant issues, set a due date, and afterward track the combined progress for all tasks.
 
 Before working on a task, the developer that is supposed to solve it, starts by assigning themselves to the issue if they were not already assigned when the issue was created.
-Afterward, they make a branch and make the changes to the code, as described in (TODO: Refer to GitHub flow chapter). When the task is complete, the developer creates a PR from their branch to master, and augments it with relevant data. This data includes a descriptive title, description of the changes, and by linking relevant Github issues. By creating this PR, it signals to the other developers that the code is ready for review. Furthermore, the developer also posts a link to the `#review` channel on discord to notify the rest of the team.
+Afterward, they make a branch and make the changes to the code, as described in (TODO: Refer to GitHub flow chapter). When the task is complete, the developer creates a PR from their branch to master, and augments it with relevant data. By creating this PR, it signals to the other developers that the code is ready for review. Furthermore, the developer also posts a link to the `#review` channel on discord to notify the rest of the team.
 
 Pull requests have to go through the process detailed below before getting merged.
 1. All automatic tests and checks must complete successfully. This includes unit tests, end-to-end tests, static analysis, and more
@@ -40,6 +40,6 @@ Pull requests have to go through the process detailed below before getting merge
 The automatic tests help catch bugs and regressions the human reviewer would otherwise miss, and the human usually catches things the automatic tests are not configured or able to detect.
 Even though it is essentially impossible to eliminate bugs completely, the combination of automatic tools, combined with human common sense, is the best way of attempting to prevent them.
 If a pull request is rejected, the author can make changes and re-request reviews.
-When a pull request is merged, it will automatically be deployed to our production environment (TODO: Refer to CI/CD chapter), and mark all linked issues as solved.
+When a pull request is merged, it will automatically be deployed to the production environment (TODO: Refer to CI/CD chapter), and mark all linked issues as solved.
 
 
