@@ -8,7 +8,7 @@ Built into their dashboards are graphs over system metrics, such as uptime and b
 The Digital Ocean dashboards are very basic, especially for uptime moniroting, but they are also incredibly simple to set up and use.
 This was, in the early stages, all the monitoring the system had.
 
-In order to monitor more closely what each process is doing, the project utilizes [Prometheus](https://prometheus.io/docs/introduction/overview/). Prometheus is a systems monitoring toolkit, capable of gathering and storing information about processes running as well as being extended to monitor even more specific things, based on what is running on the system. Standard metrics for monitoring include simple low-level information, such CPU, memory and disk usage for both the system and the specific process.
+In order to monitor more closely what each process is doing, the project utilizes [Prometheus](https://prometheus.io/docs/introduction/overview/). Prometheus is a systems monitoring toolkit, capable of gathering and storing information about processes running as well as being extended to monitor even more specific things, based on what is running on the system. The default metrics include simple low-level information, such CPU, memory and disk usage for both the system and the specific process.
 
 In the project, Prometheus has an extension to interface with the web app through the NuGet package ([prometheus-net](https://www.nuget.org/packages/prometheus-net)).
 It makes Prometheus capable of logging information relating to ASP.NET, things like HTTP request length, request frequency/volume, error rates and the like.
