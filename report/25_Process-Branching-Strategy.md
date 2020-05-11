@@ -1,6 +1,6 @@
 ## Branching Strategy
 
-Due to the smaller scope and team size, it was decided to use a lightweight, but surprisingly useful, branching strategy called [GitHub flow](https://guides.github.com/introduction/flow/) (not to be confused with Git flow). GitHub flow works like this:
+Due to the smaller scope and team size, it was decided to use a lightweight but useful branching strategy called [GitHub flow](https://guides.github.com/introduction/flow/) (not to be confused with Git flow). GitHub flow works like this:
 
 * There are two types of branches, master and feature branches. The single master branch is always deployable, but, though preferred, feature branches do not need to be.
 * Feature branches should have names describing the feature. You can optionally chose to prepend a personal id to the branch name for easy identification, like so: “tobl/table-date-filtering”.
