@@ -1,7 +1,7 @@
 ### Logging
 
 Logging output from processes is important in order to know what is going on in the system.
-If a program in no way outputs any information, then it is hard to diagnose faults or detect attacks, which can make fixing those things harder.
+If a program outputs no meta information, then it is hard to diagnose faults or detect attacks, which can make fixing those things harder.
 Since the entire website is written in .NET, it makes sense to rely on already existing logging modules to assemble and aggregate system information.
 One such module, called [Serilog](https://github.com/serilog/serilog), is what this project uses for this cause. 
 
@@ -9,7 +9,7 @@ Serilog is a powerful low-overhead diagnostic logging library, capable of loggin
 Using it is simple, as setup simply involves initializing the logger singleton with write locations (such as console, file, or Elasticsearch), after which the project, through dependency injection, is capable of referring to the same logger when needed.
 Logging in code becomes as easy as calling a method through the injected interface. 
 
-All Api calls are logged, including but not limited to:
+All API calls are logged, some examples of which are:
 
 - calls to `/latest`.
 - Getting messages by all/specific user(s), along with a count of returned messages.
@@ -31,5 +31,5 @@ No visualizations was setup from the logs. Nor was the logs used in any other me
 It was made to work for illustration purposes, but the logs were not used any further, due in part to unfamiliarity with the Kibana interface.
 
 Another possible problem is that even though Elasticsearch is for searching through text, without context for numbers and information, the data is just lost without context.
-Serilog has specific syntax for saving associated data to log messages that is not used in the project, where instead the simpler Asp.net logging extension syntax is used.
+Serilog has specific syntax for saving associated data to log messages that is not used in the project, where instead the simpler ASP.NET logging extension syntax is used.
 This may be another cause for lack of tinkering with Kibana. 
