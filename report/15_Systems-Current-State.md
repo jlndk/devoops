@@ -1,4 +1,4 @@
-Finally, describe the current state of your systems, for example using results of static analysis and quality assessment systems.
+### Current state of the system
 
 While the specific tools used for static analysis will be described in later sections, there are three main measures for quality assessment in the system:
 
