@@ -1,8 +1,7 @@
 ### Applied development process and tools supporting it
 
 Throughout this course, two tools, Github and Discord, has been used to manage the project and communication.
-Two tools have been used, to differentiate between synchronous and asynchronous communication.
-That is, Discord is used to communicate directly and informally to allow for fast and efficient communication,
+Discord is used to communicate directly and informally to allow for fast and efficient communication,
 whereas GitHub is used to organize our work in a way that can easily be searched through and understood at a later date.
 
 GitHub has been the ideal tool for the majority of our project management, because both the code, git commits, and corresponding issues coexist and can easily be cross-referenced.
