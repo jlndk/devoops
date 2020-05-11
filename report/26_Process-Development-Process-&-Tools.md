@@ -14,7 +14,7 @@ Occasionally, when many tasks need to be solved in a certain timeframe, such as 
 Before working on a task, the developer that is supposed to solve it, starts by assigning themself to the issue if they were not already assigned when the issue was created.
 Afterward, they make a branch and make the changes to the code, as described in (TODO: Refer to GitHub flow chapter). When the code change is complete, they create a new PR from their branch to master, and augment it with the relevant data, such as a descriptive title, description, and linked issues. By creating this process, it signals to the other developers that the code is ready for review. Furthermore, the developer also posts a link to the PR on discord to notify the rest of the team.
 
-For a pull request to be merged it must comply with our policies.
+Pull requests have to go through the process detailed below before getting merged.
 First of all, all automatic tests and checks must complete successfully. This includes unit tests, end-to-end tests, static analysis, and more.
 Secondly, the PR must be approved by at least one other developer. Github supports code reviews as a part of the pull requests, so that other team members can, approve, reject, and suggest changes to a PR.
 The automatic tests help catch bugs and regressions the human reviewer would otherwise miss, and the human usually catches things the automatic tests are not configured or able to detect.
