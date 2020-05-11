@@ -1,6 +1,6 @@
 ### Architecture 
 
-![Deployment](images/Deployment.png "Deployment Diagram")
+![Deployment](images/Deployment.png "Deployment Diagram")<br/>
 *Figure 2: Deployment diagram of the MiniTwit system.*
 
 
