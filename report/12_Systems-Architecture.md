@@ -9,7 +9,7 @@ The different services are containerized with docker and orchestrated with docke
 
 #### Sub systems
 
-[Traefik](https://containo.us/traefik/) is used as a reverse proxy and edge router. As shown in figure X (TODO: Update) Traefik interacts with the three public facing parts of the system, namely MiniTwit.Web.App, Kibana and Grafana. It provides both SSL certificates management and HTTPS, as well as load balancing when using Docker Swarm.
+[Traefik](https://containo.us/traefik/) is used as a reverse proxy and edge router. As shown in figure 2 Traefik interacts with the three public facing parts of the system, namely MiniTwit.Web.App, Kibana and Grafana. It provides both SSL certificates management and HTTPS, as well as load balancing when using Docker Swarm.
 
 The main application, MiniTwit.Web.App, described in the previous section, interacts with the PostgreSQL database where all data is stored.
 
