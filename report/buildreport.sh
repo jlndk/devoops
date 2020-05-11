@@ -10,4 +10,4 @@ FILES=$(ls | grep -E '\<[0-9]{2}.*.md\>' | tr '\n' ' ')
 echo 'Ensure that chapters are named in order with 01_NAME, 02_NAME' >&1
 echo 'This results in the chapters being in that order in the finished report' >&1
 pandoc -f markdown_github -t markdown_github $FILES > report.md
-pandoc -f markdown_github $FILES -o report.pdf
+pandoc -f markdown_github $FILES --include-in-header=preamble.tex -o report.pdf
