@@ -2,7 +2,7 @@ All CI/CD in the project is achieved using GitHub actions. The different steps o
 - `dotnetcore.yml` runs unit tests on the project whenever code is pushed.
 - `e2e.yml` runs end-to-end tests when a pull request to master is made.
 - `sonarPR.yml` provides a report with code analysis from SonarCloud whenever a pull request to master is made. This report is put on the pull request for easy access. 
-- `sonarMaster.yml` is triggered when code is pushed to master, and updates the general [SonarCloud report](https://sonarcloud.io/project/issues?id=jlndk_devoops) for the project. This is used for sonarPR to compare reports.
+- `sonarMaster.yml` is triggered when code is pushed to master, and updates the general [SonarCloud report](https://sonarcloud.io/dashboard?id=jlndk_devoops) for the project. This is used for sonarPR to compare reports.
 - `deploy.yml` deploys the code on the Digital Ocean server whenever code is pushed to master.
 - `release.yml` makes a release of the code, including automatic versioning and a copy of the compiled report, whenever code is pushed to master
 
