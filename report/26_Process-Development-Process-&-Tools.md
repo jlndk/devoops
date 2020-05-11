@@ -21,32 +21,12 @@ The automatic tests help catch bugs and regressions the human reviewer would oth
 Even though we cannot eliminate bugs completely, but the combination of automatic tools, combined with human common sense, is the best way of attempting to prevent them.
 If a pull request is rejected, the author can make changes and re-request reviews.
 When a pull request is merged, it will automatically be deployed to our production environment (TODO: Refer to CI/CD chapter), and mark all linked issues as solved.
-<!-- 
-**TODO GitHub**:
-* Issues
-* PR's
-* Reviews
-* Labels
-* Milestones 
--->
 
 Discord has been used where GitHub falls short, namely for instant synchronous communication.
-Despite the "gamer-branding" we used Discord instead of other popular team communication tools, such as messenger or slack, for various reasons.
+Despite the "gamer-branding", Discord was used instead of other popular team communication tools, such as messenger or slack, for various reasons.
 Besides already using it extensively in our daily lives, Discord has a powerful feature set that makes it incredibly well suited for distributed teamwork.
-One of the biggest advantages is that a discord server supports multiple text and voice channels. 
+One of the biggest advantages is that a discord server supports multiple text and voice channels.
 This makes it easy to categorize and organize the chat. The voice chats also allow us to enter and leave at will, making it ideal for long-term group work, where people can join and leave as they please.
-Another big advantage is that discord has an easy-to-use API, with support for webhooks. This has been utilized by hooking up GitHub and our uptime-monitoring tool, OhDear, to separate channels, so that we get automatically get notified when new updates occur. This has allowed us to act very fast on code changes and downtime.
+Another big advantage is that discord has an easy-to-use API, with support for webhooks. This has been utilized by hooking up GitHub and our uptime-monitoring tool, OhDear, to separate channels, so that notifications are automatically posted when new updates occur. This has allowed us to act very fast on code changes and downtime.
 
-
-
-<!-- 
-**TODO Discord**
-
-* Channels
-* Voice chats
-* Bots 
--->
-
-**TODO: Descripe how we where devops when writing report**
-
-<!-- For example, how did you use issues, Kanban boards, etc. to organize open tasks -->
+**TODO: Describe how we used devops practices when writing this report**
