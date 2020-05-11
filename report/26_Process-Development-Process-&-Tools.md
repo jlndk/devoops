@@ -7,6 +7,7 @@ whereas GitHub is used to organize our work in a way that can easily be searched
 GitHub has been the ideal tool for the majority of our project management, because both the code, git commits, and corresponding issues coexist and can easily be cross-referenced.
 Furthermore, GitHub has the concept of "Pull requests" (PR), which introduces a way to do formal review policy for new code, before merging it with the master branch.
 These pull requests can also be linked with the aforementioned issues, which makes it easy to see which code-changes fixes a given issue.
+Besides GitHub automatically marking the issue as solved when the PR is merged, this is also immensely useful for documentation purposes, since it is easy to track which is pull requests fixes a given issue.
 
 The Github workflow starts by creating the issues. The actual content of the issues is often agreed upon verbally or dictated by the assignments from the course. The issues are then augmented with relevant metadata, such as description, tags, milestones, assignees, and comments. Most importantly, a tag is used for all mandatory work, so that all tasks that needs to be completed can be found instantly.
 Occasionally, when many tasks need to be solved in a certain timeframe, such as when writing this report,a "milestone" is created in GitHub.
@@ -23,7 +24,7 @@ When a pull request is merged, it will automatically be deployed to our producti
 
 Discord has been used where GitHub falls short, namely for instant communication.
 Despite the "gamer-branding", Discord was used instead of other popular team communication tools, such as messenger or slack, for various reasons.
-Besides already using it extensively in our daily lives, Discord has many powerful features that makes it incredibly well suited for distributed teamwork.
+Besides already using it extensively in our daily lives, Discord has many powerful features that make it incredibly well suited for distributed teamwork.
 One of the biggest advantages is that a discord server supports multiple text and voice channels.
 This makes it easy to categorize and organize the chat. The voice chats also allow us to enter and leave at will, making it ideal for long-term group work, where people can join and leave as they please.
 Another big advantage is that discord has an easy-to-use API, with support for webhooks. This has been utilized by hooking up GitHub and our uptime-monitoring tool, OhDear, to separate channels, so that notifications are automatically posted when new updates occur. This has allowed us to act very fast on code changes and downtime.
