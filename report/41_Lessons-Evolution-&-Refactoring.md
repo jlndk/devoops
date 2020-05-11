@@ -66,7 +66,8 @@ The team knew that choosing scalable techonologies early was important.
 If a choice to switch from a monolithic server to a distributed system comes too late, then the changes that will have to be made could become quite big, resulting in a lot of technical debt.
 
 This was why dockerization came early for the project, with separation between components for easier clusterization.
-The team didn't quite get Docker Swarm to work, but because these considerations were done early, Docker Swarm was actually obtainable, instead of being buried in debt from not having a RESTful API, for example.
+Because the considerations were done early, Docker Swarm was actually obtainable, instead of being buried in debt from not having a RESTful API, for example.
+The team unfortunately didn't get Docker Swarm to work though the work put into trying can be found on the `swarm` branch.
 
 #### Graphs are motivational
 
@@ -78,8 +79,8 @@ It was then considered whether HTTPS and Traefik routing were the thing slowing 
 The actual reason turned out to be the server location, as will be described in [TODO: 4.2 Operations](42_Lessons-Operation.md).
 
 Without the graph, the statistics, and the competitive nature of the team as motivators, these things would never have been discovered.
-Replication of this feeling would be difficult, as there rarely are 10 teams competing to implement the best and fastest project when looking at the job market.
-Gamification of collected metrics might be able to lead teams to improve these things, for example through having a big screen with several desired trend lines/thresholds along with actual statistics.
+Replication of this feeling later could be done by collecting metrics from competetitors, if there are any, and gamifying those metrics.
+This might be able to lead teams to improve those metrics, for example through having a big screen with several desired trend lines/thresholds along with actual statistics.
 The more prominent the gamification, the more this competitive nature could drive the team to do better.
 
 #### Proper communication
@@ -95,7 +96,7 @@ A third possibility could be that there were no channels for politely nudging to
 The team tried to alleviate this with the `#review` channel on Discord, where anyone could push for a review.
 This helped in some ways, as Discord is a more prominently used communication tool among the developers.
 
-Though the team hasn't found better solutions than just being more demanding towards each other, it acknowledges that this is a problem that needs improving somehow down the line.
+This theme is expanded upon a bit more in [TODO: 4.3 Maintenance](43_Lessons-Maintaince.md).
 
 This doesn't mean that all communication was bad, far from it.
-Discord and GitHub were great places for collecting information, the problems were mainly with the project management idea of assigning reviewers and such.
+Discord and GitHub were great places for collecting information, the problems were mainly with assigning reviewers and delegating work.
