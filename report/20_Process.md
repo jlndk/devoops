@@ -1,5 +1,3 @@
 ## Process' perspective
 
-Short Introduction to Process goes here.
-
-In essence it has to be clear how code or other artifacts come from idea into the running system and everything that happens on the way.
+This section explains the work processes of the team, including how the developers interacted, organized themselves, and worked with the project using DevOps practices like CI/CD, monitoring, logging, and so on. It will also contain reasoning about why certain choices were made, and reflections on what value it has provided for the team and for the project.
