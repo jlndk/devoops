@@ -38,9 +38,9 @@ In order to ensure that the refactor didn't break anything, tests could be usefu
 Only problem is that the previous tests were an API test script along with Python unit tests.
 
 In order to see immediate results, a Github Action was created to automate running the API test.
-That didn't really work, as it didn't catch all edge cases, so instead the project got configured to be tested with the API simpulator.
+That didn't really work, as it didn't catch all edge cases, so instead the project got configured to be tested with the API simulator.
 
-Implementation of a proper test suite came later down the line, with
+Implementation of a proper test suite came later down the line, with unit tests for the dotnet runtime, as well as several end to end tests.
 The team was always aware of the fact that there should be more tests, and were even reminded when things broke in production (like when the register page broke completely).
 Though it is a lesson that the team has already learned in previous projects, here the team learned it once again.
 
@@ -48,7 +48,7 @@ Though it is a lesson that the team has already learned in previous projects, he
 
 Once the necessary refactoring steps were done, the team was capable of expanding the original implementation.
 
-#### Automation is king
+#### Automation and its benefits
 
 Early on in the development process, not many automatic steps were set up in the project pipeline.
 This made evolution much harder than it had to be, as tests would have to be manually run all the time to verify builds, and releases would have to be done manually.
@@ -77,19 +77,23 @@ First, it was discovered that the project lacked behind because response times w
 It was then considered whether HTTPS and Traefik routing were the thing slowing down the simulator, but removing those things only made very slight improvements, so they were re-enabled.
 The actual reason turned out to be the server location, as will be described in [TODO: 4.2 Operations](42_Lessons-Operation.md).
 
-Without the graph as a motivator, these things would never have been discovered.
+Without the graph, the statistics, and the competitive nature of the team as motivators, these things would never have been discovered.
+Replication of this feeling would be difficult, as there rarely are 10 teams competing to implement the best and fastest project when looking at the job market.
+Gamification of collected metrics might be able to lead teams to improve these things, for example through having a big screen with several desired trend lines/thresholds along with actual statistics.
+The more prominent the gamification, the more this competitive nature could drive the team to do better.
 
 #### Proper communication
 
 A problem that the team never got to improve on was communication, especially of the asynchronous kind.
-When co-located, the team managed to get lots of work done and reviewed, but at the times between co-located sessions and after the pandemic hit the world, then reviews were slow and impractical.
+When co-located, the team managed to get lots of work done and reviewed.
+At the times between co-located sessions and after the pandemic hit the world, the reviews were slow and impractical.
 
 A possible reason could be that reminding people to review is easier and more direct when working next to each other.
 Another could be that the other courses and work got in the way.
 
 A third possibility could be that there were no channels for politely nudging towards a review.
 The team tried to alleviate this with the `#review` channel on Discord, where anyone could push for a review.
-This helped in some ways, but simply pushed the notification into its own little box that was easier to forget or ignore.
+This helped in some ways, as Discord is a more prominently used communication tool among the developers.
 
 Though the team hasn't found better solutions than just being more demanding towards each other, it acknowledges that this is a problem that needs improving somehow down the line.
 
