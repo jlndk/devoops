@@ -3,7 +3,8 @@
 The dependencies of the systems will be split up into each subsystem or tool.
 Dependencies of dependencies will be left out for brevity, as it would the majority of the rapport otherwise.
 
-**General**
+#### General
+
 - Docker
 - Docker-Compose
 - Grafana
@@ -15,7 +16,8 @@ Dependencies of dependencies will be left out for brevity, as it would the major
 - Traefik@v2.1
 - Postgres@12
 
-**MiniTwit C# Application**
+#### MiniTwit C# Application
+
 - DotNet Core@3.1.1
 - Microsoft.AspNetCore.Identity.EntityFrameworkCore@3.1.1
 - Microsoft.Data.Sqlite@3.1.1
@@ -44,7 +46,8 @@ Dependencies of dependencies will be left out for brevity, as it would the major
 - System.Data.SQLite@1.0.112
 - Npgsql.EntityFrameworkCore.PostgreSQL@3.1.1.1
 
-**CI Tools**
+#### CI Tools
+
 - Pandoc
 - LiveTex
 - fifsky/ssh-action@master
