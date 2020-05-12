@@ -27,7 +27,7 @@ Elasticsearch is one of the leading open-source text search engines, common for 
 It has a RESTful JSON API (and a Java interface) and is capable of being deployed distributed, making it ideal for most logging situations.
 Kibana is a data visualizer developed alongside Elasticsearch, making it ideal for visualization of the system logs.
 
-No visualizations were setup from the logs. Nor was the logs used in any other meaningful way.
+No visualizations were setup from the logs. Nor were the logs used in any other meaningful way.
 It was made to work for illustration purposes, but the logs were not used any further, due in part to unfamiliarity with the Kibana interface.
 
 Another possible problem is that even though Elasticsearch is for searching through text, without context for numbers and information, the data is just lost without context.
