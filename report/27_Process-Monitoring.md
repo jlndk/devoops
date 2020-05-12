@@ -28,7 +28,7 @@ The things that the team chose to visualize are:
 - Amount of posted twits (via SQL Query)
 
 ![Minitwit - Grafana](images/Minitwit-Grafana.png)<br/>
-*Figure 6: MAin Grafana daashboard.*
+*Figure 6: Main Grafana dashboard.*
 
 These business metrics are pretty basic and many more could be included. But there simply weren't the necessary time to implement more metrics in Grafana.
 By using an open-source dashboard it was possible to utilize the metrics from node_exporter to get a lot of metrics without a lot of effort, which can be viewed [here https://grafana.minitwit.tk/d/rYdddlPWk/node-exporter-full?orgId=1](https://grafana.minitwit.tk/d/rYdddlPWk/node-exporter-full?orgId=1).

@@ -12,6 +12,6 @@ The different services are containerized with docker and orchestrated with docke
 
 The main application, MiniTwit.Web.App, described in the previous section, interacts with the PostgreSQL database where all data is stored.
 
-Monitoring can be seen on the left of figure 2 with Grafana and Prometheus. Here Prometheus interacts with the main application and pulls data which then can be displayed in Grafana.
+Monitoring can be seen on the left in figure 2 with Grafana and Prometheus. Here Prometheus interacts with the main application and pulls data which then is displayed in Grafana.
 
 Logging happens through ElasticSearch which has data pushed to it from the main application through the use of the C# library SeriLog. Kibana then pulls data from ElasticSearch to make visualizations and statistics.
