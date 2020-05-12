@@ -3,14 +3,14 @@
 Interaction throughout the project occurred through three main avenues:
 
 - A weekly meeting right after the lecture
-- The Teams' Discord server
+- The Team's Discord server
 - Issues and pull requests on the GitHub repository of the project
 
-The meeting was mainly used to organize the team, and will be described closer in the next section about team organization. It is worth noting, however, that after the lockdown caused be COVID-19, the weekly meeting started being held over Discord as well, but no other major changes were made.
+The meeting was mainly used to organize the team, and will be described closer in the next section about team organization. It is worth noting, however, that after the lockdown caused by COVID-19, the weekly meeting started being held over Discord as well, though no other major changes were made.
 
 #### Tools used
 
-Throughout this course, two existing tools, Github and Discord, has been used to manage the project and communication.
+Throughout this course, two existing tools, Github and Discord, have been used to manage the project and communication.
 
 GitHub has been used to track work throughout the project, mainly via Issues assigned to developers. Issues were the main way of tracking what work needed to be done, and by who. Some communication was also done via GitHub in the form of comments on pull requests, to keep the communication about a given pull request contained.
 
@@ -18,13 +18,13 @@ Github issues worked well as the repository was already used for hosting the cod
 
 Furthermore, GitHub has the concept of "Pull requests" (PR), which introduces a way to do formal review policy for new code, before merging it with the master branch.
 These pull requests can also be linked with the aforementioned issues, which makes it easy to see which code-changes fixes a given issue.
-Besides GitHub automatically marking the issue as solved when the PR is merged, this is also immensely useful for documentation purposes, since it is easy to track which is pull requests fixes a given issue.
+Besides GitHub automatically marking the issue as solved when the PR is merged, this is also immensely useful for documentation purposes, since it is easy to track which pull request fixes a given issue.
 
-A feature that worked less well was the GitHub Milestones, which was used for a short while tried using to keep track of what issues were being worked on in a given week, but it was decided after a few weeks to stop using this, as it did not provide enough value compared to the work spent maintaining them. This was primarily replaced by the "mandatory" label, which has proven more flexible.
+A feature that worked less well was the GitHub Milestones, which was used for a short while for keeping track of what issues were being worked on in a given week, but it was decided after a few weeks to stop using them, as they did not provide enough value compared to the work spent maintaining them. This was primarily replaced by the "mandatory" label, which has proven more flexible.
 
-Discord has been used where GitHub falls short, namely for instant communication. It has been used for both text-channels for quick questions and requests, and through voice channels for meetings or collaborative work.
+Discord has been used where GitHub falls short, namely for instant communication. It has been used both for text-channels for quick questions and requests, and through voice channels for meetings or collaborative work.
 
-Discord is an easy-to-use and powerful application that is highly customizable, allowing for separate channels dedicated to different kinds of communication. Besides the "general" channel, other channels such as review, important links, was also created. Discord also allowed for channels not meant for communication, but for bots that provided monitoring functionality like [Oh Dear](https://ohdear.app/). This acted as an alert channel and made it possible to act fast on any possible problems.
+Discord is an easy-to-use and powerful application that is highly customizable, allowing for separate channels dedicated to different kinds of communication. Besides the `#general` channel, other channels such as `#review` or `#important links`, were also created. Discord also allowed for channels not meant for communication, but for bots that provided monitoring functionality like [Oh Dear](https://ohdear.app/). This acted as an alert channel and made it possible to act fast on any possible problems.
 
 For the report, Pandoc was used, and each chapter split into a separate file. This was an awful way of doing it and created massive overhead, but it did make for a pretty and satisfying changelog.
 

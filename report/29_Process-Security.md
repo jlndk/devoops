@@ -35,7 +35,7 @@
 ## Vulnerability Testing
 
 ### SonarCube security reports
-As part of our CI pipeline, SonarCube will analyze pushed code for potential security problems, such as hard-coded credentials, out of data dependencies and insecure handling of user data. The analysis results are by no means exhaustive but serve as the first line of defense and run almost for free, both in terms of financial cost and time cost.
+As part of our CI pipeline, SonarCube will analyze pushed code for potential security problems, such as hard-coded credentials, out of date dependencies and insecure handling of user data. The analysis results are by no means exhaustive but serve as the first line of defense and run almost for free, both in terms of financial cost and time cost.
 
 ### Penetration Testing
 Through a combination of security testing done by an internal team and an external team, the following have been discovered about the system:

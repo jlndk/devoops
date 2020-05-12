@@ -57,7 +57,7 @@ Once the necessary refactoring steps were done, expansion of the implementation 
 Early on in the development process, not many automatic steps were set up in the project pipeline.
 This made evolution much harder than it had to be, as tests would have to be manually run all the time to verify builds, and releases would have to be done manually.
 
-In the pipeline, there was a focus on having many actions done automatically, as mentioned in [2.3: CI/CD](#23).
+In the pipeline, there was a focus on having many actions done automatically, as mentioned in the section CI/CD Description.
 This was, at first, because the course demanded it, but once automatic steps saw usage, the value was apparent.
 The pipeline was expanded repeatedly, with the steps themselves even being expanded, as is the case with `e2e.yml`.
 
@@ -80,7 +80,7 @@ Having this as a motivator to improve was vital to finding some of the bugs in t
 
 First, it was discovered that the project lacked behind because response times were highly influential for the graph trend lines.
 It was then considered whether HTTPS and the Traefik reverse-proxy were the things slowing down the simulator, but removing those things only made very slight improvements, so they were re-enabled.
-The actual reason turned out to be the server location, as will be described in [4.2 Operations](#42).
+The actual reason turned out to be the server location, as will be described in the following section Operation.
 
 Without the graph, statistics, and the competitive nature of the participating programmers as motivators, these things would never have been discovered.
 Replication of this feeling could be done by collecting metrics from competitors, and gamifying these.
@@ -100,7 +100,7 @@ A third possibility could be that there were no channels for politely nudging to
 An attempt to alleviate this was done with the `#review` channel on Discord, where anyone could push for a review.
 This helped in some ways, as Discord is a more prominently used communication tool among the developers.
 
-This theme is expanded upon a bit more in [4.3 Maintenance](#43).
+This theme is expanded upon a bit more in the section Maintenance.
 
 This doesn't mean that all communication was bad, far from it.
 Discord and GitHub were great places for collecting information, the problems were mainly with assigning reviewers and delegating work.

@@ -9,4 +9,4 @@ Due to the project's limited scope and the small team size, it was decided to us
 * When the feature is ready to be merged and someone else has reviewed it, the branch is merged into master and deleted.
 * Master is automatically released and deployed after being updated.
 
-Another reason that GitHub Flow was chosen, was that it is more geared towards continuous releases since it isn’t based around release branches like Git Flow is. This has been very effective and has allowed the team to focus on delivering quality features as often as possible. One caveat is that the team needs to be quick in reviewing PRs when needed, as to now block other features, that may depend on that new branch.
+Another reason that GitHub Flow was chosen, was that it is more geared towards continuous releases since it isn’t based around release branches like Git Flow is. This has been very effective and has allowed the team to focus on delivering quality features as often as possible. One caveat is that the team needs to be quick in reviewing PRs when needed, as to not block other features, that may depend on that new branch.
