@@ -1,6 +1,6 @@
 # DevOops Project Report
 
-This document is the final report of Group D (a.k.a. Group DevOops) for course "DevOps, Software Evolution and Software Maintenance" at the IT University of Copenhagen. The report covers a project done in the period of February to May of 2020 by the following members:
+This document is the final report of Group D (a.k.a. Group DevOops) for the course "DevOps, Software Evolution and Software Maintenance" at the IT University of Copenhagen. The report covers a project done in the period of February to May of 2020 by the following members:
 
 - Hjalte Sorgenfrei Mac Dalland, hjda@itu.dk
 - Jakob Israelsen, jais@itu.dk
@@ -8,9 +8,9 @@ This document is the final report of Group D (a.k.a. Group DevOops) for course "
 - Tobias Løfgren, tobl@itu.dk
 - Simon Green Kristensen, sigk@itu.dk
 
-The course intended to teach how to maintain and evolve a legacy system.
+Throughout the course students were expected to learn how to maintain and evolve a legacy system.
 For this purpose, a legacy twitter clone, implemented in Flask with Python 2 running on an old macOS version, was given to the group along with the task of refactoring the application.
-The goal was for it to run on a modern operating system, Ubuntu 18.04, and not use outdated and unsupported technologies. To facilitate a smoother development and minimize lead time, DevOps practices like Continuous Integration (CI) and Continuous Deployment (CD) were to be utilized. In addition to CI/CD, extensive logging and monitoring were to be employed to aid in spotting and fixing problems.
+The goal of the refactoring was for it to run on a modern operating system, Ubuntu 18.04, and not use outdated and unsupported technologies. To facilitate a smoother development and minimize lead time, DevOps practices like Continuous Integration (CI) and Continuous Deployment (CD) were to be utilized. In addition to CI/CD, extensive logging and monitoring were to be employed to aid in spotting and fixing problems.
 
 The production environment can be found online at [www.minitwit.tk](https://minitwit.tk) until 2020-06-11. Grafana and Kibana can be found at [grafana.minitwit.tk](https://grafana.minitwit.tk) & [kibana.minitwit.tk](https://kibana.minitwit.tk).
 

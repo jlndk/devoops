@@ -3,10 +3,10 @@
 Logging output from processes is important to know what is going on in the system.
 If a program outputs no diagnostics information, it is hard to diagnose faults or detect attacks, which can make fixing those things harder.
 Since the entire application is written in .NET, it makes sense to rely on already existing logging modules to assemble and aggregate system information.
-One such module, called [Serilog](https://github.com/serilog/serilog), is what this project uses.
+The module [Serilog](https://github.com/serilog/serilog) is used for this project.
 
 Serilog is a powerful low-overhead diagnostic logging library, capable of logging information in familiar log levels to many different log formats and log aggregators.
-Using it is simple, as setup simply involves initializing the logger singleton with write locations (such as console, file, or Elasticsearch), after which the project, through dependency injection, is capable of referring to the same logger when needed.
+Using it is simple, as setup simply involves initializing the logger singleton with data sink locations (such as console, file, or Elasticsearch). This logger is then dependency injected, where constructors asks for a logger, by AspNet.
 Logging in code becomes as easy as calling a method through the injected interface.
 
 All API calls are logged, some examples of which are:
