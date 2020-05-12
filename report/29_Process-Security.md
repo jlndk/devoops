@@ -4,26 +4,33 @@
 ![Risk assessment matrix](./images/risk_matrix.png)<br/>
 *Figure 8: Risk assessment matrix.*
 
-* Leaking user data
-  * **Description**: Most user data is public, but a few critical things such as emails and passwords are not. Leaking passwords is unlikely as they are stored only as hashes, but it is still technically possible, for example, due to logging misconfiguration. The database is the most likely attack vector for accessing sensitive data.
-  * **Severity**: High
-  * **Likelihood**: Low
-  * **Risk**: Medium
-* Losing user data
-  * **Description**: Losing user data could be due to a database failing, a developer accidentally deleting the data or faulty programming. No procedures are in place to prevent this.
-  * **Severity**: High
-  * **Likelihood**: Medium
-  * **Risk**: High
-* Leaking performance data
-  * **Description**: Leaking system performance data such as uptime, CPU load, etc. is unwanted but not dangerous. This could be mitigated by setting up a firewall or authentication to prevent outside clients from accessing the metrics endpoint of our applications.
-  * **Severity**: Low
-  * **Likelihood**: High (we know this is happening)
-  * **Risk**: Medium
-* Losing system availability
-  * **Description**: Whether due to faulty programming, high load, or outside network attacks, breaking the SLA is unwanted. Monitoring is set up to alert admins during downtime. No automatic scaling or DDOS protection is in place, due to cost.
-  * **Severity**: Medium
-  * **Likelihood**: Medium
-  * **Risk**: Medium
+#### Leaking user data
+
+* **Description**: Most user data is public, but a few critical things such as emails and passwords are not. Leaking passwords is unlikely as they are stored only as hashes, but it is still technically possible, for example, due to logging misconfiguration. The database is the most likely attack vector for accessing sensitive data.
+* **Severity**: High
+* **Likelihood**: Low
+* **Risk**: Medium
+
+#### Losing user data
+
+* **Description**: Losing user data could be due to a database failing, a developer accidentally deleting the data or faulty programming. No procedures are in place to prevent this.
+* **Severity**: High
+* **Likelihood**: Medium
+* **Risk**: High
+
+#### Leaking performance data
+  
+* **Description**: Leaking system performance data such as uptime, CPU load, etc. is unwanted but not dangerous. This could be mitigated by setting up a firewall or authentication to prevent outside clients from accessing the metrics endpoint of our applications.
+* **Severity**: Low
+* **Likelihood**: High (we know this is happening)
+* **Risk**: Medium
+
+#### Losing system availability
+  
+* **Description**: Whether due to faulty programming, high load, or outside network attacks, breaking the SLA is unwanted. Monitoring is set up to alert admins during downtime. No automatic scaling or DDOS protection is in place, due to cost.
+* **Severity**: Medium
+* **Likelihood**: Medium
+* **Risk**: Medium
 
 ## Vulnerability Testing
 

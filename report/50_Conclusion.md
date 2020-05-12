@@ -8,4 +8,4 @@ However, it is also important for each team to consider what parts will provide 
 This is especially true when considering adding new technology to a project, as buzzwords and hype can often blind developers into grabbing a solution and then go looking for a problem.
 That is, developers should not focus too much on specific tools, but rather follow the general philosophy of DevOps.
 
-In conclusion, learning about and then implementing DevOps practices in a project has been immensely valuable. Having gained a firmer grip on the technical aspects, the team is now ready to tackle the larger challenges of utilizing the DevOps mindset in the real world, like changing culture and organizing projects, to take full advantage of benefits of DevOps.
+In conclusion, learning about and then implementing DevOps practices in a project has been immensely valuable. Having gained a firmer grip on the technical aspects, the team is now ready to tackle larger challenges, like changing culture and organizing projects, by taking full advantage of the DevOps mindset.
